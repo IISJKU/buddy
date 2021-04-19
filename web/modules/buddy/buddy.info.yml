@@ -1,0 +1,9 @@
+name: Buddy
+type: module
+description: Functions for buddy
+package: Buddy
+core_version_requirement: ^9
+
+
+# Information added by Drupal.org packaging script on 2020-11-18
+version: '1.0'

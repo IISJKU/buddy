@@ -1,0 +1,11 @@
+<?php
+
+use  \Drupal\Core\Form\FormStateInterface;
+
+function buddy_form_alter(&$form, FormStateInterface $form_state, $form_id)
+{
+
+  \Drupal::messenger()->addMessage('Test.');
+
+
+}
