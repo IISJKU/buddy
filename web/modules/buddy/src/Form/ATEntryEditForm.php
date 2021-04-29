@@ -19,145 +19,39 @@ use Drupal\node\NodeInterface;
 class ATEntryEditForm extends ATEntryForm {
   protected $atEntry;
 
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state,NodeInterface $atEntry=NULL) {
 
 
-    if($_GET['id']){
-      $this->atEntry = Node::load($_GET['id']);
+    $this->atEntry = $atEntry;
 
+    $form = $this->createForm($form);
 
-      if($this->atEntry->bundle() != "at_entry"){
-        $this->atEntry = NULL;
-      }
+    $form['title']["#default_value"] = $this->atEntry->getTitle();
 
+    $atCategories = $this->atEntry->get("field_at_categories")->getValue();
 
-    }
+    foreach ($atCategories as $atCategory){
 
-    $form['title'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Title'),
-      '#description' => $this->t('Title must be at least 5 characters in length.'),
-      '#required' => TRUE,
-    ];
+      foreach ($form as $categoryContainerID=>$categoryContainer){
 
-    $form['description'] = [
-      '#type' => 'item',
-      '#markup' => "<h2>".$this->t('Support categories')."</h2>",
-    ];
+        if(str_starts_with($categoryContainerID,"category_container_")){
 
-    $storage = \Drupal::service('entity_type.manager')->getStorage('node');
+          foreach ($categoryContainer as $categoryID=>$category){
 
-    $atCategoryContainersIDs = $storage->getQuery()
-      ->condition('type', 'at_category_container')
-      ->condition('status', 1)
-      ->sort('field_category_container_weight', 'DESC')
-      ->execute();
+            if(str_starts_with($categoryID,"category_")){
 
-    $atCategoryContainers = $storage->loadMultiple($atCategoryContainersIDs);
-
-    $atCategoryIDs = $storage->getQuery()
-      ->condition('type', 'at_category')
-      ->condition('status', 1)
-      ->sort('field_category_description', 'DESC')
-      ->execute();
-
-    $atCategories = $storage->loadMultiple($atCategoryIDs);
-
-    foreach ($atCategoryContainers as $categoryContainerId => $atCategoryContainer){
-
-      \Drupal::messenger()->addMessage($categoryContainerId);
-
-      $form['category_container_'.$categoryContainerId] = array(
-        '#type' => 'fieldset',
-        '#title' => $this->t($atCategoryContainer->title->value),
-      );
-
-      if($atCategoryContainer->field_category_container_descrip->value){
-
-        $form['category_container_'.$categoryContainerId]['category_container_description'] = array(
-          '#type' => 'markup',
-          '#markup' => $atCategoryContainer->field_category_container_descrip->value,
-        );
-      }
-
-
-      foreach ($atCategories as $categoryID => $category){
-
-
-        if($atCategoryContainer->id() == $category->get('field_at_category_container')->target_id){
-
-
-          $form['category_container_'.$categoryContainerId]['category_'.$categoryID] = array(
-            '#type' => 'checkboxes',
-            '#title' => $category->title->value,
-            '#options' => array(
-              $categoryID => $category->field_category_description->value,
-            ),
-          );
-
+              if($atCategory["target_id"] == array_key_first ( $category["#options"])){
+                $form[$categoryContainerID][$categoryID]["#default_value"] = array(array_key_first ( $category["#options"] ));
+              }
+            }
+          }
         }
       }
-
-
-
-
     }
-
-
-
-
-    /*
-
-    $form['author'] = array(
-      '#type' => 'fieldset',
-      '#title' => $this
-        ->t('Author'),
-    );
-    $form['author']['name'] = array(
-      '#type' => 'textfield',
-      '#title' => $this
-        ->t('Name'),
-    );
-
-    $form['author']['options'] = array(
-      '#type' => 'checkboxes',
-      '#title' => t('Various Options by Checkbox'),
-      '#options' => array(
-        'key1' => t('Option One'),
-        'key2' => t('Option Two'),
-        'key3' => t('Option Three'),
-      ),
-    );
-*/
-    /*
-    $form['title'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Title'),
-      '#description' => $this->t('Title must be at least 5 characters in length.'),
-      '#required' => TRUE,
-    ]; */
-
-    // Group submit handlers in an actions element with a key of "actions" so
-    // that it gets styled correctly, and so that other modules may add actions
-    // to the form. This is not required, but is convention.
-    $form['actions'] = [
-      '#type' => 'actions',
-    ];
-
-    // Add a submit button that handles the submission of the form.
-    $form['actions']['submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Submit'),
-    ];
-
     return $form;
   }
 
 
-  protected function createForm(array $form){
-
-
-  }
 
   /**
    * Getter method for Form ID.
@@ -170,7 +64,7 @@ class ATEntryEditForm extends ATEntryForm {
    *   The unique ID of the form defined by this class.
    */
   public function getFormId() {
-    return 'at_entry_form';
+    return 'at_entry_edit_form';
   }
 
   /**
@@ -204,34 +98,13 @@ class ATEntryEditForm extends ATEntryForm {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    /*
-     * This would normally be replaced by code that actually does something
-     * with the title.
-     */
 
-    $values = $form_state->getValues();
-    $selectedCategories = array();
 
-    foreach ($values as $key => $value){
+    $this->atEntry->field_at_categories = $this->getSelectedCategories($form,$form_state);
+    $this->atEntry->title = $form_state->getValue('title');
+    $this->atEntry->save();
 
-      if(str_starts_with ($key,"category_")){
 
-        $selectedCategories[] = [
-          'target_id' => reset($value),
-        ];
-
-      }
-
-    }
-
-    $node = Node::create([
-      'type'        => 'at_entry',
-      'title'       =>  $form_state->getValue('title'),
-      'field_at_categories' => $selectedCategories,
-    ]);
-    $node->save();
-    $title = $form_state->getValue('title');
-    $this->messenger()->addMessage($this->t('You specified a title of %title.', ['%title' => $title]));
   }
 
 }

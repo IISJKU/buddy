@@ -21,18 +21,11 @@ class ATEntryForm extends FormBase {
 
   public function buildForm(array $form, FormStateInterface $form_state) {
 
+    return $this->createForm($form);
 
-    if($_GET['id']){
-      $this->atEntry = Node::load($_GET['id']);
+  }
 
-
-      if($this->atEntry->bundle() != "at_entry"){
-        $this->atEntry = NULL;
-      }
-
-
-    }
-
+  protected function createForm($form){
     $form['title'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Title'),
@@ -74,7 +67,7 @@ class ATEntryForm extends FormBase {
 
       if($atCategoryContainer->field_category_container_descrip->value){
 
-        $form['category_container_'.$categoryContainerId]['category_container_description'] = array(
+        $form['category_container_'.$categoryContainerId]['container_description'] = array(
           '#type' => 'markup',
           '#markup' => $atCategoryContainer->field_category_container_descrip->value,
         );
@@ -102,39 +95,6 @@ class ATEntryForm extends FormBase {
 
 
     }
-
-
-
-    /*
-
-    $form['author'] = array(
-      '#type' => 'fieldset',
-      '#title' => $this
-        ->t('Author'),
-    );
-    $form['author']['name'] = array(
-      '#type' => 'textfield',
-      '#title' => $this
-        ->t('Name'),
-    );
-
-    $form['author']['options'] = array(
-      '#type' => 'checkboxes',
-      '#title' => t('Various Options by Checkbox'),
-      '#options' => array(
-        'key1' => t('Option One'),
-        'key2' => t('Option Two'),
-        'key3' => t('Option Three'),
-      ),
-    );
-*/
-    /*
-    $form['title'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Title'),
-      '#description' => $this->t('Title must be at least 5 characters in length.'),
-      '#required' => TRUE,
-    ]; */
 
     // Group submit handlers in an actions element with a key of "actions" so
     // that it gets styled correctly, and so that other modules may add actions
@@ -202,6 +162,19 @@ class ATEntryForm extends FormBase {
      * with the title.
      */
 
+
+
+    $node = Node::create([
+      'type'        => 'at_entry',
+      'title'       =>  $form_state->getValue('title'),
+      'field_at_categories' => $this->getSelectedCategories($form,$form_state),
+    ]);
+    $node->save();
+    $title = $form_state->getValue('title');
+    $this->messenger()->addMessage($this->t('You specified a title of %title.', ['%title' => $title]));
+  }
+
+  protected function getSelectedCategories(array &$form, FormStateInterface $form_state){
     $values = $form_state->getValues();
     $selectedCategories = array();
 
@@ -209,22 +182,18 @@ class ATEntryForm extends FormBase {
 
       if(str_starts_with ($key,"category_")){
 
-        $selectedCategories[] = [
-          'target_id' => reset($value),
-        ];
+        if(reset($value) != 0){
+          $selectedCategories[] = [
+            'target_id' => reset($value),
+          ];
+        }
+
 
       }
 
     }
 
-    $node = Node::create([
-      'type'        => 'at_entry',
-      'title'       =>  $form_state->getValue('title'),
-      'field_at_categories' => $selectedCategories,
-    ]);
-    $node->save();
-    $title = $form_state->getValue('title');
-    $this->messenger()->addMessage($this->t('You specified a title of %title.', ['%title' => $title]));
+    return $selectedCategories;
   }
 
 }

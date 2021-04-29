@@ -5,3 +5,24 @@ buddy.at_entry_form:
     _title: 'AT Entry Form'
   requirements:
     _permission: 'access content'
+buddy.at_entry_edit_form:
+  path: '/edit-at-entry/{atEntry}'
+  defaults:
+    _form:  '\Drupal\buddy\Form\ATEntryEditForm'
+    _title: 'AT Entry Form'
+  requirements:
+    _permission: 'access content'
+  options:
+    parameters:
+      atEntry:
+        type: entity:node
+        bundle:
+          - at_entry
+buddy.at_description_overview:
+  path: '/my-at-entries'
+  defaults:
+    _controller: '\Drupal\buddy\Controller\ATEntryOverviewController::ATEntryOverview'
+  requirements:
+    _custom_access:  '\Drupal\buddy\Controller\ATEntryOverviewController::access'
+  options:
+    no_cache: 'TRUE'
