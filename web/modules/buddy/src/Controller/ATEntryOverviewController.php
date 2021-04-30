@@ -27,6 +27,8 @@ class ATEntryOverviewController extends ControllerBase
     $atDescriptionsOfATEntries = [];
     foreach ($atEntries as $atEntry){
 
+
+
       $atDescriptionIDs = \Drupal::entityQuery('node')
         ->condition('type', 'at_description')
         ->condition('field_at_entry', $atEntry->id(), '=')
@@ -41,11 +43,23 @@ class ATEntryOverviewController extends ControllerBase
     }
 
 
+    $html = "<table><tr>
+    <th>Entry</th>
+    <th>Languages</th>
+    <th>Manage Languages</th>
+    <th>Platforms</th>
+    <th>Manage Platforms</th>
+      <th>Edit</th>
+</tr>";
+
+
+
+    $html.="</table>";
 
 
     $build = array(
       '#type' => 'markup',
-      '#markup' => "test",
+      '#markup' => $html,
       '#title' => "AT Descriptions for ",
     );
 

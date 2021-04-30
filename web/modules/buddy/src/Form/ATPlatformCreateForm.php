@@ -25,6 +25,8 @@ class ATPlatformCreateForm extends FormBase
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
+    $node = \Drupal\node\Entity\Node::load(15);
+
 
     $request = \Drupal::request();
     if ($route = $request->attributes->get(\Symfony\Cmf\Component\Routing\RouteObjectInterface::ROUTE_OBJECT)) {
@@ -210,7 +212,7 @@ class ATPlatformCreateForm extends FormBase
       '#type' => 'item',
       '#markup' => "<h2>".$this->t('Software Specification')."</h2>",
     ];
-    $fields  = Util::getFormFieldsOfContentType("at_type_software",$form_state);
+    $fields  = Util::getFormFieldsOfContentType("at_type_software",$form, $form_state);
     return array_merge($form, $fields);
 
   }
@@ -220,7 +222,7 @@ class ATPlatformCreateForm extends FormBase
       '#type' => 'item',
       '#markup' => "<h2>".$this->t('Browser Extension Specification')."</h2>",
     ];
-    $fields  = Util::getFormFieldsOfContentType("at_type_browser_extension");
+    $fields  = Util::getFormFieldsOfContentType("at_type_browser_extension",$form, $form_state);
     return array_merge($form, $fields);
   }
 
@@ -229,7 +231,7 @@ class ATPlatformCreateForm extends FormBase
       '#type' => 'item',
       '#markup' => "<h2>".$this->t('Browser Extension Specification')."</h2>",
     ];
-    $fields  = Util::getFormFieldsOfContentType("at_type_app");
+    $fields  = Util::getFormFieldsOfContentType("at_type_app",$form, $form_state);
     return array_merge($form, $fields);
   }
 
@@ -238,27 +240,53 @@ class ATPlatformCreateForm extends FormBase
 
     $values = $form_state->getValues();
 
-
-    //* TODO */
-    $values2 = $form_state->getUserInput();
-
-
-    $test = Node::create([
+    $nodeDef = [
       'type'        => 'at_type_software',
-      'title'       =>  "MUH",
-    ]);
-   // $node->save();
+      'title'       =>  "software_reference",
+    ];
+    foreach ($values as $fieldName => $value) {
+      if (str_starts_with($fieldName, "field_")) {
+        $nodeDef[$fieldName] = $values[$fieldName];
+      }
+    }
 
+    $node = Node::create($nodeDef);
+    $node->save();
   }
 
   public function saveBrowserExtensionType(array $form, FormStateInterface $form_state){
 
+    $values = $form_state->getValues();
 
+    $nodeDef = [
+      'type'        => 'at_type_browser_extension',
+      'title'       =>  "browser extension",
+    ];
+    foreach ($values as $fieldName => $value) {
+      if (str_starts_with($fieldName, "field_")) {
+        $nodeDef[$fieldName] = $values[$fieldName];
+      }
+    }
+
+    $node = Node::create($nodeDef);
+    $node->save();
   }
 
   public function saveAppTypeForm(array $form, FormStateInterface $form_state){
+    $values = $form_state->getValues();
 
-    $fields  = Util::getFormFieldsOfContentType("at_type_app");
-    return array_merge($form, $fields);
+    $nodeDef = [
+      'type'        => 'at_type_app',
+      'title'       =>  "app",
+    ];
+    foreach ($values as $fieldName => $value) {
+      if (str_starts_with($fieldName, "field_")) {
+        $nodeDef[$fieldName] = $values[$fieldName];
+      }
+    }
+
+    $node = Node::create($nodeDef);
+    $node->save();
+
   }
 }
