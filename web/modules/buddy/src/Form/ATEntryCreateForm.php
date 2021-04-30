@@ -16,7 +16,7 @@ use Drupal\node\NodeInterface;
  *
  * @see \Drupal\Core\Form\FormBase
  */
-class ATEntryForm extends FormBase {
+class ATEntryCreateForm extends FormBase {
   protected $atEntry;
 
   public function buildForm(array $form, FormStateInterface $form_state) {

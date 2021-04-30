@@ -1,7 +1,7 @@
 buddy.at_entry_form:
   path: '/create-at-entry'
   defaults:
-    _form:  '\Drupal\buddy\Form\ATEntryForm'
+    _form:  '\Drupal\buddy\Form\ATEntryCreateForm'
     _title: 'AT Entry Form'
   requirements:
     _permission: 'access content'
@@ -26,3 +26,10 @@ buddy.at_description_overview:
     _custom_access:  '\Drupal\buddy\Controller\ATEntryOverviewController::access'
   options:
     no_cache: 'TRUE'
+buddy.multistep_form:
+  path: '/multistep-form'
+  defaults:
+    _form: '\Drupal\buddy\Form\ATPlatformCreateForm'
+    _title: 'Multistep form'
+  requirements:
+    _permission: 'access content'

@@ -16,7 +16,7 @@ use Drupal\node\NodeInterface;
  *
  * @see \Drupal\Core\Form\FormBase
  */
-class ATEntryEditForm extends ATEntryForm {
+class ATEntryEditForm extends ATEntryCreateForm {
   protected $atEntry;
 
   public function buildForm(array $form, FormStateInterface $form_state,NodeInterface $atEntry=NULL) {
