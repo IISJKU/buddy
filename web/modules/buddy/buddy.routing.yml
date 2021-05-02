@@ -27,9 +27,15 @@ buddy.at_description_overview:
   options:
     no_cache: 'TRUE'
 buddy.multistep_form:
-  path: '/multistep-form'
+  path: '/multistep-form/{atEntry}'
   defaults:
     _form: '\Drupal\buddy\Form\ATPlatformCreateForm'
     _title: 'Multistep form'
   requirements:
     _permission: 'access content'
+  options:
+    parameters:
+      atEntry:
+        type: entity:node
+        bundle:
+          - at_entry

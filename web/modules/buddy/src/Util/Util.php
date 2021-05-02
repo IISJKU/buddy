@@ -1,20 +1,25 @@
 <?php
+
 namespace Drupal\buddy\Util;
 
 class Util
 {
-  public static function getFormFieldsOfContentType($contentTypeName,$form, &$form_state){
+  public static function getFormFieldsOfContentType($contentTypeName, $form, &$form_state, $node = NULL)
+  {
 
     //Explanation
-    $node = \Drupal\node\Entity\Node::create(['type' => $contentTypeName]);
-    $form = \Drupal::service('entity.form_builder')->getForm($node,'default',$form_state->getStorage());
+    if (!$node) {
+      $node = \Drupal\node\Entity\Node::create(['type' => $contentTypeName]);
+    }
+
+    $form = \Drupal::service('entity.form_builder')->getForm($node, 'default', $form_state->getStorage());
 
     $entityFieldManager = \Drupal::service('entity_field.manager');
-    $definitions  = $entityFieldManager->getFieldDefinitions("node", $contentTypeName);
+    $definitions = $entityFieldManager->getFieldDefinitions("node", $contentTypeName);
 
     $entity_type = 'node';
     $form_mode = 'default';
-    $form_display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load($entity_type .'.' . $contentTypeName . '.' . $form_mode);
+    $form_display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load($entity_type . '.' . $contentTypeName . '.' . $form_mode);
 
     //Set form display to form state
     $form_state->set('form_display', $form_display);
@@ -37,4 +42,12 @@ class Util
     return $fields;
   }
 
+  public static function setTitle($title)
+  {
+    $request = \Drupal::request();
+    if ($route = $request->attributes->get(\Symfony\Cmf\Component\Routing\RouteObjectInterface::ROUTE_OBJECT)) {
+      $route->setDefault('_title', $title);
+    }
+
+  }
 }

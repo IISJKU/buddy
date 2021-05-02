@@ -8,10 +8,12 @@ use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 
 class ATPlatformCreateForm extends FormBase
 {
 
+  protected $atEntry;
 
   /**
    * {@inheritdoc}
@@ -23,15 +25,20 @@ class ATPlatformCreateForm extends FormBase
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state,NodeInterface $atEntry=NULL) {
+    $this->atEntry = $atEntry;
 
+    $test = $this->atEntry->get("field_at_types")->getValue();
+    /*
     $node = \Drupal\node\Entity\Node::load(15);
 
+    $form = Util::getFormFieldsOfContentType("at_type_software",$form, $form_state,$node);
 
-    $request = \Drupal::request();
-    if ($route = $request->attributes->get(\Symfony\Cmf\Component\Routing\RouteObjectInterface::ROUTE_OBJECT)) {
-      $route->setDefault('_title', 'New Title');
-    }
+    return $form;
+    */
+
+
+    Util::setTitle("Formi");
 
     /*
     $form = Util::getFormFieldsOfContentType("at_type_app");
@@ -89,17 +96,22 @@ class ATPlatformCreateForm extends FormBase
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $page_values = $form_state->get('page_values');
-
+    $id = 0;
     if($page_values['type']== "software"){
 
-      $form = $this->saveSoftwareType($form,$form_state);
+      $id = $this->saveSoftwareType($form,$form_state);
     }else if($page_values['type']== "app"){
-      $form = $this->saveAppTypeForm($form,$form_state);
+      $id = $this->saveAppTypeForm($form,$form_state);
     }else{
       //browser_extension
-      $form = $this->saveBrowserExtensionType($form,$form_state);
+      $id = $this->saveBrowserExtensionType($form,$form_state);
 
     }
+
+
+
+    $this->atEntry->field_at_types[] =  ['target_id' => $id];
+    $this->atEntry->save();
     $this->messenger()->addMessage($this->t('The form has been submitted. name="@type', [
       '@type' => $page_values['type'],
     ]));
@@ -155,6 +167,7 @@ class ATPlatformCreateForm extends FormBase
   public function fapiExamplePageTwo(array &$form, FormStateInterface $form_state) {
 
     $page_values = $form_state->get('page_values');
+
 
     if($page_values['type']== "software"){
 
@@ -252,6 +265,8 @@ class ATPlatformCreateForm extends FormBase
 
     $node = Node::create($nodeDef);
     $node->save();
+    return $node->id();
+
   }
 
   public function saveBrowserExtensionType(array $form, FormStateInterface $form_state){
@@ -270,6 +285,7 @@ class ATPlatformCreateForm extends FormBase
 
     $node = Node::create($nodeDef);
     $node->save();
+    return $node->id();
   }
 
   public function saveAppTypeForm(array $form, FormStateInterface $form_state){
@@ -287,6 +303,7 @@ class ATPlatformCreateForm extends FormBase
 
     $node = Node::create($nodeDef);
     $node->save();
+    return $node->id();
 
   }
 }
