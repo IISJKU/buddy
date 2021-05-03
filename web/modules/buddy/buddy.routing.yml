@@ -20,12 +20,11 @@ buddy.at_entry_edit_form:
     _title: 'AT Entry Form'
   requirements:
     _permission: 'access content'
+    _entity_bundles: 'atEntry:at_entry'
   options:
     parameters:
       atEntry:
         type: entity:node
-        bundle:
-          - at_entry
 buddy.type_create_form:
   path: '/create-type/{atEntry}'
   defaults:
@@ -33,12 +32,11 @@ buddy.type_create_form:
     _title: 'Create type'
   requirements:
     _permission: 'access content'
+    _entity_bundles: 'atEntry:at_entry'
   options:
     parameters:
       atEntry:
         type: entity:node
-        bundle:
-          - at_entry
 buddy.platform_edit_form:
   path: '/edit-type/{type}'
   defaults:
@@ -46,14 +44,11 @@ buddy.platform_edit_form:
     _title: 'Edit Type'
   requirements:
     _permission: 'access content'
+    _entity_bundles: 'type:at_type_app|at_type_browser_extension|at_type_software'
   options:
     parameters:
       type:
         type: entity:node
-        bundle:
-          - at_type_app
-          - at_type_browser_extension
-          - at_type_software
 buddy.description_create_form:
   path: '/create-description/{atEntry}'
   defaults:
@@ -61,12 +56,11 @@ buddy.description_create_form:
     _title: 'Create Description'
   requirements:
     _permission: 'access content'
+    _entity_bundles: 'atEntry:at_entry'
   options:
     parameters:
       atEntry:
         type: entity:node
-        bundle:
-          - at_entry
 buddy.description_edit_form:
   path: '/edit-description/{description}'
   defaults:
@@ -79,5 +73,3 @@ buddy.description_edit_form:
     parameters:
       description:
         type: entity:node
-        bundle:
-          - at_description

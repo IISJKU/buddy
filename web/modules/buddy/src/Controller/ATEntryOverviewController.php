@@ -28,8 +28,6 @@ class ATEntryOverviewController extends ControllerBase
     $atDescriptionsOfATEntries = [];
     $atPlatformsOfATEntries = [];
     foreach ($atEntries as $atEntry){
-
-
       $atDescriptionIDs = $atEntry->field_at_descriptions->getValue();
       $atDescriptions = Util::loadNodesByReferences($atDescriptionIDs);
       $atDescriptionsOfATEntries[$atEntry->id()] = $atDescriptions;
@@ -40,8 +38,9 @@ class ATEntryOverviewController extends ControllerBase
 
     }
 
+    $html = '<a href="create-at-entry">'.$this->t("Create new assistive technology entry").'</a>';
 
-    $html = "<table><tr>
+    $html.= "<table><tr>
     <th scope='col'>Entry</th>
     <th scope='col'>Languages</th>
     <th scope='col'>Manage Languages</th>
