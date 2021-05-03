@@ -16,25 +16,25 @@ use Drupal\node\NodeInterface;
  *
  * @see \Drupal\Core\Form\FormBase
  */
-class ATPlatformEditForm extends ATPlatformCreateForm {
-  protected $atPlatform;
+class ATTypeEditForm extends ATTypeCreateForm {
+  protected $atType;
 
-  public function buildForm(array $form, FormStateInterface $form_state,NodeInterface $platform=NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state,NodeInterface $type=NULL) {
 
 
-    $this->atPlatform = $platform;
+    $this->atType = $type;
 
-    $platformType = $this->atPlatform->bundle();
+    $platformType = $this->atType->bundle();
 
 
     if($platformType == "at_type_software"){
 
-      $form = $this->createSoftwareTypeForm($form,$form_state,$this->atPlatform);
+      $form = $this->createSoftwareTypeForm($form,$form_state,$this->atType);
     }else if($platformType== "at_type_app"){
-      $form = $this->createAppTypeForm($form,$form_state,$this->atPlatform);
+      $form = $this->createAppTypeForm($form,$form_state,$this->atType);
     }else{
       //browser_extension
-      $form = $this->createBrowserExtensionTypeForm($form,$form_state,$this->atPlatform);
+      $form = $this->createBrowserExtensionTypeForm($form,$form_state,$this->atType);
 
     }
 
@@ -102,13 +102,13 @@ class ATPlatformEditForm extends ATPlatformCreateForm {
     $values = $form_state->getValues();
     foreach ($values as $fieldName => $value) {
       if (str_starts_with($fieldName, "field_")) {
-        $this->atPlatform->$fieldName = $values[$fieldName];
+        $this->atType->$fieldName = $values[$fieldName];
       }
     }
 
-    $this->atPlatform->save();
+    $this->atType->save();
 
-
+    $form_state->setRedirect('buddy.at_entry_overview');
 
 
   }

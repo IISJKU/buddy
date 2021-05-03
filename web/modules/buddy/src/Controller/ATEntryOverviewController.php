@@ -42,13 +42,18 @@ class ATEntryOverviewController extends ControllerBase
 
 
     $html = "<table><tr>
-    <th>Entry</th>
-    <th>Languages</th>
-    <th>Manage Languages</th>
-    <th>Platforms</th>
-    <th>Manage Platforms</th>
-      <th>Edit</th>
+    <th scope='col'>Entry</th>
+    <th scope='col'>Languages</th>
+    <th scope='col'>Manage Languages</th>
+    <th scope='col'>Platforms</th>
+    <th scope='col'>Manage Platforms</th>
+    <th scope='col'>Edit</th>
 </tr>";
+
+    foreach ($atEntries as $atEntry){
+
+      $html.=$this->renderATEntry($atEntry, $atDescriptionsOfATEntries[$atEntry->id()], $atPlatformsOfATEntries[$atEntry->id()] );
+    }
 
 
 
@@ -58,16 +63,56 @@ class ATEntryOverviewController extends ControllerBase
     $build = array(
       '#type' => 'markup',
       '#markup' => $html,
-      '#title' => "AT Descriptions for ",
+      '#title' => $this->t("My Assistive Technology Entries"),
     );
 
     return $build;
 
   }
 
-  private function renderATEntry($atEntry,$atDescriptions,$atPlatforms){
+  private function renderATEntry($atEntry, $atDescriptions, $atTypes){
+
+    $entry = $atEntry->getTitle();
+
+    $languages = "";
+    foreach ($atDescriptions as $atDescription){
+      $lang = $atDescription->field_at_description_language->getValue();
+
+      if($languages != ""){
+        $languages.=", ";
+      }
+      $languages.='<a href="edit-description/'.$atDescription->id().'">'.$lang[0]['value'].'</a>';
+      $a = 1;
+    }
+
+    $manageLanguages = '<a href="create-description/'.$atEntry->id().'">Add language</a>';
+
+    $types = "";
+    foreach ($atTypes as $atType){
+      if($types != ""){
+        $types.=", ";
+      }
+
+      $type = $atType->bundle();
+
+      if($type == "at_type_software"){
+        $types.='<a href="edit-type/'.$atType->id().'">'.$this->t("Software").'</a>';
+      }else if($type== "at_type_app"){
+        $types.='<a href="edit-type/'.$atType->id().'">'.$this->t("App").'</a>';
+      }else{
+        //browser_extension
+        $types.='<a href="edit-type/'.$atType->id().'">'.$this->t("Browser extension").'</a>';
+      }
 
 
+    }
+
+    $manageTypes = '<a href="create-type/'.$atEntry->id().'">'.$this->t("Add type").'</a>';
+
+    $editEntry = '<a href="edit-at-entry/'.$atEntry->id().'">'.$this->t("Edit/Delete").'</a>';
+
+
+    return '<tr><td>'.$entry.'</td><td>'.$languages.'</td><td>'.$manageLanguages.'</td><td>'.$types.'</td><td>'.$manageTypes.'</td><td>'.$editEntry.'</td>';
   }
 
 

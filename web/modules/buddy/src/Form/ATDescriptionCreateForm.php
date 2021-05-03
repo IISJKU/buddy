@@ -28,7 +28,7 @@ class ATDescriptionCreateForm extends FormBase
 
   }
 
-  protected function createForm(array $form, FormStateInterface $form_state,$atDescription){
+  protected function createForm(array $form, FormStateInterface $form_state,$atDescription=null){
     $form['description'] = [
       '#type' => 'item',
       '#markup' => "<h2>".$this->t('Create AT Description')."</h2>",
@@ -75,6 +75,9 @@ class ATDescriptionCreateForm extends FormBase
     } catch (EntityStorageException $e) {
 
     }
+
+
+    $form_state->setRedirect('buddy.at_entry_overview');
 
 
   }

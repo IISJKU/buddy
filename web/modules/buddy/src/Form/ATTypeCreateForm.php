@@ -10,7 +10,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 
-class ATPlatformCreateForm extends FormBase
+class ATTypeCreateForm extends FormBase
 {
 
   protected $atEntry;
@@ -112,9 +112,7 @@ class ATPlatformCreateForm extends FormBase
 
     $this->atEntry->field_at_types[] =  ['target_id' => $id];
     $this->atEntry->save();
-    $this->messenger()->addMessage($this->t('The form has been submitted. name="@type', [
-      '@type' => $page_values['type'],
-    ]));
+    $form_state->setRedirect('buddy.at_entry_overview');
 
 
   }
