@@ -1,6 +1,7 @@
 <?php
 namespace Drupal\buddy\Controller;
 
+use Drupal\buddy\Util\Util;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Session\AccountInterface;
@@ -25,21 +26,18 @@ class ATEntryOverviewController extends ControllerBase
 
 
     $atDescriptionsOfATEntries = [];
+    $atPlatformsOfATEntries = [];
     foreach ($atEntries as $atEntry){
 
 
-
-      $atDescriptionIDs = \Drupal::entityQuery('node')
-        ->condition('type', 'at_description')
-        ->condition('field_at_entry', $atEntry->id(), '=')
-        ->execute();
-
-
-      $atDescriptions = \Drupal::entityTypeManager()->getStorage('node')
-        ->loadMultiple($atDescriptionIDs);
-
-      $id = $atEntry->id();
+      $atDescriptionIDs = $atEntry->field_at_descriptions->getValue();
+      $atDescriptions = Util::loadNodesByReferences($atDescriptionIDs);
       $atDescriptionsOfATEntries[$atEntry->id()] = $atDescriptions;
+
+      $atPlatformIDs = $atEntry->field_at_types->getValue();
+      $atPlatforms = Util::loadNodesByReferences($atPlatformIDs);
+      $atPlatformsOfATEntries[$atEntry->id()] = $atPlatforms;
+
     }
 
 

@@ -50,4 +50,17 @@ class Util
     }
 
   }
+
+  public static function loadNodesByReferences($references){
+
+    $ids = [];
+    foreach ($references as $reference){
+
+      $ids[] = $reference['target_id'];
+
+    }
+    return \Drupal::entityTypeManager()->getStorage('node')
+      ->loadMultiple($ids);
+
+  }
 }

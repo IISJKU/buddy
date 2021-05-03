@@ -18,7 +18,7 @@ buddy.at_entry_edit_form:
         type: entity:node
         bundle:
           - at_entry
-buddy.at_description_overview:
+buddy.at_entry_overview:
   path: '/my-at-entries'
   defaults:
     _controller: '\Drupal\buddy\Controller\ATEntryOverviewController::ATEntryOverview'
@@ -26,8 +26,8 @@ buddy.at_description_overview:
     _custom_access:  '\Drupal\buddy\Controller\ATEntryOverviewController::access'
   options:
     no_cache: 'TRUE'
-buddy.multistep_form:
-  path: '/multistep-form/{atEntry}'
+buddy.platform_create_form:
+  path: '/create-platform/{atEntry}'
   defaults:
     _form: '\Drupal\buddy\Form\ATPlatformCreateForm'
     _title: 'Multistep form'
@@ -39,3 +39,44 @@ buddy.multistep_form:
         type: entity:node
         bundle:
           - at_entry
+buddy.platform_edit_form:
+  path: '/edit-platform/{platform}'
+  defaults:
+    _form: '\Drupal\buddy\Form\ATPlatformEditForm'
+    _title: 'Edit Platform'
+  requirements:
+    _permission: 'access content'
+  options:
+    parameters:
+      platform:
+        type: entity:node
+        bundle:
+          - at_type_app
+          - at_type_browser_extension
+          - at_type_software
+buddy.description_create_form:
+  path: '/create-description/{atEntry}'
+  defaults:
+    _form: '\Drupal\buddy\Form\ATDescriptionCreateForm'
+    _title: 'Create Description'
+  requirements:
+    _permission: 'access content'
+  options:
+    parameters:
+      atEntry:
+        type: entity:node
+        bundle:
+          - at_entry
+buddy.description_edit_form:
+  path: '/edit-description/{description}'
+  defaults:
+    _form: '\Drupal\buddy\Form\ATDescriptionEditForm'
+    _title: 'Edit Description'
+  requirements:
+    _permission: 'access content'
+  options:
+    parameters:
+      description:
+        type: entity:node
+        bundle:
+          - at_description

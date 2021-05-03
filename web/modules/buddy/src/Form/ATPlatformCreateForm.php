@@ -67,7 +67,7 @@ class ATPlatformCreateForm extends FormBase
         "browser_extension" => $this->t('Browser extension'),
         "app" => $this->t('Mobile application'),
       ),
-      '#description' => $this->t('Enter your first name.')
+      '#description' => $this->t('Enter the type of software.')
     );
 
 
@@ -219,32 +219,32 @@ class ATPlatformCreateForm extends FormBase
   }
 
 
-  public function createSoftwareTypeForm(array $form, FormStateInterface &$form_state){
+  public function createSoftwareTypeForm(array $form, FormStateInterface &$form_state,$node=null){
 
     $form['description'] = [
       '#type' => 'item',
       '#markup' => "<h2>".$this->t('Software Specification')."</h2>",
     ];
-    $fields  = Util::getFormFieldsOfContentType("at_type_software",$form, $form_state);
+    $fields  = Util::getFormFieldsOfContentType("at_type_software",$form, $form_state,$node);
     return array_merge($form, $fields);
 
   }
 
-  public function createBrowserExtensionTypeForm(array $form, FormStateInterface $form_state){
+  public function createBrowserExtensionTypeForm(array $form, FormStateInterface $form_state,$node=null){
     $form['description'] = [
       '#type' => 'item',
       '#markup' => "<h2>".$this->t('Browser Extension Specification')."</h2>",
     ];
-    $fields  = Util::getFormFieldsOfContentType("at_type_browser_extension",$form, $form_state);
+    $fields  = Util::getFormFieldsOfContentType("at_type_browser_extension",$form, $form_state,$node);
     return array_merge($form, $fields);
   }
 
-  public function createAppTypeForm(array $form, FormStateInterface $form_state){
+  public function createAppTypeForm(array $form, FormStateInterface $form_state,$node=null){
     $form['description'] = [
       '#type' => 'item',
       '#markup' => "<h2>".$this->t('Browser Extension Specification')."</h2>",
     ];
-    $fields  = Util::getFormFieldsOfContentType("at_type_app",$form, $form_state);
+    $fields  = Util::getFormFieldsOfContentType("at_type_app",$form, $form_state,$node);
     return array_merge($form, $fields);
   }
 
