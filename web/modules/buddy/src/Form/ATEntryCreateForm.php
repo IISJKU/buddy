@@ -133,8 +133,7 @@ class ATEntryCreateForm extends FormBase {
       'field_at_categories' => $this->getSelectedCategories($form,$form_state),
     ]);
     $node->save();
-    $title = $form_state->getValue('title');
-    $this->messenger()->addMessage($this->t('You specified a title of %title.', ['%title' => $title]));
+    $form_state->setRedirect('buddy.at_entry_overview');
   }
 
   protected function getSelectedCategories(array &$form, FormStateInterface $form_state){

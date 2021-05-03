@@ -70,12 +70,15 @@ class Util
     foreach ($references as $reference){
 
       $node = \Drupal::entityTypeManager()->getStorage('node')->load($reference['target_id']);
-      try {
-        $node->delete();
-      } catch (EntityStorageException $e) {
+      if($node){
+        try {
+          $node->delete();
+        } catch (EntityStorageException $e) {
 
 
+        }
       }
+
 
     }
   }
