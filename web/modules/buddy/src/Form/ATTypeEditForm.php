@@ -22,12 +22,6 @@ class ATTypeEditForm extends ATTypeCreateForm {
 
   public function buildForm(array $form, FormStateInterface $form_state,NodeInterface $type=NULL) {
 
-    if(!ATProviderController::hasAccess($type)){
-
-      throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
-
-    }
-
     $this->atType = $type;
 
     $platformType = $this->atType->bundle();

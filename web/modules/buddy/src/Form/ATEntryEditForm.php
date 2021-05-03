@@ -23,11 +23,6 @@ class ATEntryEditForm extends ATEntryCreateForm {
 
   public function buildForm(array $form, FormStateInterface $form_state,NodeInterface $atEntry=NULL) {
 
-    if(!ATProviderController::hasAccess($atEntry)){
-
-      throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
-
-    }
 
     $this->atEntry = $atEntry;
 
@@ -87,7 +82,7 @@ class ATEntryEditForm extends ATEntryCreateForm {
     $this->atEntry->field_at_categories = $this->getSelectedCategories($form,$form_state);
     $this->atEntry->title = $form_state->getValue('title');
     $this->atEntry->save();
-
+    $form_state->setRedirect('buddy.at_entry_overview');
 
   }
 
