@@ -23,12 +23,12 @@ class ATProviderController extends ControllerBase
     }else if($type){
       $node =$type;
     }
-/*
-    if(in_array("administrator", $account->getRoles())){
-      return AccessResult::allowed();
-    }*/
 
     if(in_array("administrator", $account->getRoles())){
+      return AccessResult::allowed();
+    }
+
+    if(in_array("at_provider", $account->getRoles())){
 
       if($node){
         if($node->getOwnerId() == $account->id()){
