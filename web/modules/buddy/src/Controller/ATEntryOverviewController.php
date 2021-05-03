@@ -117,18 +117,6 @@ class ATEntryOverviewController extends ControllerBase
   }
 
 
-  public function access(AccountInterface $account) {
 
-
-
-    if(in_array("administrator", $account->getRoles()) || in_array("at_provider", $account->getRoles())){
-      return AccessResult::allowed();
-    }
-
-
-    return AccessResult::forbidden();
-
-
-  }
 
 }

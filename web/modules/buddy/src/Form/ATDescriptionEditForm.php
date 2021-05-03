@@ -4,6 +4,7 @@
 namespace Drupal\buddy\Form;
 
 
+use Drupal\buddy\Controller\ATProviderController;
 use Drupal\Core\Form\FormStateInterface;
 
 class ATDescriptionEditForm extends ATDescriptionCreateForm
@@ -17,6 +18,13 @@ class ATDescriptionEditForm extends ATDescriptionCreateForm
 
   public function buildForm(array $form, FormStateInterface $form_state, $description = null)
   {
+
+    if(!ATProviderController::hasAccess($description)){
+
+      throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
+
+    }
+
     $this->atDescription = $description;
     $platformType = $this->atDescription->bundle();
     $form = $this->createForm($form,$form_state,$this->atDescription);

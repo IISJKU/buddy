@@ -2,6 +2,7 @@
 
 namespace Drupal\buddy\Form;
 
+use Drupal\buddy\Controller\ATProviderController;
 use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -22,6 +23,11 @@ class ATEntryEditForm extends ATEntryCreateForm {
 
   public function buildForm(array $form, FormStateInterface $form_state,NodeInterface $atEntry=NULL) {
 
+    if(!ATProviderController::hasAccess($atEntry)){
+
+      throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
+
+    }
 
     $this->atEntry = $atEntry;
 

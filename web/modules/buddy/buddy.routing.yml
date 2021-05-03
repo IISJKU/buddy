@@ -3,7 +3,7 @@ buddy.at_entry_overview:
   defaults:
     _controller: '\Drupal\buddy\Controller\ATEntryOverviewController::ATEntryOverview'
   requirements:
-    _custom_access:  '\Drupal\buddy\Controller\ATEntryOverviewController::access'
+    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
   options:
     no_cache: 'TRUE'
 buddy.at_entry_form:
@@ -13,6 +13,7 @@ buddy.at_entry_form:
     _title: 'AT Entry Form'
   requirements:
     _permission: 'access content'
+    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
 buddy.at_entry_edit_form:
   path: '/edit-at-entry/{atEntry}'
   defaults:
@@ -20,6 +21,7 @@ buddy.at_entry_edit_form:
     _title: 'AT Entry Form'
   requirements:
     _permission: 'access content'
+    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
     _entity_bundles: 'atEntry:at_entry'
   options:
     parameters:
@@ -32,6 +34,7 @@ buddy.type_create_form:
     _title: 'Create type'
   requirements:
     _permission: 'access content'
+    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
     _entity_bundles: 'atEntry:at_entry'
   options:
     parameters:
@@ -44,6 +47,7 @@ buddy.platform_edit_form:
     _title: 'Edit Type'
   requirements:
     _permission: 'access content'
+    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
     _entity_bundles: 'type:at_type_app|at_type_browser_extension|at_type_software'
   options:
     parameters:
@@ -56,6 +60,7 @@ buddy.description_create_form:
     _title: 'Create Description'
   requirements:
     _permission: 'access content'
+    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
     _entity_bundles: 'atEntry:at_entry'
   options:
     parameters:
@@ -68,6 +73,7 @@ buddy.description_edit_form:
     _title: 'Edit Description'
   requirements:
     _permission: 'access content'
+    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
     _entity_bundles: 'description:at_description'
   options:
     parameters:
