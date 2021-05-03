@@ -2,6 +2,8 @@
 
 namespace Drupal\buddy\Util;
 
+use Drupal\Core\Entity\EntityStorageException;
+
 class Util
 {
   public static function getFormFieldsOfContentType($contentTypeName, $form, &$form_state, $node = NULL)
@@ -63,4 +65,19 @@ class Util
       ->loadMultiple($ids);
 
   }
+
+  public static function deleteNodesByReferences($references){
+    foreach ($references as $reference){
+
+      $node = \Drupal::entityTypeManager()->getStorage('node')->load($reference['target_id']);
+      try {
+        $node->delete();
+      } catch (EntityStorageException $e) {
+
+
+      }
+
+    }
+  }
+
 }

@@ -51,6 +51,16 @@ class ATTypeEditForm extends ATTypeCreateForm {
       '#value' => $this->t('Submit'),
     ];
 
+    $form['actions']['delete'] = [
+      '#type' => 'submit',
+      '#button_type' => 'primary',
+      '#value' => $this->t('Delete'),
+      '#submit' => ['::deleteFormSubmit'],
+
+    ];
+
+
+
     return $form;
   }
 
@@ -80,6 +90,12 @@ class ATTypeEditForm extends ATTypeCreateForm {
     $form_state->setRedirect('buddy.at_entry_overview');
 
 
+  }
+
+  public function deleteFormSubmit(array &$form, FormStateInterface $form_state)
+  {
+    $this->atType->delete();
+    $form_state->setRedirect('buddy.at_entry_overview');
   }
 
 }
