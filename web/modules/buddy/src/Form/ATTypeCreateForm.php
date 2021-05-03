@@ -29,24 +29,11 @@ class ATTypeCreateForm extends FormBase
     $this->atEntry = $atEntry;
 
     $test = $this->atEntry->get("field_at_types")->getValue();
-    /*
-    $node = \Drupal\node\Entity\Node::load(15);
 
-    $form = Util::getFormFieldsOfContentType("at_type_software",$form, $form_state,$node);
+    Util::setTitle($this->t("Create type for:").$this->atEntry->getTitle());
 
-    return $form;
-    */
-
-
-    Util::setTitle("Formi");
-
-    /*
-    $form = Util::getFormFieldsOfContentType("at_type_app");
-
-    return $form;
-    */
     if ($form_state->has('page_num') && $form_state->get('page_num') == 2) {
-      return self::fapiExamplePageTwo($form, $form_state);
+      return self::pageTwoForm($form, $form_state);
     }
 
 
@@ -67,7 +54,7 @@ class ATTypeCreateForm extends FormBase
         "browser_extension" => $this->t('Browser extension'),
         "app" => $this->t('Mobile application'),
       ),
-      '#description' => $this->t('Enter the type of software.')
+      '#description' => $this->t('Enter the type of assistive technology.')
     );
 
 
@@ -83,17 +70,15 @@ class ATTypeCreateForm extends FormBase
       '#button_type' => 'primary',
       '#value' => $this->t('Next'),
       // Custom submission handler for page 1.
-      '#submit' => ['::fapiExampleMultistepFormNextSubmit'],
+      '#submit' => ['::pageOneSubmit'],
       // Custom validation handler for page 1.
-      '#validate' => ['::fapiExampleMultistepFormNextValidate'],
+      '#validate' => ['::pageOneSubmitValidate'],
     ];
 
     return $form;
   }
 
-  /**
-   * {@inheritdoc}
-   */
+
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $page_values = $form_state->get('page_values');
     $id = 0;
@@ -117,28 +102,14 @@ class ATTypeCreateForm extends FormBase
 
   }
 
-  /**
-   * Provides custom validation handler for page 1.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   */
-  public function fapiExampleMultistepFormNextValidate(array &$form, FormStateInterface $form_state) {
+
+  public function pageOneSubmitValidate(array &$form, FormStateInterface $form_state) {
 
 
   }
 
-  /**
-   * Provides custom submission handler for page 1.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   */
-  public function fapiExampleMultistepFormNextSubmit(array &$form, FormStateInterface $form_state) {
+
+  public function pageOneSubmit(array &$form, FormStateInterface $form_state) {
     $form_state
       ->set('page_values', [
         // Keep only first step values to minimize stored data.
@@ -151,18 +122,8 @@ class ATTypeCreateForm extends FormBase
       ->setRebuild(TRUE);
   }
 
-  /**
-   * Builds the second step form (page 2).
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   *
-   * @return array
-   *   The render array defining the elements of the form.
-   */
-  public function fapiExamplePageTwo(array &$form, FormStateInterface $form_state) {
+
+  public function pageTwoForm(array &$form, FormStateInterface $form_state) {
 
     $page_values = $form_state->get('page_values');
 
@@ -183,7 +144,7 @@ class ATTypeCreateForm extends FormBase
       '#type' => 'submit',
       '#value' => $this->t('Back'),
       // Custom submission handler for 'Back' button.
-      '#submit' => ['::fapiExamplePageTwoBack'],
+      '#submit' => ['::pageTwoBackSubmit'],
       // We won't bother validating the required 'color' field, since they
       // have to come back to this page to submit anyway.
       '#limit_validation_errors' => [],
@@ -197,15 +158,7 @@ class ATTypeCreateForm extends FormBase
     return $form;
   }
 
-  /**
-   * Provides custom submission handler for 'Back' button (page 2).
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   */
-  public function fapiExamplePageTwoBack(array &$form, FormStateInterface $form_state) {
+  public function pageTwoBackSubmit(array &$form, FormStateInterface $form_state) {
     $form_state
       // Restore values for the first step.
       ->setValues($form_state->get('page_values'))

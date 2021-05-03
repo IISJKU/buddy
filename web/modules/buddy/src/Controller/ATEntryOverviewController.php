@@ -13,6 +13,8 @@ class ATEntryOverviewController extends ControllerBase
 
   public function ATEntryOverview(){
 
+    //throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
+
     $user = \Drupal::currentUser();
 
 
@@ -43,9 +45,9 @@ class ATEntryOverviewController extends ControllerBase
     $html.= "<table><tr>
     <th scope='col'>Entry</th>
     <th scope='col'>Languages</th>
-    <th scope='col'>Manage Languages</th>
-    <th scope='col'>Platforms</th>
-    <th scope='col'>Manage Platforms</th>
+    <th scope='col'>Add Language</th>
+    <th scope='col'>Types</th>
+    <th scope='col'>Add Type</th>
     <th scope='col'>Edit</th>
 </tr>";
 
