@@ -4,15 +4,11 @@ namespace Drupal\buddy\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Lock\NullLockBackend;
+use Drupal\Core\Link;
 use Drupal\node\Entity\Node;
-use Drupal\node\NodeInterface;
 
 /**
- * Implements the SimpleForm form controller.
- *
- * This example demonstrates a simple form with a single text input element. We
- * extend FormBase which is the simplest form base class used in Drupal.
+ * AT Entry creation form
  *
  * @see \Drupal\Core\Form\FormBase
  */
@@ -26,17 +22,6 @@ class ATEntryCreateForm extends FormBase {
   }
 
   protected function createForm($form){
-    $form['title'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Title'),
-      '#description' => $this->t('Title must be at least 5 characters in length.'),
-      '#required' => TRUE,
-    ];
-
-    $form['description'] = [
-      '#type' => 'item',
-      '#markup' => "<h2>".$this->t('Support categories')."</h2>",
-    ];
 
     $storage = \Drupal::service('entity_type.manager')->getStorage('node');
 
@@ -47,6 +32,31 @@ class ATEntryCreateForm extends FormBase {
       ->execute();
 
     $atCategoryContainers = $storage->loadMultiple($atCategoryContainersIDs);
+
+    if (empty($atCategoryContainers)) {
+      $add_text = $this->t('There are no AT Containers yet. @add_link', [
+        '@add_link' => Link::createFromRoute(
+          $this->t('Add a new AT Container.'),
+          'node.add', ['node_type' => 'at_category_container'])
+          ->toString(),
+      ]);
+      $form['description'] = [
+        '#type' => 'item',
+        '#markup' => $add_text,
+      ];
+      return $form;
+    } else {
+      $form['title'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Title'),
+        '#description' => $this->t('Title must be at least 5 characters in length.'),
+        '#required' => TRUE,
+      ];
+      $form['description'] = [
+        '#type' => 'item',
+        '#markup' => "<h2>".$this->t('Support categories')."</h2>",
+      ];
+    }
 
     $atCategoryIDs = $storage->getQuery()
       ->condition('type', 'at_category')
@@ -88,15 +98,8 @@ class ATEntryCreateForm extends FormBase {
 
         }
       }
-
-
-
-
     }
 
-    // Group submit handlers in an actions element with a key of "actions" so
-    // that it gets styled correctly, and so that other modules may add actions
-    // to the form. This is not required, but is convention.
     $form['actions'] = [
       '#type' => 'actions',
     ];
@@ -149,8 +152,6 @@ class ATEntryCreateForm extends FormBase {
             'target_id' => reset($value),
           ];
         }
-
-
       }
 
     }
