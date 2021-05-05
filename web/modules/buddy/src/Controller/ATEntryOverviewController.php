@@ -65,6 +65,11 @@ class ATEntryOverviewController extends ControllerBase
       '#type' => 'markup',
       '#markup' => $html,
       '#title' => $this->t("My Assistive Technology Entries"),
+      '#attached' => [
+        'library' => [
+          'buddy/at_provider_forms',
+        ],
+      ],
     );
 
     return $build;

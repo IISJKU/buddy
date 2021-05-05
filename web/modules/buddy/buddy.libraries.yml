@@ -1,0 +1,10 @@
+at_provider_forms:
+  version: 1.x
+  css:
+    theme:
+      css/at-provider.css: {}
+      css/font-awesome.min.css: {}
+  js:
+    js/at-provider.js: {}
+  dependencies:
+    - core/jquery

@@ -6,6 +6,14 @@ buddy.at_entry_overview:
     _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
   options:
     no_cache: 'TRUE'
+buddy.new_at_entry_overview:
+  path: '/my-at-entries-new'
+  defaults:
+    _controller: '\Drupal\buddy\Controller\ATEntryOverviewController2::ATEntryOverview'
+  requirements:
+    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
+  options:
+    no_cache: 'TRUE'
 buddy.at_entry_form:
   path: '/create-at-entry'
   defaults:
