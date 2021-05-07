@@ -3,7 +3,6 @@
 namespace Drupal\buddy\Form;
 
 use Drupal\buddy\Controller\ATProviderController;
-use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Lock\NullLockBackend;
@@ -18,17 +17,16 @@ use Drupal\node\NodeInterface;
  *
  * @see \Drupal\Core\Form\FormBase
  */
-class ATEntryDeleteForm extends ATEntryCreateForm {
-  protected $atEntry;
+class ATTypeDeleteForm extends ATTypeCreateForm {
+  protected $atType;
 
-  public function buildForm(array $form, FormStateInterface $form_state,NodeInterface $atEntry=NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state,NodeInterface $type=NULL) {
 
-
-    $this->atEntry = $atEntry;
+    $this->atType = $type;
 
     $form['description'] = [
       '#type' => 'item',
-      '#title' => $this->t('Do you really want to delete the following entry:').$this->atEntry->getTitle(),
+      '#title' => $this->t('Do you really want to delete the following type:').$this->atType->getTitle(),
     ];
 
     // Group submit handlers in an actions element with a key of "actions" so
@@ -55,8 +53,9 @@ class ATEntryDeleteForm extends ATEntryCreateForm {
   }
 
 
+
   public function getFormId() {
-    return 'at_entry_delete_form';
+    return 'at_type_delete_form';
   }
 
 
@@ -67,25 +66,16 @@ class ATEntryDeleteForm extends ATEntryCreateForm {
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
-    $this->atEntry->delete();
-    $form_state->setRedirect('buddy.at_entry_overview_new');
+
+    $form_state->setRedirect('buddy.at_entry_overview');
+
 
   }
 
   public function deleteFormSubmit(array &$form, FormStateInterface $form_state)
   {
-
-
-    $descriptions = $this->atEntry->get("field_at_descriptions")->getValue();
-    Util::deleteNodesByReferences($descriptions);
-
-    $types = $this->atEntry->get("field_at_types")->getValue();
-    Util::deleteNodesByReferences($types);
-    $this->atEntry->delete();
+    $this->atType->delete();
     $form_state->setRedirect('buddy.at_entry_overview');
   }
-
-
-
 
 }

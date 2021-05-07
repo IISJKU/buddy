@@ -98,7 +98,7 @@ class ATEntryOverviewController2 extends ControllerBase
                 <td>' . $lang[0]['value'] . '</td>
                 <td><a href="edit-description/' . $atDescription->id() . '">' . $this->t("Edit draft") . '</a></td>
                 <td>-</td>
-                <td><a href="delete-at-entry/' . $atDescription->id() . '"><i class="fa fa-trash-o" aria-hidden="true"></i></a></td>
+                <td><a href="delete-description/' . $atDescription->id() . '"><i class="fa fa-trash-o" aria-hidden="true"></i></a></td>
               </tr>';
 
     }
