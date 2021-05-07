@@ -126,3 +126,17 @@ buddy.description_delete_form:
     parameters:
       description:
         type: entity:node
+buddy.description_view:
+  path: '/view-description/{description}'
+  defaults:
+    _controller: '\Drupal\buddy\Controller\ATDescriptionViewController::ATDescriptionView'
+    _title: 'View Description'
+  requirements:
+    _permission: 'access content'
+    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
+    _entity_bundles: 'description:at_description'
+  options:
+    no_cache: 'TRUE'
+    parameters:
+      description:
+        type: entity:node

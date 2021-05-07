@@ -55,6 +55,7 @@ class ATDescriptionEditForm extends ATDescriptionCreateForm
   public function submitForm(array &$form, FormStateInterface $form_state)
   {
     $values = $form_state->getValues();
+    $this->atDescription->setTitle($values['title']);
     foreach ($values as $fieldName => $value) {
       if (str_starts_with($fieldName, "field_")) {
         $this->atDescription->$fieldName = $values[$fieldName];

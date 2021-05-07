@@ -33,6 +33,16 @@ class ATDescriptionCreateForm extends FormBase
       '#type' => 'item',
       '#markup' => "<h2>".$this->t('Create AT Description')."</h2>",
     ];
+
+    $form['title'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Title'),
+      '#description' => $this->t('Title must be at least 5 characters in length.'),
+      '#required' => TRUE,
+    ];
+    if($atDescription){
+      $form['title']['#default_value'] = $atDescription->getTitle();
+    }
     $fields  = Util::getFormFieldsOfContentType("at_description",$form, $form_state,$atDescription);
     $form =  array_merge($form, $fields);
 
@@ -59,7 +69,7 @@ class ATDescriptionCreateForm extends FormBase
 
     $nodeDef = [
       'type'        => 'at_description',
-      'title'       =>  "at description",
+      'title'       =>  $values['title'],
     ];
     foreach ($values as $fieldName => $value) {
       if (str_starts_with($fieldName, "field_")) {
