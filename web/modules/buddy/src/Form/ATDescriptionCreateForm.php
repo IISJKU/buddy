@@ -89,6 +89,6 @@ class ATDescriptionCreateForm extends FormBase
 
     $form_state->setRedirect('buddy.at_entry_overview');
 
-
+    $this->messenger()->addMessage($this->t('The description has been saved as draft! A moderator was informed to approve and publish the description!'));
   }
 }

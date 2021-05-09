@@ -45,7 +45,7 @@ class ATDescriptionViewController extends ControllerBase
 
     $revision_ids = \Drupal::entityTypeManager()->getStorage('node')->revisionIds($description);
     $last_revision_id = end($revision_ids);
-    $revision = false;
+
     $revisionLink = "";
     if ($description->getRevisionId() != $last_revision_id) {
       $revisionLink = Link::createFromRoute($this->t('Edit revision'),'buddy.description_edit_form',['description' => $description->id()])->toString()->getGeneratedLink();

@@ -63,7 +63,7 @@ class ATDescriptionEditForm extends ATDescriptionCreateForm
     }
     $user = \Drupal::currentUser();
     $this->atDescription->setNewRevision(TRUE);
-    $this->atDescription->revision_log = 'Created revision for node' . $nid;
+    $this->atDescription->revision_log = 'Created revision for node';
     $this->atDescription->setRevisionCreationTime(REQUEST_TIME);
     $this->atDescription->setRevisionUserId($user->id());
 
@@ -74,9 +74,10 @@ class ATDescriptionEditForm extends ATDescriptionCreateForm
     }
     $this->atDescription->save();
 
-  //  $this->atDescription->save();
 
     $form_state->setRedirect('buddy.at_entry_overview');
+
+    $this->messenger()->addMessage($this->t('The description has been updated and saved as draft! A moderator was informed to approve and publish the new revision!'));
   }
 
   public function deleteFormSubmit(array &$form, FormStateInterface $form_state)

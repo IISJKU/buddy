@@ -83,6 +83,7 @@ class ATEntryOverviewController2 extends ControllerBase
     <div class="at_container_table">
               <table>
           <tr>
+              <th rowspan="2">Title</th>
               <th rowspan="2">Language</th>
               <th colspan="2">Status</th>
               <th rowspan="2">Delete</th>
@@ -93,11 +94,29 @@ class ATEntryOverviewController2 extends ControllerBase
           </tr>';
 
     foreach ($atDescriptions as $atDescription) {
+      $revision_ids = \Drupal::entityTypeManager()->getStorage('node')->revisionIds($atDescription);
+      $last_revision_id = end($revision_ids);
+
+      $draftTitle = "";
+      if ($atDescription->getRevisionId() != $last_revision_id) {
+        $draftTitle= $this->t("Edit revision");
+      }else{
+        $draftTitle = $this->t("Create new revision");
+      }
+      $mod = $atDescription->get('moderation_state')->getValue();
+      $published = "-";
+      if($mod[0]['value'] == 'draft'){
+        $draftTitle= $this->t("Edit draft");
+      }else{
+
+        $published = '<a href="view-description/'.$atDescription->id().'">'.$this->t("View published").'</a>';
+      }
       $lang = $atDescription->field_at_description_language->getValue();
       $html .= '<tr>
+                <td>'.$atDescription->getTitle().'</td>
                 <td>' . $lang[0]['value'] . '</td>
-                <td><a href="edit-description/' . $atDescription->id() . '">' . $this->t("Edit draft") . '</a></td>
-                <td>-</td>
+                <td>'.$published.'</td>
+                <td><a href="edit-description/' . $atDescription->id() . '">' .$draftTitle . '</a></td>
                 <td><a href="delete-description/' . $atDescription->id() . '"><i class="fa fa-trash-o" aria-hidden="true"></i></a></td>
               </tr>';
 

@@ -1,13 +1,13 @@
-buddy.at_entry_overview:
-  path: '/my-at-entries'
+buddy.at_entry_overview_old:
+  path: '/my-at-entries-old'
   defaults:
     _controller: '\Drupal\buddy\Controller\ATEntryOverviewController::ATEntryOverview'
   requirements:
     _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
   options:
     no_cache: 'TRUE'
-buddy.new_at_entry_overview:
-  path: '/my-at-entries-new'
+buddy.at_entry_overview:
+  path: '/my-at-entries'
   defaults:
     _controller: '\Drupal\buddy\Controller\ATEntryOverviewController2::ATEntryOverview'
   requirements:
