@@ -12,6 +12,7 @@ buddy.at_entry_overview:
     _controller: '\Drupal\buddy\Controller\ATEntryOverviewController2::ATEntryOverview'
   requirements:
     _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
+    _role: 'administrator+at_provider'
   options:
     no_cache: 'TRUE'
 buddy.at_entry_form:

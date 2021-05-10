@@ -2,6 +2,7 @@
 
 namespace Drupal\buddy\Form;
 
+use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Lock\NullLockBackend;
@@ -26,10 +27,12 @@ class ATEntryCreateForm extends FormBase {
   }
 
   protected function createForm($form){
+
+    Util::setTitle("Create new assistive technology entry");
     $form['title'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Title'),
-      '#description' => $this->t('Title must be at least 5 characters in length.'),
+      '#title' => $this->t('Name'),
+      '#description' => $this->t('The name or your assistive technology. Must be at least 5 characters in length.'),
       '#required' => TRUE,
     ];
 

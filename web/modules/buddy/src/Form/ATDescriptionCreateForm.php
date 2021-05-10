@@ -31,18 +31,19 @@ class ATDescriptionCreateForm extends FormBase
   protected function createForm(array $form, FormStateInterface $form_state,$atDescription=null){
     $form['description'] = [
       '#type' => 'item',
-      '#markup' => "<h2>".$this->t('Create AT Description')."</h2>",
+      '#markup' => "<h3>".$this->t('A localized description of your assistive technology.')."</h3>",
     ];
 
     $form['title'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Title'),
-      '#description' => $this->t('Title must be at least 5 characters in length.'),
+      '#title' => $this->t('Localized name'),
+      '#description' => $this->t('The localized name of your assistive technology'),
       '#required' => TRUE,
     ];
     if($atDescription){
       $form['title']['#default_value'] = $atDescription->getTitle();
     }
+
     $fields  = Util::getFormFieldsOfContentType("at_description",$form, $form_state,$atDescription);
     $form =  array_merge($form, $fields);
 

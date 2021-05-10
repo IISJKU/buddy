@@ -47,10 +47,29 @@
   clear: both;
 }
 
+
 .at_container_header a{
   float: right;
 }
 
 .type_edit_header,.type_delete_header{
   width: 20px;
+}
+
+.at_entry_menu{
+  text-align: right;
+  margin-bottom: 20px;
+  font-size: large;
+}
+.at_entry_menu i{
+  margin-left: 5px;
+}
+
+.sr-only {
+  position:absolute;
+  left:-10000px;
+  top:auto;
+  width:1px;
+  height:1px;
+  overflow:hidden;
 }

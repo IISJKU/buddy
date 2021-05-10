@@ -31,15 +31,15 @@ class ATDescriptionViewController extends ControllerBase
 
     $downloadLinkHTML = "";
     if(count($downloadLink)){
-      $downloadLinkHTML = "";
+      $downloadLinkHTML = '<strong>Download: </strong><a href="'.$downloadLink[0]["uri"].'" class="button button--primary">Download</a><br>';
     }
 
-    $html = '<div>'.$this->t("Language:").$language[0]['value'].'</div><div>'.$atDescription[0]['value'].'</div><div>'.$downloadLinkHTML.'</div>';
+    $html = '<div><strong>'.$this->t("Language").': </strong>'.$language[0]['value'].'</div><div><strong>Description:</strong><br>'.$atDescription[0]['value'].'</div><div>'.$downloadLinkHTML.'</div>';
 
 
-    $backLink = Link::createFromRoute($this->t('Back'),'buddy.at_entry_overview')->toString()->getGeneratedLink();
+    $backLink = Link::createFromRoute($this->t('Back'),'buddy.at_entry_overview',[],['attributes' => ['class' => 'button button--primary']])->toString()->getGeneratedLink();
 
-    $html.=$backLink;
+    $html.='<br>'.$backLink;
 
 
 
@@ -48,9 +48,9 @@ class ATDescriptionViewController extends ControllerBase
 
     $revisionLink = "";
     if ($description->getRevisionId() != $last_revision_id) {
-      $revisionLink = Link::createFromRoute($this->t('Edit revision'),'buddy.description_edit_form',['description' => $description->id()])->toString()->getGeneratedLink();
+      $revisionLink = Link::createFromRoute($this->t('Edit revision'),'buddy.description_edit_form',['description' => $description->id()],  ['attributes' => ['class' => 'button button--primary']])->toString()->getGeneratedLink();
     }else{
-      $revisionLink = Link::createFromRoute($this->t('Create new revision'),'buddy.description_edit_form',['description' => $description->id()])->toString()->getGeneratedLink();
+      $revisionLink = Link::createFromRoute($this->t('Create new revision'),'buddy.description_edit_form',['description' => $description->id()],  ['attributes' => ['class' => 'button button--primary']])->toString()->getGeneratedLink();
     }
 
     $html.=$revisionLink;

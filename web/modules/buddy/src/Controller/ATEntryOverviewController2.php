@@ -40,7 +40,7 @@ class ATEntryOverviewController2 extends ControllerBase
 
     }
 
-    $html = "";
+    $html = '<div class="at_entry_menu"> <a href="create-at-entry">'.$this->t("Add new assistive technology").'<i class="fa fa-plus" aria-hidden="true"></i> </a></div>';
     foreach ($atEntries as $atEntry) {
 
       $html .= $this->renderATEntry($atEntry, $atDescriptionsOfATEntries[$atEntry->id()], $atPlatformsOfATEntries[$atEntry->id()]);
@@ -66,8 +66,8 @@ class ATEntryOverviewController2 extends ControllerBase
     $html = '<div class="at_entry_container">
 <div class="at_entry_header">
 <h2>' . $atEntry->getTitle() . '</h2>
- <a href="delete-at-entry/' . $atEntry->id() . '"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
- <a href="edit-at-entry/' . $atEntry->id() . '"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+ <a href="delete-at-entry/' . $atEntry->id() . '" title="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i><span class="sr-only">Delete</span> </a>
+ <a href="edit-at-entry/' . $atEntry->id() . '" title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">Edit</span></a>
  </div>
 ';
 
@@ -83,14 +83,14 @@ class ATEntryOverviewController2 extends ControllerBase
     <div class="at_container_table">
               <table>
           <tr>
-              <th rowspan="2">Title</th>
-              <th rowspan="2">Language</th>
-              <th colspan="2">Status</th>
-              <th rowspan="2">Delete</th>
+              <th rowspan="2" scope="col">Title</th>
+              <th rowspan="2" scope="col">Language</th>
+              <th colspan="2" scope="colgroup">Status</th>
+              <th rowspan="2" scope="col">Delete</th>
           </tr>
           <tr>
-              <th>Published</th>
-              <th>Draft</th>
+              <th scope="col">Published</th>
+              <th scope="col">Draft</th>
           </tr>';
 
     foreach ($atDescriptions as $atDescription) {
@@ -117,7 +117,7 @@ class ATEntryOverviewController2 extends ControllerBase
                 <td>' . $lang[0]['value'] . '</td>
                 <td>'.$published.'</td>
                 <td><a href="edit-description/' . $atDescription->id() . '">' .$draftTitle . '</a></td>
-                <td><a href="delete-description/' . $atDescription->id() . '"><i class="fa fa-trash-o" aria-hidden="true"></i></a></td>
+                <td><a href="delete-description/' . $atDescription->id() . '" title="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i><span class="sr-only">Delete</span></a></td>
               </tr>';
 
     }
@@ -136,9 +136,9 @@ class ATEntryOverviewController2 extends ControllerBase
     </div>
     <div class="at_container_table">
         <table>
-            <tr><th>Type</th>
-            <th class="type_edit_header">Edit</th>
-            <th class="type_delete_header">Delete</th></tr>';
+            <tr><th scope="col">Type</th>
+            <th class="type_edit_header" scope="col">Edit</th>
+            <th class="type_delete_header" scope="col">Delete</th></tr>';
     foreach ($atTypes as $atType) {
       $html.="<tr>";
 
@@ -153,8 +153,8 @@ class ATEntryOverviewController2 extends ControllerBase
       }
 
 
-      $html.= '<td><a href="edit-type/' . $atType->id() . '"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>';
-      $html.= '<td><a href="delete-type/' . $atType->id() . '"><i class="fa fa-trash-o" aria-hidden="true"></i></a></td>';
+      $html.= '<td><a href="edit-type/' . $atType->id() . '" title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">Edit</span></a></td>';
+      $html.= '<td><a href="delete-type/' . $atType->id() . '" title="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i><span class="sr-only">Delete</span></a></td>';
       $html.="</tr>";
 
 
