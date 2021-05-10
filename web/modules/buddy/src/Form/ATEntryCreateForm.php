@@ -51,6 +51,20 @@ class ATEntryCreateForm extends FormBase {
 
     $atCategoryContainers = $storage->loadMultiple($atCategoryContainersIDs);
 
+    if (empty($atCategoryContainers)) {
+      $add_text = $this->t('There are no AT Containers yet. @add_link', [
+        '@add_link' => Link::createFromRoute(
+          $this->t('Add a new AT Container.'),
+          'node.add', ['node_type' => 'at_category_container'])
+          ->toString(),
+      ]);
+      $form['description'] = [
+        '#type' => 'item',
+        '#markup' => $add_text,
+      ];
+      return $form;
+    }
+
     $atCategoryIDs = $storage->getQuery()
       ->condition('type', 'at_category')
       ->condition('status', 1)
