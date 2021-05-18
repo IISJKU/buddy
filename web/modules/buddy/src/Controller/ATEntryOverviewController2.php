@@ -81,16 +81,13 @@ class ATEntryOverviewController2 extends ControllerBase
     </div>
 
     <div class="at_container_table">
-              <table>
-          <tr>
-              <th rowspan="2" scope="col">Title</th>
-              <th rowspan="2" scope="col">Language</th>
-              <th colspan="2" scope="colgroup">Status</th>
-              <th rowspan="2" scope="col">Delete</th>
-          </tr>
-          <tr>
-              <th scope="col">Published</th>
+              <table class="table table-hover table-responsive ">
+          <tr class="table-primary">
+              <th scope="col">Title</th>
+              <th scope="col">Language</th>
+               <th scope="col">Published</th>
               <th scope="col">Draft</th>
+              <th scope="col">Delete</th>
           </tr>';
 
     foreach ($atDescriptions as $atDescription) {
@@ -135,10 +132,12 @@ class ATEntryOverviewController2 extends ControllerBase
         <a href="create-type/' . $atEntry->id() . '">Add Type <i class="fa fa-plus" aria-hidden="true"></i></a>
     </div>
     <div class="at_container_table">
-        <table>
-            <tr><th scope="col">Type</th>
-            <th class="type_edit_header" scope="col">Edit</th>
-            <th class="type_delete_header" scope="col">Delete</th></tr>';
+        <table class="table table-hover table-responsive ">
+            <tr class="table-primary">
+              <th scope="col">Type</th>
+              <th class="type_edit_header" scope="col">Edit</th>
+              <th class="type_delete_header" scope="col">Delete</th>
+            </tr>';
     foreach ($atTypes as $atType) {
       $html.="<tr>";
 
