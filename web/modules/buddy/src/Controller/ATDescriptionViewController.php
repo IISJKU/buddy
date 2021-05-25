@@ -6,6 +6,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\image\Entity\ImageStyle;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 
@@ -26,6 +27,10 @@ class ATDescriptionViewController extends ControllerBase
     $atDescription = $description->field_at_description->getValue();
 
 
+    $image = $description->field_at_description_at_image->getValue();
+    $styled_image_url = ImageStyle::load('medium')->buildUrl($description->field_at_description_at_image->entity->getFileUri());
+
+
 
     $downloadLink = $description->field_at_description_download->getValue();
 
@@ -34,10 +39,13 @@ class ATDescriptionViewController extends ControllerBase
       $downloadLinkHTML = '<strong>Download: </strong><a href="'.$downloadLink[0]["uri"].'" class="button button--primary">Download</a><br>';
     }
 
-    $html = '<div><strong>'.$this->t("Language").': </strong>'.$language[0]['value'].'</div><div><strong>Description:</strong><br>'.$atDescription[0]['value'].'</div><div>'.$downloadLinkHTML.'</div>';
+    $html = '<div><strong>'.$this->t("Language").': </strong>'.$language[0]['value'].'</div>
+<div><strong>Description:</strong><br>'.$atDescription[0]['value'].'</div>
+<div><img src="'.$styled_image_url.'" alt="Preview image"></div>
+<div>'.$downloadLinkHTML.'</div>';
 
 
-    $backLink = Link::createFromRoute($this->t('Back'),'buddy.at_entry_overview',[],['attributes' => ['class' => 'button button--primary']])->toString()->getGeneratedLink();
+    $backLink = Link::createFromRoute($this->t('Back'),'buddy.at_entry_overview',[],['attributes' => ['class' => 'btn btn-primary overview-button']])->toString()->getGeneratedLink();
 
     $html.='<br>'.$backLink;
 
@@ -48,9 +56,9 @@ class ATDescriptionViewController extends ControllerBase
 
     $revisionLink = "";
     if ($description->getRevisionId() != $last_revision_id) {
-      $revisionLink = Link::createFromRoute($this->t('Edit revision'),'buddy.description_edit_form',['description' => $description->id()],  ['attributes' => ['class' => 'button button--primary']])->toString()->getGeneratedLink();
+      $revisionLink = Link::createFromRoute($this->t('Edit revision'),'buddy.description_edit_form',['description' => $description->id()],  ['attributes' => ['class' => 'btn btn-primary overview-button']])->toString()->getGeneratedLink();
     }else{
-      $revisionLink = Link::createFromRoute($this->t('Create new revision'),'buddy.description_edit_form',['description' => $description->id()],  ['attributes' => ['class' => 'button button--primary']])->toString()->getGeneratedLink();
+      $revisionLink = Link::createFromRoute($this->t('Create new revision'),'buddy.description_edit_form',['description' => $description->id()],  ['attributes' => ['class' => 'btn btn-primary overview-button']])->toString()->getGeneratedLink();
     }
 
     $html.=$revisionLink;

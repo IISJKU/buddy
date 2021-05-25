@@ -74,7 +74,18 @@ class ATDescriptionCreateForm extends FormBase
     ];
     foreach ($values as $fieldName => $value) {
       if (str_starts_with($fieldName, "field_")) {
-        $nodeDef[$fieldName] = $values[$fieldName];
+
+        if($fieldName === "field_at_description_at_image"){
+
+          $nodeDef[$fieldName] = [
+            'target_id' => $values[$fieldName][0]['fids'][0],
+            'alt' =>  $values[$fieldName][0]['alt'],
+            'title' => $values[$fieldName][0]['title'],
+          ];
+        }else{
+          $nodeDef[$fieldName] = $values[$fieldName];
+        }
+
       }
     }
 

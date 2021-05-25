@@ -40,10 +40,13 @@ class ATEntryOverviewController2 extends ControllerBase
 
     }
 
-    $html = '<div class="at_entry_menu"> <a href="create-at-entry">'.$this->t("Add new assistive technology").'<i class="fa fa-plus" aria-hidden="true"></i> </a></div>';
+    $html = '<div class="at_entry_header_menu">
+        <a href="create-at-entry">'.$this->t("Add new assistive technology").'
+                    <i class="fa fa-plus" aria-hidden="true"></i> </a>
+             </div>';
     foreach ($atEntries as $atEntry) {
 
-      $html .= $this->renderATEntry($atEntry, $atDescriptionsOfATEntries[$atEntry->id()], $atPlatformsOfATEntries[$atEntry->id()]);
+        $html .= $this->renderATEntry($atEntry, $atDescriptionsOfATEntries[$atEntry->id()], $atPlatformsOfATEntries[$atEntry->id()]);
     }
 
     $build = array(
@@ -66,8 +69,11 @@ class ATEntryOverviewController2 extends ControllerBase
     $html = '<div class="at_entry_container">
 <div class="at_entry_header">
 <h2>' . $atEntry->getTitle() . '</h2>
+<div class="at_entry_menu">
  <a href="delete-at-entry/' . $atEntry->id() . '" title="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i><span class="sr-only">Delete</span> </a>
  <a href="edit-at-entry/' . $atEntry->id() . '" title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">Edit</span></a>
+
+</div>
  </div>
 ';
 
@@ -77,12 +83,12 @@ class ATEntryOverviewController2 extends ControllerBase
     <div class="at_entry_descriptions">
         <div class="at_container_header">
             <h3>Descriptions</h3>
-            <a href="create-description/' . $atEntry->id() . '">Add Description<i class="fa fa-plus" aria-hidden="true"></i> </a>
+            <a href="create-description/' . $atEntry->id() . '">Add Description <i class="fa fa-plus" aria-hidden="true"></i> </a>
     </div>
 
     <div class="at_container_table">
               <table class="table table-hover table-responsive ">
-          <tr class="table-primary">
+          <tr>
               <th scope="col">Title</th>
               <th scope="col">Language</th>
                <th scope="col">Published</th>
@@ -133,7 +139,7 @@ class ATEntryOverviewController2 extends ControllerBase
     </div>
     <div class="at_container_table">
         <table class="table table-hover table-responsive ">
-            <tr class="table-primary">
+            <tr>
               <th scope="col">Type</th>
               <th class="type_edit_header" scope="col">Edit</th>
               <th class="type_delete_header" scope="col">Delete</th>
@@ -164,7 +170,7 @@ class ATEntryOverviewController2 extends ControllerBase
     </div>
 
 </div>
-</div></div>';
+</div>';
 
     return $html;
 
