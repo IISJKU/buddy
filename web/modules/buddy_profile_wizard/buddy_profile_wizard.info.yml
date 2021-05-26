@@ -1,0 +1,10 @@
+name: Buddy Profile Wizard
+type: module
+description: Profile Wizard
+package: Buddy
+core_version_requirement: ^9
+dependencies:
+  - buddy:buddy
+
+# Information added by Drupal.org packaging script on 2020-11-18
+version: '1.0'

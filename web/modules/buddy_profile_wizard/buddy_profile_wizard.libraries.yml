@@ -1,0 +1,7 @@
+buddy_profile_wizard:
+  version: 1.x
+  js:
+    js/phaser.js: {}
+    js/wizard.js: {}
+  dependencies:
+    - core/jquery

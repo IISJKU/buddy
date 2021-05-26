@@ -1,0 +1,10 @@
+buddy_profile_wizard.profile_wizard:
+  path: '/profile_wizard'
+  defaults:
+    _form: '\Drupal\buddy_profile_wizard\Form\ProfileWizardForm'
+    _title: 'Create Profile'
+  requirements:
+    _permission: 'access content'
+    _custom_access:  '\Drupal\buddy_profile_wizard\Controller\ProfileWizardController::access'
+  options:
+    no_cache: 'TRUE'
