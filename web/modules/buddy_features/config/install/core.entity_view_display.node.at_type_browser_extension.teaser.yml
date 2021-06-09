@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.at_type_browser_extension.field_type_browser
+    - field.field.node.at_type_browser_extension.field_type_license
+    - field.field.node.at_type_browser_extension.field_type_price
+    - node.type.at_type_browser_extension
+  module:
+    - user
+id: node.at_type_browser_extension.teaser
+targetEntityType: node
+bundle: at_type_browser_extension
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_type_browser: true
+  field_type_license: true
+  field_type_price: true

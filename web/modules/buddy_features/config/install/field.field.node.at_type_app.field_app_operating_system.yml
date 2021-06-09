@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_app_operating_system
+    - node.type.at_type_app
+  module:
+    - options
+id: node.at_type_app.field_app_operating_system
+field_name: field_app_operating_system
+entity_type: node
+bundle: at_type_app
+label: 'Operating System'
+description: 'Supported operating systems'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

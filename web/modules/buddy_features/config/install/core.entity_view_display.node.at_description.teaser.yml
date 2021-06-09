@@ -1,0 +1,32 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.at_description.field_at_description
+    - field.field.node.at_description.field_at_description_at_image
+    - field.field.node.at_description.field_at_description_download
+    - field.field.node.at_description.field_at_description_language
+    - node.type.at_description
+  module:
+    - user
+id: node.at_description.teaser
+targetEntityType: node
+bundle: at_description
+mode: teaser
+content:
+  content_moderation_control:
+    weight: -20
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_at_description: true
+  field_at_description_at_image: true
+  field_at_description_download: true
+  field_at_description_language: true

@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.at_entry.field_at_categories
+    - field.field.node.at_entry.field_at_descriptions
+    - field.field.node.at_entry.field_at_types
+    - node.type.at_entry
+  module:
+    - user
+id: node.at_entry.teaser
+targetEntityType: node
+bundle: at_entry
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_at_categories: true
+  field_at_descriptions: true
+  field_at_types: true

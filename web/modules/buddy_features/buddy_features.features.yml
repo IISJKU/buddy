@@ -1,0 +1,13 @@
+excluded:
+  - core.entity_form_display.node.article.default
+  - core.entity_view_display.node.article.default
+  - core.entity_view_display.node.article.rss
+  - core.entity_view_display.node.article.teaser
+  - field.field.node.article.field_image
+  - field.field.node.article.field_tags
+  - field.storage.node.field_image
+  - field.storage.node.field_tags
+  - user.role.administrator
+  - taxonomy.vocabulary.tags
+  - workflows.workflow.editorial
+required: true

@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_at_description_download
+    - node.type.at_description
+  module:
+    - link
+id: node.at_description.field_at_description_download
+field_name: field_at_description_download
+entity_type: node
+bundle: at_description
+label: 'Download Link'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 17
+  title: 1
+field_type: link

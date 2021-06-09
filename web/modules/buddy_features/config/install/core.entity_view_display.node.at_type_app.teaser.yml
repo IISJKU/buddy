@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.at_type_app.field_app_operating_system
+    - field.field.node.at_type_app.field_type_license
+    - field.field.node.at_type_app.field_type_price
+    - node.type.at_type_app
+  module:
+    - user
+id: node.at_type_app.teaser
+targetEntityType: node
+bundle: at_type_app
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_app_operating_system: true
+  field_type_license: true
+  field_type_price: true

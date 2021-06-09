@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_type_license
+    - node.type.at_type_app
+  module:
+    - options
+id: node.at_type_app.field_type_license
+field_name: field_type_license
+entity_type: node
+bundle: at_type_app
+label: License
+description: 'License of the app'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

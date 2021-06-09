@@ -1,0 +1,24 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_category_weight
+    - node.type.at_category
+id: node.at_category.field_category_weight
+field_name: field_category_weight
+entity_type: node
+bundle: at_category
+label: 'Category Weight'
+description: 'The lower the weight the higher the category in the category container'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_type_desk_operating_system
+    - node.type.at_type_software
+  module:
+    - options
+id: node.at_type_software.field_type_desk_operating_system
+field_name: field_type_desk_operating_system
+entity_type: node
+bundle: at_type_software
+label: 'Operating System'
+description: 'The operating systems that the assistive technology supports.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

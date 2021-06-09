@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.at_type_software.field_type_desk_operating_system
+    - field.field.node.at_type_software.field_type_license
+    - field.field.node.at_type_software.field_type_price
+    - field.field.node.at_type_software.field_type_support
+    - node.type.at_type_software
+  module:
+    - user
+id: node.at_type_software.teaser
+targetEntityType: node
+bundle: at_type_software
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_type_desk_operating_system: true
+  field_type_license: true
+  field_type_price: true
+  field_type_support: true

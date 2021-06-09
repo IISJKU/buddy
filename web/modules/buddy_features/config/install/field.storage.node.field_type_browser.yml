@@ -1,0 +1,35 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_type_browser
+field_name: field_type_browser
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: chrome
+      label: Chrome
+    -
+      value: firefox
+      label: Firefox
+    -
+      value: edge
+      label: Edge
+    -
+      value: safari
+      label: Safari
+    -
+      value: opera
+      label: Opera
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,45 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.at_entry.field_at_categories
+    - field.field.node.at_entry.field_at_descriptions
+    - field.field.node.at_entry.field_at_types
+    - node.type.at_entry
+  module:
+    - user
+id: node.at_entry.default
+targetEntityType: node
+bundle: at_entry
+mode: default
+content:
+  field_at_categories:
+    weight: 101
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_at_descriptions:
+    weight: 102
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_at_types:
+    weight: 103
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden: {  }

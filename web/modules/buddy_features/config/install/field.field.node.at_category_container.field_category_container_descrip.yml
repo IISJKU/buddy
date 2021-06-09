@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_category_container_descrip
+    - node.type.at_category_container
+  module:
+    - text
+id: node.at_category_container.field_category_container_descrip
+field_name: field_category_container_descrip
+entity_type: node
+bundle: at_category_container
+label: 'Category Container Description'
+description: 'The description of the category container.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

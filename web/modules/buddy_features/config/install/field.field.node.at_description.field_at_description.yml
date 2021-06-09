@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_at_description
+    - node.type.at_description
+  module:
+    - text
+id: node.at_description.field_at_description
+field_name: field_at_description
+entity_type: node
+bundle: at_description
+label: 'AT Description'
+description: 'The localized description for the AT'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

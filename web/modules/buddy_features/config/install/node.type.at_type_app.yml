@@ -1,0 +1,16 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: 'AT Type App'
+type: at_type_app
+description: 'An AT application for mobile devices'
+help: ''
+new_revision: false
+preview_mode: 1
+display_submitted: false

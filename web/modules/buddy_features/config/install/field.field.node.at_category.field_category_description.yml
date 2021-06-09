@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_category_description
+    - node.type.at_category
+id: node.at_category.field_category_description
+field_name: field_category_description
+entity_type: node
+bundle: at_category
+label: 'Category Description'
+description: 'Description of the category'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

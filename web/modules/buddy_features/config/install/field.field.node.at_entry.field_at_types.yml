@@ -1,0 +1,32 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_at_types
+    - node.type.at_entry
+    - node.type.at_type_app
+    - node.type.at_type_browser_extension
+    - node.type.at_type_software
+id: node.at_entry.field_at_types
+field_name: field_at_types
+entity_type: node
+bundle: at_entry
+label: 'AT Types'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      at_type_app: at_type_app
+      at_type_browser_extension: at_type_browser_extension
+      at_type_software: at_type_software
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: at_type_app
+field_type: entity_reference

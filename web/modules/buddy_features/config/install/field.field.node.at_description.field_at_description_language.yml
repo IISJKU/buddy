@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_at_description_language
+    - node.type.at_description
+  module:
+    - options
+id: node.at_description.field_at_description_language
+field_name: field_at_description_language
+entity_type: node
+bundle: at_description
+label: 'AT Description Language'
+description: 'Language of the description'
+required: true
+translatable: false
+default_value:
+  -
+    value: en
+default_value_callback: ''
+settings: {  }
+field_type: list_string
