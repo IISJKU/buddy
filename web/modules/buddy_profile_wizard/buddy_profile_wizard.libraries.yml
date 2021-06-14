@@ -2,6 +2,8 @@ buddy_profile_wizard:
   version: 1.x
   js:
     js/phaser.js: {}
+    js/math-game.js: {}
+    js/memory-game.js: {}
     js/wizard.js: {}
   dependencies:
     - core/jquery
