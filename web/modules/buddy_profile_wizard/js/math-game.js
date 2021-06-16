@@ -69,10 +69,11 @@ class MathGame extends Phaser.Scene {
       }).setOrigin(0.5);
     this.startText.setAlpha(0);
 
-    this.startText.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.text.width, this.text.height), Phaser.Geom.Rectangle.Contains);
+    this.startText.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.startText.width, this.startText.height), Phaser.Geom.Rectangle.Contains);
 
     let mathGame = this;
     this.startText.on("pointerdown", function (pointer) {
+      console.log("AAA");
       mathGame.startText.destroy();
       mathGame.text.destroy();
       mathGame.startGame();
