@@ -47,3 +47,26 @@ table th:last-child,table td:last-child{
   margin-right: 20px;
   margin-bottom: 20px;
 }
+
+#block-dropdownlanguage {
+  max-width: 200px;
+}
+
+#block-dropdownlanguage .dropbutton-wrapper {
+  color: black !important;
+}
+
+#block-dropdownlanguage .fieldset-legend {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+#block-dropdownlanguage fieldset {
+  margin-top: 0;
+}
+
+@media (min-width: 992px) {
+  #block-dropdownlanguage fieldset {
+    margin-left: 8px;
+  }
+}

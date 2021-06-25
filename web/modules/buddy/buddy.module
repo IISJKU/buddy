@@ -6,3 +6,18 @@ function buddy_form_alter(&$form, FormStateInterface $form_state, $form_id)
 {
 
 }
+
+/**
+ * Implement hook_entity_load
+ * Check for translations of AT descriptions and notify users
+ * @param array $entities
+ * @param $entity_type_id
+ */
+function buddy_entity_load(array $entities, $entity_type_id) {
+  if ($entity_type_id == 'node' && count($entities) == 1) {
+    $node = array_values($entities)[0];
+    if ($node->getType() == 'at_description') {
+      // TODO: check for translation
+    }
+  }
+}
