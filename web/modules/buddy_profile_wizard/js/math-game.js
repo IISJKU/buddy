@@ -148,7 +148,6 @@ class MathGame extends Phaser.Scene {
   nextStep() {
 
 
-    console.log("HH");
     if (this.steps.length > 0) {
 
       if (this.steps[0].operation === 0) {
@@ -207,8 +206,6 @@ class MathGame extends Phaser.Scene {
         tween.addListener("complete", function (tween, targets) {
 
           mathGame.drumloop.stop();
-          console.log("COMPLETE");
-          console.log(delay);
           mathGame.time.addEvent({
             delay: delay,
             callback: function () {
@@ -301,7 +298,6 @@ class MathGame extends Phaser.Scene {
 
     answers = this.shuffle(answers);
 
-    console.log(answers);
 
     let answerButtons = [];
     for(let i=0; i < answers.length; i++){
