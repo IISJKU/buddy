@@ -13,7 +13,7 @@ var config = {
     }
   },
   backgroundColor: '#2d2d2d',
-  scene: [ MathGame, MemoryGame ]
+  scene: [Intro, MathGame, MemoryGame ]
 
   /*scene: {
     preload: preload,
