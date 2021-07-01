@@ -1,3 +1,10 @@
+buddy.user_entry_point:
+  path: '/user-entry'
+  defaults:
+    _form: '\Drupal\buddy\Form\UserEntryPoint'
+    _title: 'Log in or register'
+  requirements:
+    _permission: 'access content'
 buddy.at_entry_overview:
   path: '/my-at-entries'
   defaults:
