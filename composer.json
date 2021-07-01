@@ -21,7 +21,8 @@
         "drupal/core-project-message": "^9.1",
         "drupal/core-recommended": "^9.1",
         "drupal/devel": "^4.1",
-        "drupal/features": "^3.12"
+        "drupal/features": "^3.12",
+        "drupal/theme_switcher": "^1.2"
     },
     "conflict": {
         "drupal/drupal": "*"
