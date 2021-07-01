@@ -17,7 +17,7 @@ class ATBackendOverviewController extends ControllerBase
   public function content() {
     return [
       '#type' => 'markup',
-      '#markup' => $this->t('Hello, World!'),
+      '#markup' => $this->t('Welcome to Buddy Backend!'),
     ];
   }
 }
