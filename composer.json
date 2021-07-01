@@ -22,6 +22,7 @@
         "drupal/core-recommended": "^9.1",
         "drupal/devel": "^4.1",
         "drupal/features": "^3.12",
+        "drupal/phpmailer_smtp": "^2.0",
         "drupal/theme_switcher": "^1.2"
     },
     "conflict": {
