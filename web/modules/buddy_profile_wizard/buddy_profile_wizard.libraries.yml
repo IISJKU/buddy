@@ -1,8 +1,11 @@
 buddy_profile_wizard:
   version: 1.x
   js:
+    js/translation/string-factory.js: {}
     js/phaser.js: {}
-    js/util/TextButton.js: {}
+    js/util/data-structures.js: {}
+    js/util/elements.js: {}
+    js/util/scenes.js: {}
     js/intro.js: {}
     js/math-game.js: {}
     js/memory-game.js: {}

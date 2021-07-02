@@ -1,7 +1,7 @@
 var config = {
   type: Phaser.AUTO,
   scale: {
-    _mode: Phaser.Scale.WIDTH_CONTROLS_HEIGHT,
+    mode: Phaser.Scale.WIDTH_CONTROLS_HEIGHT,
     parent: 'phaser-container',
     width: 800,
     height: 600
@@ -20,5 +20,6 @@ var config = {
     create: create
   }*/
 };
+
 
 var game = new Phaser.Game(config);

@@ -1,4 +1,4 @@
-class Intro extends Phaser.Scene {
+class Intro extends GameScene {
 
   constructor ()
   {
@@ -6,43 +6,32 @@ class Intro extends Phaser.Scene {
   }
 
   preload() {
-    this.load.plugin('rexglowfilterpipelineplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexglowfilterpipelineplugin.min.js', true);
-    this.load.plugin('rexinversepipelineplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexinversepipelineplugin.min.js', true);
-    this.cameras.main.backgroundColor = Phaser.Display.Color.HexStringToColor("#3498db");
-    this.load.image('yesIcon', 'modules/buddy_profile_wizard/assets/img/util/NoIcon.png');
-    this.load.image('noIcon', 'modules/buddy_profile_wizard/assets/img/util/YesIcon.png');
-    this.load.image('textToSpeech', 'modules/buddy_profile_wizard/assets/img/util/TextToSpeech.png');
-    this.load.audio('no', 'modules/buddy_profile_wizard/assets/sounds/no.wav');
+
+    super.preload();
   }
 
 
   create ()
   {
+
+    this.createTitle(stringFactory.getString("intro_title"));
+
     this.coolSound = this.sound.add('no');
 
 
+    this.startButton = new IconButton(this,stringFactory.getString("intro_start_game"),this.cameras.main.centerX, 300,"yesIcon",function (){
+      game.scene.stop("Intro");
+      game.scene.start("MathGame");
+    });
+    this.startButton.init();
+    this.add.existing(this.startButton);
+
     /*
-    this.add.text(
-      640,
-      360,
-      "Hello World",
-      {
-        fontSize: 50,
-        color: "#000000",
-        fontStyle: "bold"
-      }
-    ).setOrigin(0.5);
 
-    this.clickCount = 0;
-    this.clickCountText = this.add.text(100, 200, '');
-
-    this.clickButton = new TextButton(this, 100, 100, 'Click me!', () => this.updateClickCountText());
-    this.add.existing(this.clickButton);
-
-    */
-
+    let test = this;
     this.test = new TextButton(this,"test \n test",400 ,100,function (){
       console.log("OARSCH");
+      test.scale.startFullscreen();
     });
     this.test.init();
     this.add.existing(this.test);
@@ -56,12 +45,13 @@ class Intro extends Phaser.Scene {
 
 
     this.test3 = new TextToSpeechButton(this,"test test",400 ,300,this.coolSound,function (){
-      console.log("OARSCH2");
+      game.scene.stop("Intro");
+      game.scene.start("MathGame");
     });
     this.test3.init();
     this.add.existing(this.test3);
 
-    //this.background = this.add.rectangle(11, 11, 20 , 20, 0xffffff);
+    */
 
   }
 
