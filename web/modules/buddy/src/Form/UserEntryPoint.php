@@ -7,8 +7,6 @@ use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\Url;
 
 /**
@@ -31,7 +29,7 @@ class UserEntryPoint extends FormBase {
     return $form;
   }
 
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state): array {
 
     $form['#tree'] = TRUE;
     $form['description'] = [
@@ -89,7 +87,7 @@ class UserEntryPoint extends FormBase {
           '#title' => $this
             ->t('Choose how to log in:'),
           '#default_value' => $form_state->hasValue([$step, 'login_method']) ?
-            $form_state->getValue([$step, 'login_method']) : '',
+            $form_state->getValue([$step, 'login_method']) : 'local',
           '#options' => array(
             'federated' => $this
               ->t('Log in with Facebook or Google.'),
@@ -120,20 +118,37 @@ class UserEntryPoint extends FormBase {
         break;
 
       case UserEntryWizardStep::FederalizedOptions:
+
         $limit_validation_errors = [['step'],
-          ['step' . UserEntryWizardStep::LoginOrRegister]];
+          ['step' . UserEntryWizardStep::LoginOrRegister],
+          ['step'. UserEntryWizardStep::RegisterProvider],
+        ];
 
-        $block_manager = \Drupal::service('plugin.manager.block');
-        $plugin_block = $block_manager->createInstance('block-socialauthlogin', []);
-        // TODO
+        $html = '<div id="user-entry-social-auth" class="social-auth-container">';
 
+        // Facebook button
+        $html .= '<div class="auth-option">';
+        $html .= '<a class="social-auth auth-link" href="/user/login/facebook">';
+        $html .= '<img class="social-auth auth-icon" ';
+        $html .= 'src="modules/buddy/img/social/facebook_logo.svg" ';
+        $html .= $this->t('alt="Authenticate through Facebook">');
+        $html .= '</a></div>';
+        // Google button
+        $html .= '<div class="auth-option">';
+        $html .= '<a class="social-auth auth-link" href="/user/login/google">';
+        $html .= '<img class="social-auth auth-icon" ';
+        $html .= 'src="modules/buddy/img/social/google_logo.svg" ';
+        $html .= $this->t('alt="Authenticate through Google">');
+        $html .= '</a></div>';
+
+        $html .= '</div>';
+
+        $form[$step]['federalized_buttons'] = [
+          '#type' => 'markup',
+          '#title' => t('Choose a Login provider:'),
+          '#markup' => $html,
+        ];
         break;
-      case UserEntryWizardStep::LoginForm:
-        $login_form = \Drupal::formBuilder()->getForm('Drupal\user\Form\UserLoginForm');
-        $form = \Drupal::formBuilder()->getForm('Drupal\user\Form\UserLoginForm');
-        return $form;
-        break;
-
 
       default:
         $limit_validation_errors = [];
@@ -166,19 +181,6 @@ class UserEntryPoint extends FormBase {
         ],
       ];
     }
-    if ($form['step']['#value'] == UserEntryWizardStep::LoginForm) {
-      $form['actions']['submit'] = [
-        '#type' => 'submit',
-        '#value' => $this->t("Log in"),
-        '#submit' => ['::loginSubmit'],
-      ];
-    } else if ($form['step']['#value'] == UserEntryWizardStep::RegisterForm) {
-      $form['actions']['submit'] = [
-        '#type' => 'submit',
-        '#value' => $this->t("Submit and Register"),
-      ];
-    }
-
 
     $form['#prefix'] = '<div id="user-entry-form-wrapper">';
     $form['#suffix'] = '</div>';
@@ -290,9 +292,7 @@ class UserEntryPoint extends FormBase {
    *   Form API form.
    */
   public function prompt(array $form, FormStateInterface $form_state) {
-
     $step_no = $form_state->getValue('step');
-
     switch ($step_no) {
       case UserEntryWizardStep::LoginForm:
         $response = new AjaxResponse();
@@ -301,7 +301,6 @@ class UserEntryPoint extends FormBase {
         $response->addCommand($command);
         return $response;
     }
-
     return $form;
   }
 
