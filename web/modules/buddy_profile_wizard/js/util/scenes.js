@@ -9,6 +9,10 @@ class GameScene extends Phaser.Scene {
     this.cameras.main.backgroundColor = Phaser.Display.Color.HexStringToColor("#3498db");
     this.load.image('yesIcon', 'modules/buddy_profile_wizard/assets/img/util/NoIcon.png');
     this.load.image('noIcon', 'modules/buddy_profile_wizard/assets/img/util/YesIcon.png');
+    this.load.image('retryIcon', 'modules/buddy_profile_wizard/assets/img/util/RetryIcon.png');
+    this.load.image('playIcon', 'modules/buddy_profile_wizard/assets/img/util/PlayIcon.png');
+    this.load.image('ffIcon', 'modules/buddy_profile_wizard/assets/img/util/FastForwardIcon.png');
+    this.load.image('fbIcon', 'modules/buddy_profile_wizard/assets/img/util/FastBackIcon.png');
     this.load.image('textToSpeech', 'modules/buddy_profile_wizard/assets/img/util/TextToSpeech.png');
     this.load.audio('no', 'modules/buddy_profile_wizard/assets/sounds/no.wav');
   }
