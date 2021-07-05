@@ -191,26 +191,7 @@ class UserEntryPoint extends FormBase {
 
   }
 
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    // TODO: Implement submitForm() method.
-  }
-
-  /**
-   * User login submit.
-   *
-   * @param array $form
-   *   The Form API form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The FormState object.
-   *
-   * @return array
-   *   The Form API form.
-   */
-  public function loginSubmit(array $form, FormStateInterface $form_state): array {
-    // TODO: Implement loginSubmit() method.
-    $i = 0;
-    return $form;
-  }
+  public function submitForm(array &$form, FormStateInterface $form_state) {}
 
   /**
    * Ajax callback that moves the form to the previous step.
