@@ -14,9 +14,9 @@ class Intro extends GameScene {
   create ()
   {
 
-    this.createTitle(stringFactory.getString("intro_title"));
-
     this.coolSound = this.sound.add('no');
+
+    this.createTitle(stringFactory.getString("intro_title"));
 
 
     this.startButton = new IconButton(this,stringFactory.getString("intro_start_game"),this.cameras.main.centerX, 300,"playIcon",function (){
@@ -25,6 +25,7 @@ class Intro extends GameScene {
     });
     this.startButton.init();
     this.add.existing(this.startButton);
+
 
     /*
 

@@ -8,6 +8,7 @@ class TextButton extends Phaser.GameObjects.Container {
     this.textOutline = 20;
     this.backgroundStrokeWidth = 6;
 
+
     if (!labelStyle) {
       this.labelStyle = {
         fontFamily: 'Arial Black',
@@ -73,6 +74,7 @@ class TextButton extends Phaser.GameObjects.Container {
     this.background.setFillStyle('#0ff');
   }
 
+
 }
 
 
@@ -80,6 +82,8 @@ class IconButton extends TextButton {
   constructor(scene, text, x, y, icon, callback, style) {
     super(scene, text, x, y, callback, style);
     this.icon = icon;
+
+    console.log("NEW BUTTON!!!");
 
   }
 

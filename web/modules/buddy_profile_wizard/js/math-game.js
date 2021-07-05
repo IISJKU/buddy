@@ -1,4 +1,4 @@
-class MathGame extends Phaser.Scene {
+class MathGame extends GameScene {
 
   constructor() {
     super('MathGame');
@@ -47,16 +47,19 @@ class MathGame extends Phaser.Scene {
   }
 
   setupGame(){
-    this.text = this.add.text(
-      this.cameras.main.centerX,
-      50,
-      "Count the people in the house",
-      {
-        fontSize: 30,
-        color: "#000000",
-        fontStyle: "bold"
-      }).setOrigin(0.5);
 
+
+    this.createTitle(stringFactory.getString("math_game_title_1"));
+    let mathGame = this;
+    this.startButton = new IconButton(this,stringFactory.getString("math_game_start"),this.cameras.main.centerX, 300,"playIcon",function (){
+      mathGame.titleText.destroy();
+      mathGame.startButton.destroy();
+      mathGame.startGame();
+    });
+    this.startButton.init();
+    this.add.existing(this.startButton);
+
+    /*
 
     this.startText = this.add.text(
       this.cameras.main.centerX,
@@ -89,6 +92,7 @@ class MathGame extends Phaser.Scene {
       }
     });
 
+    */
 
   }
 
@@ -336,8 +340,10 @@ class MathGame extends Phaser.Scene {
             answerButtons[k].destroy();
             mathGame.text.destroy();
             mathGame.houseSprite.destroy();
-            mathGame.setupGame();
+
           }
+
+          mathGame.setupGame();
 
         }else{
           mathGame.noSound.play();
