@@ -89,10 +89,10 @@ class UserEntryPoint extends FormBase {
           '#default_value' => $form_state->hasValue([$step, 'login_method']) ?
             $form_state->getValue([$step, 'login_method']) : 'local',
           '#options' => array(
-            'federated' => $this
-              ->t('Log in with Facebook or Google.'),
             'local' => $this
               ->t('Log in with Buddy account.'),
+            'federated' => $this
+              ->t('Log in with Facebook or Google.'),
           ),
           '#required' => TRUE,
         );
@@ -106,22 +106,23 @@ class UserEntryPoint extends FormBase {
           '#title' => $this
             ->t('Choose how to register:'),
           '#default_value' => $form_state->hasValue([$step, 'register_method']) ?
-            $form_state->getValue([$step, 'register_method']) : '',
+            $form_state->getValue([$step, 'register_method']) : 'local',
           '#options' => array(
-            'federated' => $this
-              ->t('Register with an existing Facebook or Google account.'),
             'local' => $this
               ->t('Create a new Buddy account.'),
+            'federated' => $this
+              ->t('Register with an existing Facebook or Google account.'),
           ),
           '#required' => TRUE,
         );
         break;
 
-      case UserEntryWizardStep::FederalizedOptions:
-
+      case UserEntryWizardStep::FederalizedOptionsRegister:
+      case UserEntryWizardStep::FederalizedOptionsLogin:
         $limit_validation_errors = [['step'],
           ['step' . UserEntryWizardStep::LoginOrRegister],
           ['step'. UserEntryWizardStep::RegisterProvider],
+          ['step'. UserEntryWizardStep::LoginProvider],
         ];
 
         $html = '<div id="user-entry-social-auth" class="social-auth-container">';
@@ -130,16 +131,16 @@ class UserEntryPoint extends FormBase {
         $html .= '<div class="auth-option">';
         $html .= '<a class="social-auth auth-link" href="/user/login/facebook">';
         $html .= '<img class="social-auth auth-icon" ';
-        $html .= 'src="modules/buddy/img/social/facebook_logo.svg" ';
-        $html .= $this->t('alt="Authenticate through Facebook">');
-        $html .= '</a></div>';
+        $html .= 'src="modules/buddy/img/social/facebook_logo.svg" alt="';
+        $html .= $this->t('Authenticate through Facebook');
+        $html .= '"></a></div>';
         // Google button
         $html .= '<div class="auth-option">';
         $html .= '<a class="social-auth auth-link" href="/user/login/google">';
         $html .= '<img class="social-auth auth-icon" ';
-        $html .= 'src="modules/buddy/img/social/google_logo.svg" ';
-        $html .= $this->t('alt="Authenticate through Google">');
-        $html .= '</a></div>';
+        $html .= 'src="modules/buddy/img/social/google_logo.svg" alt="';
+        $html .= $this->t('Authenticate through Google');
+        $html .= '"></a></div>';
 
         $html .= '</div>';
 
@@ -167,7 +168,8 @@ class UserEntryPoint extends FormBase {
         ],
       ];
     }
-    if ($form['step']['#value'] != UserEntryWizardStep::FederalizedOptions &&
+    if ($form['step']['#value'] != UserEntryWizardStep::FederalizedOptionsLogin &&
+      $form['step']['#value'] != UserEntryWizardStep::FederalizedOptionsRegister &&
       $form['step']['#value'] != UserEntryWizardStep::LoginForm &&
       $form['step']['#value'] != UserEntryWizardStep::RegisterForm) {
       $form['actions']['next'] = [
@@ -222,18 +224,22 @@ class UserEntryPoint extends FormBase {
    *   The Form API form.
    */
   public function prevSubmit(array $form, FormStateInterface $form_state): array {
-
     $step_no = $form_state->getValue('step');
-    $step = 'step' . $step_no;
-
-
     switch ($step_no) {
+      case UserEntryWizardStep::FederalizedOptionsRegister:
+      case UserEntryWizardStep::RegisterForm:
+        $form_state->setValue('step', UserEntryWizardStep::RegisterProvider);
+        break;
+      case UserEntryWizardStep::FederalizedOptionsLogin:
+      case UserEntryWizardStep::LoginForm:
+        $form_state->setValue('step', UserEntryWizardStep::LoginProvider);
+        break;
       default:
         $form_state->setValue('step', UserEntryWizardStep::LoginOrRegister);
         break;
     }
-
-    $form_state->setValue('step_local', $form_state->getValue('step_local') - 1);
+    $form_state->setValue('step_local', $form_state->getValue('step_local')) ?
+      $form_state->getValue('step_local') - 1 : 1;
     $form_state->setRebuild();
     return $form;
   }
@@ -264,14 +270,14 @@ class UserEntryPoint extends FormBase {
         break;
       case UserEntryWizardStep::LoginProvider:
         if ($form_state->getValue([$step, 'login_method']) == 'federated') {
-          $form_state->setValue('step', UserEntryWizardStep::FederalizedOptions);
+          $form_state->setValue('step', UserEntryWizardStep::FederalizedOptionsLogin);
         } else {
           $form_state->setValue('step', UserEntryWizardStep::LoginForm);
         }
         break;
       case UserEntryWizardStep::RegisterProvider:
         if ($form_state->getValue([$step, 'register_method']) == 'federated') {
-          $form_state->setValue('step', UserEntryWizardStep::FederalizedOptions);
+          $form_state->setValue('step', UserEntryWizardStep::FederalizedOptionsRegister);
         } else {
           $form_state->setValue('step', UserEntryWizardStep::RegisterForm);
         }
@@ -300,6 +306,12 @@ class UserEntryPoint extends FormBase {
         $command = new RedirectCommand($url->toString());
         $response->addCommand($command);
         return $response;
+      case UserEntryWizardStep::RegisterForm:
+        $response = new AjaxResponse();
+        $url = Url::fromRoute('user.register');
+        $command = new RedirectCommand($url->toString());
+        $response->addCommand($command);
+        return $response;
     }
     return $form;
   }
@@ -313,5 +325,6 @@ abstract class UserEntryWizardStep
   const RegisterProvider = 3;
   const LoginForm = 4;
   const RegisterForm = 5;
-  const FederalizedOptions = 6;
+  const FederalizedOptionsLogin = 6;
+  const FederalizedOptionsRegister = 7;
 }
