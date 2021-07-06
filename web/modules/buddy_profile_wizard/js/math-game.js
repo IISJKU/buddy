@@ -277,15 +277,7 @@ class MathGame extends GameScene {
 
   showQuiz(){
     let mathGame = this;
-    this.text = this.add.text(
-      this.cameras.main.centerX,
-      50,
-      "How many people are in the house?",
-      {
-        fontSize: 30,
-        color: "#000000",
-        fontStyle: "bold"
-      }).setOrigin(0.5);
+    this.createTitle(stringFactory.getString("math_game_question"));
 
 
     let answers = [];
@@ -305,19 +297,46 @@ class MathGame extends GameScene {
 
 
     let answerButtons = [];
-    for(let i=0; i < answers.length; i++){
+    for(let i=0; i < answers.length; i++) {
 
       let yPosition = 100;
 
-      if(i < answers.length/2){
-        yPosition = 150;
+      if (i < answers.length / 2) {
+        yPosition = 170;
       }
 
-      let position = i%(answers.length/2);
+      let position = i % (answers.length / 2);
 
 
-      let xPosition = position*this.cameras.main.width/(answers.length/2)+this.cameras.main.width/(answers.length);
+      let xPosition = position * this.cameras.main.width / (answers.length / 2) + this.cameras.main.width / (answers.length);
 
+
+      let test = new TextButton(this,  answers[i], xPosition, yPosition, function () {
+        if (answers[i] === mathGame.finalAmount) {
+
+          mathGame.yesSound.play();
+
+          for (let k = 0; k < answerButtons.length; k++) {
+            answerButtons[k].destroy();
+          }
+          mathGame.houseSprite.destroy();
+          mathGame.titleText.destroy();
+          mathGame.setupGame();
+
+        } else {
+          mathGame.noSound.play();
+        }
+        console.log(answers[i] === mathGame.finalAmount);
+      });
+
+      test.init();
+      this.add.existing(test);
+      answerButtons.push(test);
+    }
+
+
+
+      /*
       let answerButton = this.add.text(
         xPosition,
         yPosition,
@@ -354,6 +373,7 @@ class MathGame extends GameScene {
 
     }
 
+    */
 
 
 

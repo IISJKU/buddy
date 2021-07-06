@@ -30,11 +30,14 @@ var stringFactory = {
     this.addString("math_game_title_1","Count the people in the house!","en");
     this.addString("math_game_title_1","Zähle die Leute im Haus","de");
 
-    this.addString("math_game_title_2","How many people are in the house?","en");
-    this.addString("math_game_title_2","Wieviele Leute sind im Haus?","de");
+    this.addString("math_game_title_2","Count the people in the house!","en");
+    this.addString("math_game_title_2","Zähle die Leute im Haus!","de");
 
     this.addString("math_game_start","Start !","en");
     this.addString("math_game_start","Los !","de");
+
+    this.addString("math_game_question","How many people are in the house?","en");
+    this.addString("math_game_question","Wieviele Leute sind im Haus?","de");
 
   },
 
