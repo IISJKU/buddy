@@ -6,3 +6,17 @@ function buddy_form_alter(&$form, FormStateInterface $form_state, $form_id)
 {
 
 }
+
+/**
+ * Implement HOOK_form_FORM_ID_form_alter
+ * @param $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ * @param $form_id
+ */
+function buddy_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['#submit'][] = 'buddy_login_form_submit';
+}
+
+function buddy_login_form_submit(array $form, FormStateInterface $form_state) {
+  // \Drupal::service('messenger')->addMessage("SUBMITTED");
+}

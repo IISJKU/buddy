@@ -1,49 +1,48 @@
-footer{
-  background-color: #e6ff90;
-  color: #fff;
-}
+/* General */
+
+
 
 .navbar {
-  background-color: #e6ff90;
+  background-color: #000000;
   color: #fff;
 }
 
 
-table{
- /* box-shadow: 0px 2px 18px 0px rgba(0,0,0,0.5); */
+table {
+  /* box-shadow: 0px 2px 18px 0px rgba(0,0,0,0.5); */
 }
 
-th{
+th {
   background-color: #4c60cf;
   color: white;
 }
 
-table th:first-child,table td:first-child{
-  border-radius:10px 0 0 10px;
+table th:first-child, table td:first-child {
+  border-radius: 10px 0 0 10px;
 }
 
-table th:last-child,table td:last-child{
-  border-radius:0 10px 10px 0;
+table th:last-child, table td:last-child {
+  border-radius: 0 10px 10px 0;
 }
 
 .table th, .table td {
   border-top: none;
 }
 
-#block-buddy-bt4-page-title{
+#block-buddy-bt4-page-title {
 
   margin-top: 30px;
   margin-bottom: 20px;
 }
 
-.view-at-catalogue .views-row{
+.view-at-catalogue .views-row {
   padding-top: 20px;
   padding-bottom: 20px;
   border-bottom: 2px solid black;
 
 }
 
-.overview-button{
+.overview-button {
   margin-right: 20px;
   margin-bottom: 20px;
 }
@@ -51,17 +50,88 @@ table th:last-child,table td:last-child{
 
 /* Header */
 
-header{
+header {
 
   font-size: 1.5rem;
+}
+
+.navbar-brand a.site-title{
+  font-size: 3rem;
+}
+
+.navbar-brand .site-slogan{
+  font-size: 1.2rem;
+}
+
+header .nav-item a,header .navbar-brand a.site-title{
+  color: white;
+}
+
+header .navbar-brand a.site-title:hover,
+header .navbar-brand a.site-title:focus{
+  color: white;
+}
+header .nav-item a:hover,header .nav-item a:focus{
+  background: #ac535f;
+}
+
+.navbar-toggler {
+  color: rgba(255, 255, 255, 1);
+  border-color: rgba(255, 255, 255, 1);
+}
+
+
+.navbar-toggler-icon {
+  color: white;
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: middle;
+  content: "";
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+header{
+
+  border-bottom: 10px solid #ff0000;
+}
+
+/* Breadcrumbs + Search */
+
+.search-block-form{
+  text-align: right;
 }
 
 /* MAIN */
 
-main{
+main {
   font-size: 1.5rem;
+  margin-bottom: 50px;
+  min-height: 400px;
 }
 
 
-
 /*FOOTER */
+
+
+footer{
+  background-color: #000000;
+  color: #fff;
+  border-top: 10px solid #ff0000;
+}
+
+.buddy_partners{
+  text-align: center;
+}
+
+.buddy_partners img{
+  margin: 0 100px 20px 100px;
+}
+
+.buddy_ec{
+  margin-top: 60px;
+}
+
+.buddy_ec_logo{
+  text-align: right;
+}

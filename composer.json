@@ -17,16 +17,22 @@
     "require": {
         "composer/installers": "^1.9",
         "drupal/bootstrap4": "^2.1",
+        "drupal/config_direct_save": "^2.1",
         "drupal/core-composer-scaffold": "^9.1",
         "drupal/core-project-message": "^9.1",
         "drupal/core-recommended": "^9.1",
         "drupal/devel": "^4.1",
-        "drupal/features": "^3.12"
+        "drupal/dropdown_language": "^3.0",
+        "drupal/features": "^3.12",
+        "drupal/phpmailer_smtp": "^2.0",
+        "drupal/social_auth_facebook": "^3.0",
+        "drupal/social_auth_google": "^3.0@RC",
+        "drupal/theme_switcher": "^1.2"
     },
     "conflict": {
         "drupal/drupal": "*"
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
         "sort-packages": true

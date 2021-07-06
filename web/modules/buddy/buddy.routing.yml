@@ -1,5 +1,21 @@
+buddy.at_backend_overview:
+  path: '/at-entries/overview'
+  defaults:
+    _controller: '\Drupal\buddy\Controller\ATBackendOverviewController::content'
+  requirements:
+    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
+    _role: 'administrator+at_provider'
+  options:
+    no_cache: 'TRUE'
+buddy.user_entry_point:
+  path: '/user-entry'
+  defaults:
+    _form: '\Drupal\buddy\Form\UserEntryPoint'
+    _title: 'Log in or register'
+  requirements:
+    _role: 'anonymous'
 buddy.at_entry_overview:
-  path: '/my-at-entries'
+  path: '/at-entries/my-at-entries'
   defaults:
     _controller: '\Drupal\buddy\Controller\ATEntryOverviewController::ATEntryOverview'
   requirements:
@@ -8,7 +24,7 @@ buddy.at_entry_overview:
   options:
     no_cache: 'TRUE'
 buddy.at_entry_form:
-  path: '/create-at-entry'
+  path: '/at-entries/create-at-entry'
   defaults:
     _form:  '\Drupal\buddy\Form\ATEntryCreateForm'
     _title: 'AT Entry Form'
@@ -16,7 +32,7 @@ buddy.at_entry_form:
     _permission: 'access content'
     _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
 buddy.at_entry_edit_form:
-  path: '/edit-at-entry/{atEntry}'
+  path: '/at-entries/edit-at-entry/{atEntry}'
   defaults:
     _form:  '\Drupal\buddy\Form\ATEntryEditForm'
     _title: 'AT Entry Form'
@@ -29,7 +45,7 @@ buddy.at_entry_edit_form:
       atEntry:
         type: entity:node
 buddy.at_entry_delete_form:
-  path: '/delete-at-entry/{atEntry}'
+  path: '/at-entries/delete-at-entry/{atEntry}'
   defaults:
     _form:  '\Drupal\buddy\Form\ATEntryDeleteForm'
     _title: 'AT Entry Form'
@@ -42,7 +58,7 @@ buddy.at_entry_delete_form:
       atEntry:
         type: entity:node
 buddy.type_create_form:
-  path: '/create-type/{atEntry}'
+  path: '/at-entries/create-type/{atEntry}'
   defaults:
     _form: '\Drupal\buddy\Form\ATTypeCreateForm'
     _title: 'Create type'
@@ -55,7 +71,7 @@ buddy.type_create_form:
       atEntry:
         type: entity:node
 buddy.platform_edit_form:
-  path: '/edit-type/{type}'
+  path: '/at-entries/edit-type/{type}'
   defaults:
     _form: '\Drupal\buddy\Form\ATTypeEditForm'
     _title: 'Edit Type'
@@ -68,7 +84,7 @@ buddy.platform_edit_form:
       type:
         type: entity:node
 buddy.platform_delete_form:
-  path: '/delete-type/{type}'
+  path: '/at-entries/delete-type/{type}'
   defaults:
     _form: '\Drupal\buddy\Form\ATTypeDeleteForm'
     _title: 'Delete Type'
@@ -81,7 +97,7 @@ buddy.platform_delete_form:
       type:
         type: entity:node
 buddy.description_create_form:
-  path: '/create-description/{atEntry}'
+  path: '/at-entries/create-description/{atEntry}'
   defaults:
     _form: '\Drupal\buddy\Form\ATDescriptionCreateForm'
     _title: 'Create Description'
@@ -94,7 +110,7 @@ buddy.description_create_form:
       atEntry:
         type: entity:node
 buddy.description_edit_form:
-  path: '/edit-description/{description}'
+  path: '/at-entries/edit-description/{description}'
   defaults:
     _form: '\Drupal\buddy\Form\ATDescriptionEditForm'
     _title: 'Edit Description'
@@ -107,7 +123,7 @@ buddy.description_edit_form:
       description:
         type: entity:node
 buddy.description_delete_form:
-  path: '/delete-description/{description}'
+  path: '/at-entries/delete-description/{description}'
   defaults:
     _form: '\Drupal\buddy\Form\ATDescriptionDeleteForm'
     _title: 'Delete Description'
@@ -120,7 +136,7 @@ buddy.description_delete_form:
       description:
         type: entity:node
 buddy.description_view:
-  path: '/view-description/{description}'
+  path: '/at-entries/view-description/{description}'
   defaults:
     _controller: '\Drupal\buddy\Controller\ATDescriptionViewController::ATDescriptionView'
     _title: 'View Description'
