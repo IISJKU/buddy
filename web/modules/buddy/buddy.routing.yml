@@ -7,6 +7,13 @@ buddy.at_backend_overview:
     _role: 'administrator+at_provider'
   options:
     no_cache: 'TRUE'
+buddy.user_entry_point:
+  path: '/user-entry'
+  defaults:
+    _form: '\Drupal\buddy\Form\UserEntryPoint'
+    _title: 'Log in or register'
+  requirements:
+    _role: 'anonymous'
 buddy.at_entry_overview:
   path: '/at-entries/my-at-entries'
   defaults:

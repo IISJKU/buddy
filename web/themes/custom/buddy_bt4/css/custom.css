@@ -51,6 +51,21 @@ table th:last-child, table td:last-child {
   margin-bottom: 20px;
 }
 
+#user-entry-social-auth {
+  width: 100%;
+  display: block;
+}
+
+.auth-option {
+  float: left;
+  margin: 10px;
+}
+
+.auth-option img {
+  max-width: 120px;
+  max-height: 120px;
+}
+
 
 /* Header */
 
