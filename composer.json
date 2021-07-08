@@ -24,6 +24,7 @@
         "drupal/devel": "^4.1",
         "drupal/dropdown_language": "^3.0",
         "drupal/features": "^3.12",
+        "drupal/mailsystem": "^4.3",
         "drupal/phpmailer_smtp": "^2.0",
         "drupal/social_auth_facebook": "^3.0",
         "drupal/social_auth_google": "^3.0@RC",
