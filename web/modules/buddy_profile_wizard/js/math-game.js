@@ -59,48 +59,13 @@ class MathGame extends GameScene {
     this.startButton.init();
     this.add.existing(this.startButton);
 
-    /*
-
-    this.startText = this.add.text(
-      this.cameras.main.centerX,
-      95,
-      "Start Game!",
-      {
-        fontSize: 25,
-        color: "#000000",
-        fontStyle: "bold",
-      }).setOrigin(0.5);
-    this.startText.setAlpha(0);
-
-    this.startText.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.startText.width, this.startText.height), Phaser.Geom.Rectangle.Contains);
-
-    let mathGame = this;
-    this.startText.on("pointerdown", function (pointer) {
-      console.log("AAA");
-      mathGame.startText.destroy();
-      mathGame.text.destroy();
-      mathGame.startGame();
-
-    });
-
-    this.time.addEvent({
-      delay: 1000,
-      callback: function () {
-        mathGame.startText.setAlpha(1);
-
-
-      }
-    });
-
-    */
-
   }
 
 
   startGame() {
     let numberOfSteps = 5;
     let minPeople = 1;
-    let maxPeople = 5;
+    let maxPeople = 3;
     let currentPeople = 0;
     for (let i = 0; i < numberOfSteps; i++) {
 

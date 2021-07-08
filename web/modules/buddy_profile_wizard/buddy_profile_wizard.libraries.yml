@@ -8,6 +8,7 @@ buddy_profile_wizard:
     js/util/scenes.js: {}
     js/intro.js: {}
     js/math-game.js: {}
+    js/reading-game.js: {}
     js/memory-game.js: {}
     js/wizard.js: {}
   dependencies:

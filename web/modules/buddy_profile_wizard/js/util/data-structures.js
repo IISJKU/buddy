@@ -7,16 +7,17 @@ class QuizQuestion{
   }
 
   addAnswer(answer){
-    this.question.push(answer);
+    this.answers.push(answer);
   }
 
 }
 
 
 class Answer{
-  constructor(text, icon,illustration) {
+  constructor(text,result, icon,illustration) {
     this.text = text;
     this.icon = icon;
+    this.result = result;
     this.illustration = illustration;
   }
 }
