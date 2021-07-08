@@ -41,7 +41,7 @@ class TextButton extends Phaser.GameObjects.Container {
 
   initBackground() {
 
-    this.background = this.scene.add.rectangle(0, 0, this.backgroundWidth + this.backgroundStrokeWidth, this.backgroundHeight + this.backgroundStrokeWidth, 0xffffff);
+    this.background = this.scene.add.rectangle(0, 0, this.backgroundWidth + this.backgroundStrokeWidth, this.backgroundHeight + this.backgroundStrokeWidth, '#ffffff');
 
     this.background.setInteractive({useHandCursor: true})
       .on('pointerover', () => this.enterButtonHoverState())
@@ -52,7 +52,7 @@ class TextButton extends Phaser.GameObjects.Container {
         this.callback();
       });
 
-    this.foreground = this.scene.add.rectangle(0,0, this.backgroundWidth, this.backgroundHeight, 0x123123);
+    this.foreground = this.scene.add.rectangle(0,0, this.backgroundWidth, this.backgroundHeight, "#123123");
 
   }
 
@@ -67,7 +67,7 @@ class TextButton extends Phaser.GameObjects.Container {
   }
 
   enterButtonRestState() {
-    this.background.setFillStyle(0xffffff);
+    this.background.setFillStyle("#000000");
   }
 
   enterButtonActiveState() {

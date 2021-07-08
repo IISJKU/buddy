@@ -58,7 +58,9 @@ class QuizScene
     super(id);
     this.quizQuestions = [];
     this.timeLimit = 0;
-
+    this.currentQuizQuestion = 0;
+    this.questionHeight = 100;
+    this.currentAnswers = [];
   }
 
   preload() {
@@ -66,26 +68,96 @@ class QuizScene
 
   }
 
+  addQuestion(question){
+    this.quizQuestions.push(question);
+  }
+
 
   renderQuestion(question) {
 
-    let heading = this.renderQuestionHeading(question.question, question.illustration);
+    console.log(this.cameras.main.width);
+    let heading = this.renderQuestionHeading(question);
 
     for (let i = 0; i < question.answers.length; i++) {
 
-      let answer = this.renderAnswer(question.answers[i]);
+
+
+      let currentItemsInRow = question.columnLayout;
+
+      console.log(question.answers.length%question.columnLayout);
+      console.log(i+question.columnLayout, question.answers.length+1);
+      if(question.answers.length%question.columnLayout !== 0 && i+question.columnLayout > question.answers.length+1){
+
+        currentItemsInRow = question.answers.length%i;
+      }
+
+      console.log(currentItemsInRow);
+
+      let xPos = this.cameras.main.width/currentItemsInRow*(i%3)+this.cameras.main.width/currentItemsInRow*0.5;
+      let yPos = Math.floor(i/question.columnLayout)* this.questionHeight+this.cameras.main.centerY;
+
+      let answer = this.renderAnswer(question.answers[i],{x: xPos, y:yPos});
+      this.add.existing(answer);
+      this.currentAnswers.push(answer);
     }
 
 
   }
 
-  renderQuestionHeading(question, illustration) {
+  renderQuestionHeading(question) {
+
+    if(question.illustration){
+
+    }else{
+
+
+    }
 
   }
 
-  renderAnswer(answer) {
+  renderAnswer(answer,position) {
+    let readingGame = this;
 
+    if(answer.icon){
+
+      let answerButton = new IconButton(this,answer.text,position.x, position.y,answer.icon,function (){
+        readingGame.startGame();
+      });
+      answerButton.init();
+      return answerButton;
+    }else{
+      let answerButton = new TextButton(this,answer.text,position.x, position.y,function (){
+        readingGame.startGame();
+      });
+      answerButton.init();
+      return answerButton;
+
+    }
+  }
+
+  startQuiz(){
+
+    if(this.quizQuestions.length > this.currentQuizQuestion){
+      this.showQuestion(this.currentQuizQuestion);
+
+    }
 
   }
+
+  showQuestion(questionIndex){
+    this.renderQuestion(this.quizQuestions[questionIndex]);
+  }
+
+  questionFinished(){
+
+    this.questionFinishedHook();
+
+  }
+
+  questionFinishedHook(){
+
+    console.log("aaa");
+  }
+
 
 }

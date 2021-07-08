@@ -3,6 +3,7 @@ class QuizQuestion{
   constructor(question,illustration) {
     this.question = question;
     this.illustration = illustration;
+    this.columnLayout = 3;
     this.answers = [];
   }
 
