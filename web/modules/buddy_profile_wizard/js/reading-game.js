@@ -6,17 +6,14 @@ class ReadingGame extends QuizScene{
   create(){
 
 
-    let test = new QuizQuestion("Hi how are you?");
-    test.addAnswer(new Answer("yes","test1"));
-    test.addAnswer(new Answer("no","test2"));
-    test.addAnswer(new Answer("1no","tes11t2"));
-    test.addAnswer(new Answer("123","tes11t2"));
-    test.addAnswer(new Answer("22","test1"));
+    let test = new QuizQuestion("banane","Die Bannane ist gelb?");
+    test.addAnswer(new Answer("Ja",true));
+    test.addAnswer(new Answer("Nein",false));
     this.addQuestion(test);
 
-    test = new QuizQuestion("Hi how are you2?");
-    test.addAnswer(new Answer("ye2s","test12"));
-    test.addAnswer(new Answer("n2o","test22"));
+    test = new QuizQuestion("bier","Bier schmeckt gut?");
+    test.addAnswer(new Answer("Ja",true));
+    test.addAnswer(new Answer("Nein",false));
     this.addQuestion(test);
 
 
@@ -35,8 +32,17 @@ class ReadingGame extends QuizScene{
   startGame(){
     this.titleText.destroy();
     this.startButton.destroy();
-    this.startQuiz();
+    this.showNextQuestion();
   }
+
+
+  questionFinishedHook(id,answer){
+    console.log("Q finished",id,answer);
+
+    return super.questionFinishedHook(id,answer);
+
+  }
+
 
 
 }

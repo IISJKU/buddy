@@ -1,6 +1,7 @@
 
 class QuizQuestion{
-  constructor(question,illustration) {
+  constructor(id,question,illustration) {
+    this.id = id;
     this.question = question;
     this.illustration = illustration;
     this.columnLayout = 3;

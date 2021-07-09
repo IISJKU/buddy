@@ -81,22 +81,29 @@ class QuizScene
     for (let i = 0; i < question.answers.length; i++) {
 
 
-
       let currentItemsInRow = question.columnLayout;
+      let currentNumberInRow = i%currentItemsInRow;
 
-      console.log(question.answers.length%question.columnLayout);
-      console.log(i+question.columnLayout, question.answers.length+1);
-      if(question.answers.length%question.columnLayout !== 0 && i+question.columnLayout > question.answers.length+1){
-
-        currentItemsInRow = question.answers.length%i;
+      let rest = question.answers.length%question.columnLayout;
+      if(rest !== 0 && i+rest >= question.answers.length){
+        currentItemsInRow = rest;
+        currentNumberInRow = (question.answers.length - i - rest)*-1;
       }
 
-      console.log(currentItemsInRow);
 
-      let xPos = this.cameras.main.width/currentItemsInRow*(i%3)+this.cameras.main.width/currentItemsInRow*0.5;
-      let yPos = Math.floor(i/question.columnLayout)* this.questionHeight+this.cameras.main.centerY;
+      let xPos= 0;
 
-      let answer = this.renderAnswer(question.answers[i],{x: xPos, y:yPos});
+      if(currentItemsInRow%2 === 0){
+        let spaceBetweenItems  = this.cameras.main.width/(currentItemsInRow+1);
+        xPos = spaceBetweenItems*(currentNumberInRow+1);
+       }else{
+        let spaceBetweenItems  = this.cameras.main.width/currentItemsInRow;
+        xPos = spaceBetweenItems*currentNumberInRow+spaceBetweenItems*0.5;
+
+      }
+
+      let yPos= Math.floor(i/question.columnLayout)* this.questionHeight+this.cameras.main.centerY;
+      let answer = this.renderAnswer(question.id, question.answers[i],{x: xPos, y:yPos});
       this.add.existing(answer);
       this.currentAnswers.push(answer);
     }
@@ -110,24 +117,26 @@ class QuizScene
 
     }else{
 
+      this.createTitle(question.question);
+
 
     }
 
   }
 
-  renderAnswer(answer,position) {
+  renderAnswer(qid,answer,position) {
     let readingGame = this;
 
     if(answer.icon){
 
       let answerButton = new IconButton(this,answer.text,position.x, position.y,answer.icon,function (){
-        readingGame.startGame();
+        readingGame.questionFinished(qid,answer);
       });
       answerButton.init();
       return answerButton;
     }else{
       let answerButton = new TextButton(this,answer.text,position.x, position.y,function (){
-        readingGame.startGame();
+        readingGame.questionFinished(qid,answer);
       });
       answerButton.init();
       return answerButton;
@@ -135,11 +144,14 @@ class QuizScene
     }
   }
 
-  startQuiz(){
+  showNextQuestion(){
 
     if(this.quizQuestions.length > this.currentQuizQuestion){
       this.showQuestion(this.currentQuizQuestion);
 
+    }else{
+
+      this.quizFinishedHook();
     }
 
   }
@@ -148,16 +160,46 @@ class QuizScene
     this.renderQuestion(this.quizQuestions[questionIndex]);
   }
 
-  questionFinished(){
+  questionFinished(id,answer){
 
-    this.questionFinishedHook();
+    this.currentQuizQuestion++;
+    this.clearCurrentQuestion();
+
+    if(this.questionFinishedHook(id,answer)){
+
+      this.showNextQuestion();
+    }
+
 
   }
 
-  questionFinishedHook(){
+  questionFinishedHook(id,answer){
 
-    console.log("aaa");
+
+    return true;
   }
+
+  quizFinishedHook(){
+
+  }
+
+  clearCurrentQuestion(){
+
+    if(this.titleText){
+      this.titleText.destroy();
+    }
+
+    if(this.illustration){
+      this.illustration.destroy();
+    }
+
+    for(let i=0; i < this.currentAnswers.length; i++){
+      this.currentAnswers[i].destroy();
+    }
+    this.currentAnswers = [];
+
+  }
+
 
 
 }
