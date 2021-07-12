@@ -39,6 +39,12 @@ var stringFactory = {
     this.addString("math_game_question","How many people are in the house?","en");
     this.addString("math_game_question","Wieviele Leute sind im Haus?","de");
 
+
+
+    this.addString("reading_game_1_intro","Click on the word\n I am going to say. ","en");
+    this.addString("reading_game_1_intro","Klick auf das Wort,\n dass ich gleich sagen werde.","de");
+
+
   },
 
   addString(key,text, lang){

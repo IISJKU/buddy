@@ -3,12 +3,15 @@ buddy_profile_wizard:
   js:
     js/translation/string-factory.js: {}
     js/phaser.js: {}
+    js/util/gameUtil.js: {}
     js/util/data-structures.js: {}
     js/util/elements.js: {}
     js/util/scenes.js: {}
     js/intro.js: {}
     js/math-game.js: {}
-    js/reading-game.js: {}
+    js/reading-game-tts-word.js: {}
+    js/reading-game-tts-sentence.js: {}
+    js/reading-game-text.js: {}
     js/memory-game.js: {}
     js/wizard.js: {}
   dependencies:

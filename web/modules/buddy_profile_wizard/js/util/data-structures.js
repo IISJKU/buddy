@@ -1,15 +1,16 @@
 
 class QuizQuestion{
-  constructor(id,question,illustration) {
+  constructor(id,question,stimuli) {
     this.id = id;
     this.question = question;
-    this.illustration = illustration;
+    this.stimuli = stimuli;
     this.columnLayout = 3;
     this.answers = [];
   }
 
   addAnswer(answer){
     this.answers.push(answer);
+    this.answers = gameUtil.shuffle(this.answers);
   }
 
 }
@@ -21,5 +22,14 @@ class Answer{
     this.icon = icon;
     this.result = result;
     this.illustration = illustration;
+  }
+}
+
+class Stimuli{
+  constructor(image,sound,video) {
+    this.image = image;
+    this.sound = sound;
+    this.video = video;
+
   }
 }

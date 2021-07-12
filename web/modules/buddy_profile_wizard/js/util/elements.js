@@ -163,3 +163,166 @@ class TextToSpeechButton extends IconButton {
   }
 }
 
+class AvatarAudioButton extends Phaser.GameObjects.Container {
+  constructor(scene, audio, x, y, callback, autoplay = true) {
+    super(scene, x, y);
+    this.scene = scene;
+    this.audio = audio;
+    this.callback = callback;
+    this.autoplay = autoplay;
+    this.playing = false;
+    this.avatarMouthOpen = false;
+  }
+
+  init() {
+    this.initContent();
+    this.initBackground();
+    this.initSound();
+    this.createButton();
+  }
+
+
+
+
+  initContent() {
+    this.avatarSoundIcon = this.scene.add.sprite(0, 0, "avatarNormalMouthOpen");
+    this.avatarSoundIcon.setScale(0.25);
+    this.componentWidth = this.avatarSoundIcon.scale*this.avatarSoundIcon.width;
+  }
+
+  initBackground() {
+
+    this.background = this.scene.add.circle(0, 0, this.componentWidth*0.7, 0xffffff);
+
+
+    this.background.setInteractive({useHandCursor: true})
+      .on('pointerover', () => this.enterButtonHoverState())
+      .on('pointerout', () => this.enterButtonRestState())
+      .on('pointerdown', () => this.enterButtonActiveState())
+      .on('pointerup', () => {
+        this.enterButtonHoverState();
+        if(!this.playing){
+          this.playSound();
+          this.callback();
+        }
+
+      });
+
+
+  }
+
+  createButton() {
+    this.add(this.background);
+    this.add(this.avatarSoundIcon);
+
+  }
+
+  initSound(){
+    this.sound = this.scene.sound.add(this.audio);
+    let avatarAudioButton = this;
+    this.sound.on('complete', function (sound) {
+      avatarAudioButton.stopAnimation();
+      avatarAudioButton.playing = false;
+    },this);
+    if(this.autoplay){
+
+      this.playSound();
+
+    }
+
+  }
+
+  playSound(){
+
+    if(!this.playing){
+      this.startAnimation();
+      this.playing = true;
+      this.sound.play();
+    }
+  }
+
+
+  destroy(){
+    if(this.playing){
+      this.sound.removeAllListeners();
+      this.sound.stop();
+      this.stopAnimation();
+    }
+    super.destroy();
+  }
+
+  startAnimation(){
+
+
+    if(this.playing){
+      return;
+    }
+
+
+    this.background.setStrokeStyle(4, 0xefc53f);
+
+
+    this.backgroundTween = this.scene.tweens.add({
+
+      targets: this.background,
+      scaleX: 0.85,
+      scaleY: 0.85,
+      yoyo: true,
+      repeat: -1,
+      duration: 200,
+      ease: 'Sine.easeInOut'
+
+    });
+
+
+
+    this.continueAnimation();
+
+  }
+
+  continueAnimation(){
+
+    let avatarAudioButton = this;
+    this.timeOut = setTimeout(function(){
+
+      if(avatarAudioButton.avatarMouthOpen){
+        avatarAudioButton.avatarSoundIcon.setTexture("avatarNormal");
+      }else{
+        avatarAudioButton.avatarSoundIcon.setTexture("avatarNormalMouthOpen");
+
+      }
+      avatarAudioButton.avatarMouthOpen = !avatarAudioButton.avatarMouthOpen;
+      avatarAudioButton.continueAnimation();
+    }, Math.floor(Math.random() * 70)+70);
+  }
+
+  stopAnimation(){
+
+    if(this.timeOut){
+      clearTimeout(this.timeOut);
+      this.timeOut = null;
+      this.avatarSoundIcon.setTexture("avatarNormal");
+    }
+
+    if(this.backgroundTween){
+      this.backgroundTween.stop();
+      this.backgroundTween = null;
+    }
+    this.background.setStrokeStyle(0, 0xefc53f);
+
+  }
+
+  enterButtonHoverState() {
+    this.background.setFillStyle('#ff0');
+  }
+
+  enterButtonRestState() {
+    this.background.setFillStyle(0xffffff);
+  }
+
+  enterButtonActiveState() {
+    this.background.setFillStyle('#0ff');
+  }
+
+
+}

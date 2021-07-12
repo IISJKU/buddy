@@ -12,8 +12,9 @@ var config = {
       gravity: { y: 200 }
     }
   },
+
   backgroundColor: '#2d2d2d',
-  scene: [ReadingGame, Intro, MathGame, MemoryGame ]
+  scene: [ReadingGameTTSWord, Intro, MathGame, MemoryGame,ReadingGameText,ReadingGameTTSSentence ]
 
   /*scene: {
     preload: preload,

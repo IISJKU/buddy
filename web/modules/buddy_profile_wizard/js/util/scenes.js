@@ -14,7 +14,15 @@ class GameScene extends Phaser.Scene {
     this.load.image('ffIcon', 'modules/buddy_profile_wizard/assets/img/util/FastForwardIcon.png');
     this.load.image('fbIcon', 'modules/buddy_profile_wizard/assets/img/util/FastBackIcon.png');
     this.load.image('textToSpeech', 'modules/buddy_profile_wizard/assets/img/util/TextToSpeech.png');
+
+
+    //Avatar
+    this.load.image('avatarNormal', 'modules/buddy_profile_wizard/assets/img/avatar/AvatarNormal.png');
+    this.load.image('avatarNormalMouthOpen', 'modules/buddy_profile_wizard/assets/img/avatar/AvatarNormalMouthOpen.png');
+    this.load.image('avatarHappy', 'modules/buddy_profile_wizard/assets/img/avatar/AvatarHappy.png');
+    this.load.image('avatarSad', 'modules/buddy_profile_wizard/assets/img/avatar/AvatarSad.png');
     this.load.audio('no', 'modules/buddy_profile_wizard/assets/sounds/no.wav');
+
   }
 
   createTitle(title, style, sound) {
@@ -27,11 +35,11 @@ class GameScene extends Phaser.Scene {
         stroke: '#000000',
         strokeThickness: 5,
         fill: '#ffffff',
+        align:'center',
       };
     }
 
     this.titleText = this.add.text(this.cameras.main.centerX, 0, title, style).setOrigin(0.5, 0);
-
 
   }
 
@@ -112,16 +120,11 @@ class QuizScene
   }
 
   renderQuestionHeading(question) {
+    this.createTitle(question.question);
+    if(question.stimuli){
 
-    if(question.illustration){
-
-    }else{
-
-      this.createTitle(question.question);
-
-
+      this.renderStimuli(question.stimuli);
     }
-
   }
 
   renderAnswer(qid,answer,position) {
@@ -142,6 +145,35 @@ class QuizScene
       return answerButton;
 
     }
+  }
+
+  renderStimuli(stimuli){
+    if(stimuli.sound){
+
+
+      this.avatarButton = new AvatarAudioButton(this,stimuli.sound,this.cameras.main.centerX, 100,function (){
+
+      });
+      this.avatarButton.init();
+      this.add.existing(this.avatarButton);
+
+      /*
+      this.avatarSoundIcon = this.add.sprite(this.cameras.main.centerX, 100, "avatarNormal");
+      console.log(this.cameras.main);
+      this.avatarSoundIcon.setScale(0.25);
+
+
+       */
+      console.log(stimuli);
+
+    }else if(stimuli.video){
+      console.log("TODO: render video stimuli");
+    }else{
+
+      console.log("TODO: render image stimuli");
+    }
+
+
   }
 
   showNextQuestion(){
@@ -187,6 +219,10 @@ class QuizScene
 
     if(this.titleText){
       this.titleText.destroy();
+    }
+
+    if(this.avatarButton){
+      this.avatarButton.destroy();
     }
 
     if(this.illustration){
