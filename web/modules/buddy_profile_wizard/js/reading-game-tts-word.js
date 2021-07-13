@@ -96,6 +96,6 @@ class ReadingGameTTSWord extends QuizScene{
 
   quizFinishedHook(){
 
-    console.log("quiz finished");
+    Director.changeScene("ReadingGameTTSWord");
   }
 }

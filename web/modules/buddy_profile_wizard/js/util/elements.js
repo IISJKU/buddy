@@ -13,7 +13,7 @@ class TextButton extends Phaser.GameObjects.Container {
       this.labelStyle = {
         fontFamily: 'Arial Black',
         fontSize: 20,
-
+        align:'center',
         fontStyle: "bold",
         stroke: '#000000',
         strokeThickness: 6,

@@ -20,8 +20,11 @@ class Intro extends GameScene {
 
 
     this.startButton = new IconButton(this,stringFactory.getString("intro_start_game"),this.cameras.main.centerX, 300,"playIcon",function (){
-      game.scene.stop("Intro");
-      game.scene.start("MathGame");
+
+      Director.changeScene("Intro");
+
+      //game.scene.stop("Intro");
+      //game.scene.start("MathGame");
     });
     this.startButton.init();
     this.add.existing(this.startButton);

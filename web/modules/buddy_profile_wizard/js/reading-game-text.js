@@ -41,23 +41,6 @@ class ReadingGameText extends QuizScene{
     this.addQuestion(soundtest);
 
 
-    /*
-    let test = new QuizQuestion("banane","Die Bannane ist gelb?");
-    test.addAnswer(new Answer("Ja",true));
-    test.addAnswer(new Answer("Nein",false));
-    this.addQuestion(test);
-
-    test = new QuizQuestion("bier","Bier schmeckt gut?");
-    test.addAnswer(new Answer("Ja",true));
-    test.addAnswer(new Answer("Nein",false));
-    this.addQuestion(test);
-
-    */
-
-
-
-
-
     this.createTitle(stringFactory.getString("reading_game_1_intro"));
     let readingGame = this;
     this.startButton = new IconButton(this,stringFactory.getString("math_game_start"),this.cameras.main.centerX, 300,"playIcon",function (){
@@ -93,6 +76,10 @@ class ReadingGameText extends QuizScene{
 
   }
 
+  quizFinishedHook() {
+
+    console.log("FINISHED");
+  }
 
 
 }
