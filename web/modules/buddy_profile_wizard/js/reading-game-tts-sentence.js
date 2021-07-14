@@ -54,7 +54,7 @@ class ReadingGameTTSSentence extends QuizScene{
     this.addQuestion(soundtest);
 
 
-    this.createTitle(stringFactory.getString("reading_game_tts_sentence_intro"));
+    this.createTitle(stringFactory.getString("reading_game_text_intro"));
     let readingGame = this;
     this.startButton = new IconButton(this,stringFactory.getString("math_game_start"),this.cameras.main.centerX, 300,"playIcon",function (){
 
@@ -88,7 +88,11 @@ class ReadingGameTTSSentence extends QuizScene{
     return super.questionFinishedHook(id,answer);
 
   }
+  quizFinishedHook(){
 
+    console.log("starting bla");
+    Director.changeScene("ReadingGameTTSSentence");
+  }
 
 
 }

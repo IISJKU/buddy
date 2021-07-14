@@ -48,6 +48,9 @@ var stringFactory = {
     this.addString("reading_game_tts_sentence_intro","Click on the sentence\n I am going to say. ","en");
     this.addString("reading_game_tts_sentence_intro","Klicke auf den Satz,\n den ich gleich sagen werde.","de");
 
+    this.addString("reading_game_text_intro","Read the text and answer the question!","en");
+    this.addString("reading_game_text_intro","Lies dir den Text durch\n und beantworte dann die Frage!","de");
+
 
   },
 

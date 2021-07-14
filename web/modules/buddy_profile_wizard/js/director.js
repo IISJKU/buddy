@@ -4,6 +4,7 @@ let Director = {
 
     game.scene.stop(currentScene);
 
+    console.log(currentScene);
     switch (currentScene) {
 
       case "Intro": {
@@ -17,6 +18,17 @@ let Director = {
         game.scene.start("ReadingGameTTSSentence");
         break;
       }
+      case "ReadingGameTTSSentence": {
+
+        game.scene.start("ReadingGameText");
+        break;
+      }
+      case "ReadingGameText": {
+
+        game.scene.start("MathGame");
+        break;
+      }
+
 
       default: {
 
