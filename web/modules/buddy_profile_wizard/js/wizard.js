@@ -7,14 +7,18 @@ var config = {
     height: 600
   },
   physics: {
-    default: 'arcade',
-    arcade: {
-      gravity: { y: 200 }
+    default: 'matter',
+    matter: {
+      gravity: {
+        y: 0.6
+      },
+      debug: true,
+      debugBodyColor: 0xffffff
     }
   },
 
   backgroundColor: '#2d2d2d',
-  scene: [Intro,ReadingGameTTSWord, MathGame, MemoryGame,ReadingGameText,ReadingGameTTSSentence ]
+  scene: [MemoryGameShortTerm,Intro,ReadingGameTTSWord, MathGame, MemoryGame,ReadingGameText,ReadingGameTTSSentence ]
 
   /*scene: {
     preload: preload,

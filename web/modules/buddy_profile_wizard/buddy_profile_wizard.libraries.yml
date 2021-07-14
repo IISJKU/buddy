@@ -13,6 +13,8 @@ buddy_profile_wizard:
     js/reading-game-tts-sentence.js: {}
     js/reading-game-text.js: {}
     js/memory-game.js: {}
+    js/memory-game-working-memory.js: {}
+    js/memory-game-short-term.js: {}
     js/director.js: {}
     js/wizard.js: {}
   dependencies:
