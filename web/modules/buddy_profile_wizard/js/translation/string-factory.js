@@ -42,7 +42,7 @@ var stringFactory = {
 
 
     this.addString("reading_game_1_intro","Click on the word\n I am going to say. ","en");
-    this.addString("reading_game_1_intro","Klick auf das Wort,\n dass ich gleich sagen werde.","de");
+    this.addString("reading_game_1_intro","Klick auf das Wort,\n das ich gleich sagen werde.","de");
 
 
     this.addString("reading_game_tts_sentence_intro","Click on the sentence\n I am going to say. ","en");
