@@ -10,9 +10,9 @@ var config = {
     default: 'matter',
     matter: {
       gravity: {
-        y: 0.6
+        y: 0.4
       },
-      debug: false,
+      debug: true,
       debugBodyColor: 0xffffff
     }
   },

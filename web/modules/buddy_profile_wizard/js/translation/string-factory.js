@@ -51,6 +51,10 @@ var stringFactory = {
     this.addString("reading_game_text_intro","Read the text and answer the question!","en");
     this.addString("reading_game_text_intro","Lies dir den Text durch\n und beantworte dann die Frage!","de");
 
+    this.addString("memory_game_short_term_remove_item","Remove!","en");
+    this.addString("memory_game_short_term_remove_item","Entfernen!","de");
+
+
 
   },
 
