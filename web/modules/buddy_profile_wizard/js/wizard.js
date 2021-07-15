@@ -12,7 +12,7 @@ var config = {
       gravity: {
         y: 0.4
       },
-      debug: true,
+      debug: false,
       debugBodyColor: 0xffffff
     }
   },

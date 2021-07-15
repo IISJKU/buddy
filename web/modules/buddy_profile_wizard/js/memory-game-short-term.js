@@ -9,13 +9,14 @@ class MemoryGameShortTerm extends GameScene {
     this.steps = [];
     this.conveyor_belt = null;
     this.actualItem = null;
-    this.actualItemFallingInSuitcase = false;
     this.actualItemFallingFromTop = true;
     this.items = [];
     this.testItems = [];
-    this.consumedTestItems = [];
-    this.numberOfDuplicates = 10;
+    this.itemsInSuitcase = [];
+    this.numberOfDuplicates = 5;
+    this.overallItems = 5;
     this.currentItemIndex = 0;
+    this.errors = 0;
   }
 
   preload() {
@@ -27,7 +28,7 @@ class MemoryGameShortTerm extends GameScene {
 
 
 
-    for(let i=1; i < 18; i++){
+    for(let i=0; i < this.overallItems; i++){
       let itemString = "item"+(i+1).toString();
       this.items.push(itemString);
       this.load.image(itemString, 'modules/buddy_profile_wizard/assets/img/memory_game_short_term/'+itemString+'.png');
@@ -35,6 +36,9 @@ class MemoryGameShortTerm extends GameScene {
     }
 
 
+    this.load.audio('boing', 'modules/buddy_profile_wizard/assets/sounds/boing.wav');
+    this.load.audio('impact', 'modules/buddy_profile_wizard/assets/sounds/soft_impact1.wav');
+    this.load.audio('suitcase', 'modules/buddy_profile_wizard/assets/sounds/suitcase_sucks_in_item.wav');
 
 
 
@@ -47,10 +51,14 @@ class MemoryGameShortTerm extends GameScene {
   }
 
   create() {
-
+    this.removeSound = this.sound.add('boing');
+    this.impactSound = this.sound.add('impact');
+    this.suitcaseSound = this.sound.add('suitcase');
     this.suitcase = this.add.sprite(140, this.cameras.main.height - 105, "suitcase");
+    this.suitcase.setDepth(1);
     this.conveyor_belt = this.matter.add.image(500, 400, 'conveyor-belt', null, {isStatic: true});
     this.conveyor_belt.setScale(0.4);
+    this.conveyor_belt.setDepth(3);
     this.conveyor_belt.setCollisionGroup(1);
     this.conveyor_belt.setCollidesWith(1);
 
@@ -60,6 +68,7 @@ class MemoryGameShortTerm extends GameScene {
     for(let i=0; i < this.numberOfDuplicates; i++){
 
       let duplicateItem = this.items[Math.floor(Math.random()*this.items.length)];
+      console.log("Dub:"+duplicateItem);
       this.testItems.push(duplicateItem);
     }
 
@@ -73,17 +82,20 @@ class MemoryGameShortTerm extends GameScene {
 
       if (event.pairs[0].bodyA.gameObject === memoryGameShort.conveyor_belt) {
 
-
+        memoryGameShort.impactSound.play();
         memoryGameShort.actualItemFallingFromTop = false;
         memoryGameShort.actualItem.setVelocity(-4, 0);
       } else if (event.pairs[0].bodyB.gameObject === memoryGameShort.conveyor_belt) {
         memoryGameShort.actualItem.setVelocity(-4, 0);
         memoryGameShort.actualItemFallingFromTop = false;
+        memoryGameShort.impactSound.play();
       } else {
 
         if (event.pairs[0].bodyA === memoryGameShort.fallSensor || event.pairs[0].bodyB === memoryGameShort.fallSensor) {
-          memoryGameShort.actualItemFallingInSuitcase = true;
+          memoryGameShort.inputDisabled = true;
+
         } else if (event.pairs[0].bodyA === memoryGameShort.slowSensor || event.pairs[0].bodyB === memoryGameShort.slowSensor) {
+          memoryGameShort.suitcaseSound.play();
           memoryGameShort.actualItem.setVelocity(0, 0);
           memoryGameShort.itemInSuitcase = true;
         } else if (event.pairs[0].bodyA === memoryGameShort.destroySensor || event.pairs[0].bodyB === memoryGameShort.destroySensor) {
@@ -122,9 +134,9 @@ class MemoryGameShortTerm extends GameScene {
     );
 
 
-    this.startButton = new IconButton(this, stringFactory.getString("memory_game_short_term_remove_item"), this.cameras.main.centerX, 300, "noIcon", function () {
+    this.startButton = new IconButton(this, stringFactory.getString("memory_game_short_term_remove_item"), this.cameras.main.width - 150, this.cameras.main.height - 100, "noIcon", function () {
 
-      if(!memoryGameShort.itemInSuitcase){
+      if(!memoryGameShort.inputDisabled){
 
         memoryGameShort.removeCurrentObject();
       }
@@ -133,7 +145,8 @@ class MemoryGameShortTerm extends GameScene {
     this.startButton.init();
     this.add.existing(this.startButton);
 
-    this.suitcase = this.add.sprite(140, this.cameras.main.height - 105, "suitcase_front");
+    this.suitcaseFront = this.add.sprite(140, this.cameras.main.height - 105, "suitcase_front");
+    this.suitcaseFront.setDepth(3);
 
     this.ground1 = this.matter.add.rectangle(300, this.cameras.main.height - 100, 150, 10, {
       isStatic: true,
@@ -149,22 +162,46 @@ class MemoryGameShortTerm extends GameScene {
 
   nextStep() {
 
+    if(this.actualItemAssetName){
+      //Add error because this was already in the bag
+      if(this.itemsInSuitcase.includes(this.actualItemAssetName)){
+
+        this.errors++;
+      }else{
+        this.itemsInSuitcase.push(this.actualItemAssetName);
+      }
+    }
+
+
     if(this.currentItemIndex < this.testItems.length){
 
       this.spawnObject(this.testItems[this.currentItemIndex]);
       this.currentItemIndex++;
     }else{
       console.log("test finished");
+
+      console.log("Errors:"+this.errors);
+      console.log(this.errors+"/"+this.testItems.length);
     }
 
   }
 
   removeCurrentObject() {
     if (this.actualItem) {
+
+      this.removeSound.play();
+      //Add error because this was not in the bag
+      if(!this.itemsInSuitcase.includes(this.actualItemAssetName)){
+
+        this.errors++;
+      }
+
+
       this.inputDisabled = true;
+
       if (this.actualItemFallingFromTop) {
 
-        this.actualItem.setVelocity(-10, -4);
+        this.actualItem.setVelocity(-10, -6);
         this.actualItem.setAngularVelocity(0.2);
 
         let memoryGameShort = this;
@@ -202,13 +239,15 @@ class MemoryGameShortTerm extends GameScene {
     if (this.actualItem) {
       this.actualItem.destroy();
       this.actualItem = null;
-      this.actualItemFallingInSuitcase = false;
+      this.inputDisabled = false;
       this.actualItemFallingFromTop = true;
       this.itemInSuitcase = false;
     }
 
+    this.actualItemAssetName = assetName;
     this.actualItem = this.matter.add.image(600, -100, assetName);
     this.actualItem.setFriction(0);
+    this.actualItem.setDepth(2);
     this.actualItem.setCollisionGroup(1);
     this.actualItem.setCollidesWith(1);
   }
