@@ -8,6 +8,7 @@ class Intro extends GameScene {
   preload() {
 
     super.preload();
+    this.load.audio('intro_message', 'modules/buddy_profile_wizard/assets/sounds/intro/de/intro.mp3');
   }
 
 
@@ -17,6 +18,12 @@ class Intro extends GameScene {
     this.coolSound = this.sound.add('no');
 
     this.createTitle(stringFactory.getString("intro_title"));
+
+    this.avatarButton = new AvatarAudioButton(this,"intro_message",this.cameras.main.centerX, 180,function (){
+
+    });
+    this.avatarButton.init();
+    this.add.existing(this.avatarButton);
 
 
     this.startButton = new IconButton(this,stringFactory.getString("intro_start_game"),this.cameras.main.centerX, 300,"playIcon",function (){

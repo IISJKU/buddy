@@ -54,7 +54,7 @@ class ReadingGameTTSSentence extends QuizScene{
     this.addQuestion(soundtest);
 
 
-    this.createTitle(stringFactory.getString("reading_game_text_intro"));
+    this.createTitle(stringFactory.getString("reading_game_tts_sentence_intro"));
     let readingGame = this;
     this.startButton = new IconButton(this,stringFactory.getString("math_game_start"),this.cameras.main.centerX, 300,"playIcon",function (){
 

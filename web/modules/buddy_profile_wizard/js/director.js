@@ -29,6 +29,12 @@ let Director = {
         break;
       }
 
+      case "MathGame": {
+
+        game.scene.start("MemoryGameShortTerm");
+        break;
+      }
+
 
       default: {
 

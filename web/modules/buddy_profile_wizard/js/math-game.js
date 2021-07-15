@@ -18,6 +18,8 @@ class MathGame extends GameScene {
     this.load.audio('explosion', 'modules/buddy_profile_wizard/assets/sounds/drum.wav');
     this.load.audio('yes', 'modules/buddy_profile_wizard/assets/sounds/yes.wav');
     this.load.audio('no', 'modules/buddy_profile_wizard/assets/sounds/no.wav');
+
+    this.load.audio('math_intro', 'modules/buddy_profile_wizard/assets/sounds/math_game/de/math_intro.mp3');
   }
 
   create() {
@@ -51,9 +53,18 @@ class MathGame extends GameScene {
 
     this.createTitle(stringFactory.getString("math_game_title_1"));
     let mathGame = this;
+
+    this.avatarButton = new AvatarAudioButton(this,"math_intro",this.cameras.main.centerX, 180,function (){
+
+    });
+    this.avatarButton.init();
+    this.add.existing(this.avatarButton);
+
+
     this.startButton = new IconButton(this,stringFactory.getString("math_game_start"),this.cameras.main.centerX, 300,"playIcon",function (){
       mathGame.titleText.destroy();
       mathGame.startButton.destroy();
+      mathGame.avatarButton.destroy();
       mathGame.startGame();
     });
     this.startButton.init();
@@ -286,7 +297,8 @@ class MathGame extends GameScene {
           }
           mathGame.houseSprite.destroy();
           mathGame.titleText.destroy();
-          mathGame.setupGame();
+          //mathGame.setupGame();
+          Director.changeScene("MathGame");
 
         } else {
           mathGame.noSound.play();

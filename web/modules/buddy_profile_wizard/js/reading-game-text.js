@@ -13,13 +13,13 @@ class ReadingGameText extends QuizScene{
   create(){
 
     let test = new QuizQuestion("banane","Die Bannane ist gelb?");
-    test.addAnswer(new Answer("Ja",true));
     test.addAnswer(new Answer("Nein",false));
+    test.addAnswer(new Answer("Ja",true));
     this.addQuestion(test);
 
     test = new QuizQuestion("bier","Bier schmeckt gut?");
-    test.addAnswer(new Answer("Ja",true));
     test.addAnswer(new Answer("Nein",false));
+    test.addAnswer(new Answer("Ja",true));
     this.addQuestion(test);
 
 

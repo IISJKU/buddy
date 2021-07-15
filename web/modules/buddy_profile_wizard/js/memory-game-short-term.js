@@ -13,10 +13,11 @@ class MemoryGameShortTerm extends GameScene {
     this.items = [];
     this.testItems = [];
     this.itemsInSuitcase = [];
-    this.numberOfDuplicates = 5;
-    this.overallItems = 5;
+    this.numberOfDuplicates = 10;
+    this.overallItems = 10;
     this.currentItemIndex = 0;
-    this.errors = 0;
+    this.errorsRemoved = 0;
+    this.errorsDuplicate = 0;
   }
 
   preload() {
@@ -36,6 +37,7 @@ class MemoryGameShortTerm extends GameScene {
     }
 
 
+    this.load.audio('memory_game_short_term_intro', 'modules/buddy_profile_wizard/assets/sounds/memory_game_short_term/de/short_term_intro.mp3');
     this.load.audio('boing', 'modules/buddy_profile_wizard/assets/sounds/boing.wav');
     this.load.audio('impact', 'modules/buddy_profile_wizard/assets/sounds/soft_impact1.wav');
     this.load.audio('suitcase', 'modules/buddy_profile_wizard/assets/sounds/suitcase_sucks_in_item.wav');
@@ -51,6 +53,27 @@ class MemoryGameShortTerm extends GameScene {
   }
 
   create() {
+
+    this.createTitle(stringFactory.getString("memory_game_short_term_title"));
+    let memoryGameShortTerm = this;
+
+    this.avatarButton = new AvatarAudioButton(this,"memory_game_short_term_intro",this.cameras.main.centerX, 180,function (){
+
+    });
+    this.avatarButton.init();
+    this.add.existing(this.avatarButton);
+
+    this.startButton = new IconButton(this, stringFactory.getString("math_game_start"), this.cameras.main.centerX, 300, "playIcon", function () {
+      memoryGameShortTerm.titleText.destroy();
+      memoryGameShortTerm.startButton.destroy();
+      memoryGameShortTerm.avatarButton.destroy();
+      memoryGameShortTerm.startGame();
+    });
+    this.startButton.init();
+    this.add.existing(this.startButton);
+
+  }
+  startGame(){
     this.removeSound = this.sound.add('boing');
     this.impactSound = this.sound.add('impact');
     this.suitcaseSound = this.sound.add('suitcase');
@@ -166,7 +189,8 @@ class MemoryGameShortTerm extends GameScene {
       //Add error because this was already in the bag
       if(this.itemsInSuitcase.includes(this.actualItemAssetName)){
 
-        this.errors++;
+        this.errorsDuplicate++;
+        console.log("Muh");
       }else{
         this.itemsInSuitcase.push(this.actualItemAssetName);
       }
@@ -179,7 +203,8 @@ class MemoryGameShortTerm extends GameScene {
       this.currentItemIndex++;
     }else{
       console.log("test finished");
-
+      let percent = ((this.testItems.length-this.errorsRemoved-this.errorsDuplicate)/this.testItems.length)*100;
+      this.createTitle("Reached percent:"+percent);
       console.log("Errors:"+this.errors);
       console.log(this.errors+"/"+this.testItems.length);
     }
@@ -193,7 +218,8 @@ class MemoryGameShortTerm extends GameScene {
       //Add error because this was not in the bag
       if(!this.itemsInSuitcase.includes(this.actualItemAssetName)){
 
-        this.errors++;
+        this.errorsRemoved++;
+
       }
 
 
@@ -228,6 +254,9 @@ class MemoryGameShortTerm extends GameScene {
       }
       this.actualItem.setCollisionGroup(0);
       this.actualItem.setCollidesWith(0);
+
+      //Reset this, otherwise it would also count as error in next step method;
+      this.actualItemAssetName = null;
 
     }
 
