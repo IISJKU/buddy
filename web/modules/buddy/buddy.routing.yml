@@ -14,6 +14,15 @@ buddy.user_entry_point:
     _title: 'Log in or register'
   requirements:
     _role: 'anonymous'
+buddy.user_profile:
+  path: '/user-profile'
+  defaults:
+    _form: '\Drupal\buddy\Form\UserProfilePreferencesForm'
+    _title: 'Create Profile'
+  requirements:
+    _role: 'anonymous'
+  options:
+    no_cache: 'TRUE'
 buddy.at_entry_overview:
   path: '/at-entries/my-at-entries'
   defaults:
