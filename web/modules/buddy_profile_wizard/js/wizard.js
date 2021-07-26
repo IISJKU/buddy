@@ -1,24 +1,30 @@
 var config = {
   type: Phaser.AUTO,
   scale: {
-    _mode: Phaser.Scale.WIDTH_CONTROLS_HEIGHT,
+    mode: Phaser.Scale.WIDTH_CONTROLS_HEIGHT,
     parent: 'phaser-container',
     width: 800,
     height: 600
   },
   physics: {
-    default: 'arcade',
-    arcade: {
-      gravity: { y: 200 }
+    default: 'matter',
+    matter: {
+      gravity: {
+        y: 0.4
+      },
+      debug: false,
+      debugBodyColor: 0xffffff
     }
   },
+
   backgroundColor: '#2d2d2d',
-  scene: [ MathGame, MemoryGame ]
+  scene: [Intro,ReadingGameTTSWord, MathGame, MemoryGame,ReadingGameText,ReadingGameTTSSentence,MemoryGameShortTerm ]
 
   /*scene: {
     preload: preload,
     create: create
   }*/
 };
+
 
 var game = new Phaser.Game(config);

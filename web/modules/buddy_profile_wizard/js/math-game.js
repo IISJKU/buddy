@@ -1,4 +1,4 @@
-class MathGame extends Phaser.Scene {
+class MathGame extends GameScene {
 
   constructor() {
     super('MathGame');
@@ -18,6 +18,8 @@ class MathGame extends Phaser.Scene {
     this.load.audio('explosion', 'modules/buddy_profile_wizard/assets/sounds/drum.wav');
     this.load.audio('yes', 'modules/buddy_profile_wizard/assets/sounds/yes.wav');
     this.load.audio('no', 'modules/buddy_profile_wizard/assets/sounds/no.wav');
+
+    this.load.audio('math_intro', 'modules/buddy_profile_wizard/assets/sounds/math_game/de/math_intro.mp3');
   }
 
   create() {
@@ -47,48 +49,26 @@ class MathGame extends Phaser.Scene {
   }
 
   setupGame(){
-    this.text = this.add.text(
-      this.cameras.main.centerX,
-      50,
-      "Count the people in the house",
-      {
-        fontSize: 30,
-        color: "#000000",
-        fontStyle: "bold"
-      }).setOrigin(0.5);
 
 
-    this.startText = this.add.text(
-      this.cameras.main.centerX,
-      95,
-      "Start Game!",
-      {
-        fontSize: 25,
-        color: "#000000",
-        fontStyle: "bold",
-      }).setOrigin(0.5);
-    this.startText.setAlpha(0);
-
-    this.startText.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.startText.width, this.startText.height), Phaser.Geom.Rectangle.Contains);
-
+    this.createTitle(stringFactory.getString("math_game_title_1"));
     let mathGame = this;
-    this.startText.on("pointerdown", function (pointer) {
-      console.log("AAA");
-      mathGame.startText.destroy();
-      mathGame.text.destroy();
+
+    this.avatarButton = new AvatarAudioButton(this,"math_intro",this.cameras.main.centerX, 180,function (){
+
+    });
+    this.avatarButton.init();
+    this.add.existing(this.avatarButton);
+
+
+    this.startButton = new IconButton(this,stringFactory.getString("math_game_start"),this.cameras.main.centerX, 300,"playIcon",function (){
+      mathGame.titleText.destroy();
+      mathGame.startButton.destroy();
+      mathGame.avatarButton.destroy();
       mathGame.startGame();
-
     });
-
-    this.time.addEvent({
-      delay: 1000,
-      callback: function () {
-        mathGame.startText.setAlpha(1);
-
-
-      }
-    });
-
+    this.startButton.init();
+    this.add.existing(this.startButton);
 
   }
 
@@ -96,7 +76,7 @@ class MathGame extends Phaser.Scene {
   startGame() {
     let numberOfSteps = 5;
     let minPeople = 1;
-    let maxPeople = 5;
+    let maxPeople = 3;
     let currentPeople = 0;
     for (let i = 0; i < numberOfSteps; i++) {
 
@@ -149,7 +129,6 @@ class MathGame extends Phaser.Scene {
   nextStep() {
 
 
-    console.log("HH");
     if (this.steps.length > 0) {
 
       if (this.steps[0].operation === 0) {
@@ -208,8 +187,6 @@ class MathGame extends Phaser.Scene {
         tween.addListener("complete", function (tween, targets) {
 
           mathGame.drumloop.stop();
-          console.log("COMPLETE");
-          console.log(delay);
           mathGame.time.addEvent({
             delay: delay,
             callback: function () {
@@ -276,15 +253,7 @@ class MathGame extends Phaser.Scene {
 
   showQuiz(){
     let mathGame = this;
-    this.text = this.add.text(
-      this.cameras.main.centerX,
-      50,
-      "How many people are in the house?",
-      {
-        fontSize: 30,
-        color: "#000000",
-        fontStyle: "bold"
-      }).setOrigin(0.5);
+    this.createTitle(stringFactory.getString("math_game_question"));
 
 
     let answers = [];
@@ -302,22 +271,49 @@ class MathGame extends Phaser.Scene {
 
     answers = this.shuffle(answers);
 
-    console.log(answers);
 
     let answerButtons = [];
-    for(let i=0; i < answers.length; i++){
+    for(let i=0; i < answers.length; i++) {
 
       let yPosition = 100;
 
-      if(i < answers.length/2){
-        yPosition = 150;
+      if (i < answers.length / 2) {
+        yPosition = 170;
       }
 
-      let position = i%(answers.length/2);
+      let position = i % (answers.length / 2);
 
 
-      let xPosition = position*this.cameras.main.width/(answers.length/2)+this.cameras.main.width/(answers.length);
+      let xPosition = position * this.cameras.main.width / (answers.length / 2) + this.cameras.main.width / (answers.length);
 
+
+      let test = new TextButton(this,  answers[i], xPosition, yPosition, function () {
+        if (answers[i] === mathGame.finalAmount) {
+
+          mathGame.yesSound.play();
+
+          for (let k = 0; k < answerButtons.length; k++) {
+            answerButtons[k].destroy();
+          }
+          mathGame.houseSprite.destroy();
+          mathGame.titleText.destroy();
+          //mathGame.setupGame();
+          Director.changeScene("MathGame");
+
+        } else {
+          mathGame.noSound.play();
+        }
+        console.log(answers[i] === mathGame.finalAmount);
+      });
+
+      test.init();
+      this.add.existing(test);
+      answerButtons.push(test);
+    }
+
+
+
+      /*
       let answerButton = this.add.text(
         xPosition,
         yPosition,
@@ -340,8 +336,10 @@ class MathGame extends Phaser.Scene {
             answerButtons[k].destroy();
             mathGame.text.destroy();
             mathGame.houseSprite.destroy();
-            mathGame.setupGame();
+
           }
+
+          mathGame.setupGame();
 
         }else{
           mathGame.noSound.play();
@@ -352,6 +350,7 @@ class MathGame extends Phaser.Scene {
 
     }
 
+    */
 
 
 

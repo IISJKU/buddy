@@ -1,13 +1,9 @@
 /* General */
 
 
-footer {
-  background-color: #343a40;
-  color: #fff;
-}
 
 .navbar {
-  background-color: #343a40;
+  background-color: #000000;
   color: #fff;
 }
 
@@ -51,21 +47,6 @@ table th:last-child, table td:last-child {
   margin-bottom: 20px;
 }
 
-#user-entry-social-auth {
-  width: 100%;
-  display: block;
-}
-
-.auth-option {
-  float: left;
-  margin: 10px;
-}
-
-.auth-option img {
-  max-width: 120px;
-  max-height: 120px;
-}
-
 
 /* Header */
 
@@ -91,7 +72,7 @@ header .navbar-brand a.site-title:focus{
   color: white;
 }
 header .nav-item a:hover,header .nav-item a:focus{
-  background: #AC535F;
+  background: #ac535f;
 }
 
 .navbar-toggler {
@@ -112,7 +93,7 @@ header .nav-item a:hover,header .nav-item a:focus{
 
 header{
 
-  border-bottom: 10px solid #6893dd;
+  border-bottom: 10px solid #ff0000;
 }
 
 /* Breadcrumbs + Search */
@@ -132,9 +113,11 @@ main {
 
 /*FOOTER */
 
-footer{
 
-  border-top: 10px solid #6893dd;
+footer{
+  background-color: #000000;
+  color: #fff;
+  border-top: 10px solid #ff0000;
 }
 
 .buddy_partners{
@@ -151,27 +134,4 @@ footer{
 
 .buddy_ec_logo{
   text-align: right;
-}
-
-#block-dropdownlanguage {
-  max-width: 200px;
-}
-
-#block-dropdownlanguage .dropbutton-wrapper {
-  color: black !important;
-}
-
-#block-dropdownlanguage .fieldset-legend {
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.75);
-}
-
-#block-dropdownlanguage fieldset {
-  margin-top: 0;
-}
-
-@media (min-width: 992px) {
-  #block-dropdownlanguage fieldset {
-    margin-left: 8px;
-  }
 }
