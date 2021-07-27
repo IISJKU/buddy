@@ -27,10 +27,8 @@ class UserProfilePreferencesForm extends FormBase
    */
   public function buildForm(array $form, FormStateInterface $form_state)
   {
-    if (!$form_state->has('page_num')) {
 
-      $form_state->set('page_num', 0);
-    }
+
 
 
     $storage = \Drupal::service('entity_type.manager')->getStorage('node');
@@ -52,6 +50,18 @@ class UserProfilePreferencesForm extends FormBase
     $atCategories = $storage->loadMultiple($atCategoryIDs);
 
 
+    if (!$form_state->has('page_num')) {
+
+      $form_state->set('page_num', 0);
+      $selectedAtCategories = [];
+      foreach ($atCategories as $key=> $atCategory){
+
+        $selectedAtCategories[$key] = 0;
+        $form_state->set('selectedAtCategories', $selectedAtCategories);
+      }
+    }
+
+    $selectedAtCategories = $form_state->get('selectedAtCategories');
     $currentPage = $form_state->get('page_num');
     $keys = array_keys($atCategoryContainers);
     $categoryContainerId = $keys[$currentPage];
@@ -59,10 +69,28 @@ class UserProfilePreferencesForm extends FormBase
 
 
 
-    $form['category_container_' . $categoryContainerId] = array(
-      '#type' => 'fieldset',
-      '#title' => $this->t($atCategoryContainer->title->value),
-    );
+
+    if ($atCategoryContainer->field_category_container_user_ti->value) {
+
+      Util::setTitle($atCategoryContainer->field_category_container_user_ti->value);
+      /*
+      $form['category_container_' . $categoryContainerId]['container_description'] = array(
+        '#type' => 'markup',
+        '#markup' => $atCategoryContainer->field_category_container_user_ti->value,
+      );
+      */
+    }else{
+
+      Util::setTitle($atCategoryContainer->title->value);
+      /*
+      $form['category_container_' . $categoryContainerId] = array(
+        '#type' => 'fieldset',
+        '#title' => $this->t($atCategoryContainer->title->value),
+      );
+      */
+    }
+
+
 
     if ($atCategoryContainer->field_category_container_descrip->value) {
 
@@ -78,7 +106,35 @@ class UserProfilePreferencesForm extends FormBase
 
       if ($atCategoryContainer->id() == $category->get('field_at_category_container')->target_id) {
 
+        $form['category_container_' . $categoryContainerId]['category_' . $categoryID]['title'] = [
+          '#type' => 'item',
+          '#markup' => "<h2>".$category->field_at_category_user_title->value."</h2>",
+        ];
 
+        $form['category_container_' . $categoryContainerId]['category_' . $categoryID]['description'] = [
+          '#type' => 'item',
+          '#markup' => "<p>".$category->field_at_category_user_descript->value."</p>",
+        ];
+
+        $form['category_container_' . $categoryContainerId]['category_' . $categoryID]['radio'] = array(
+          '#type' => 'radios',
+          '#title' => $this->t("Do you want ")." ".$category->field_at_category_user_title->value."?",
+          '#default_value' => $selectedAtCategories[$categoryID],
+          '#options' => array(
+            '0' => $this
+              ->t('Yes'),
+            '1' => $this
+              ->t('No'),
+          ),
+          '#attributes' => array('class' => array('profile-radio')),
+        );
+
+        $form['category_container_' . $categoryContainerId]['category_' . $categoryID]['line'] = [
+          '#type' => 'item',
+          '#markup' => "<hr>",
+        ];
+
+        /*
         $form['category_container_' . $categoryContainerId]['category_' . $categoryID] = array(
           '#type' => 'checkboxes',
           '#title' => $category->title->value,
@@ -86,7 +142,7 @@ class UserProfilePreferencesForm extends FormBase
             $categoryID => $category->field_category_description->value,
           ),
         );
-
+        */
       }
     }
 
@@ -98,19 +154,32 @@ class UserProfilePreferencesForm extends FormBase
       '#type' => 'actions',
     ];
 
+    if ($currentPage > 0) {
+      $form['actions']['prev'] = [
+        '#type' => 'submit',
+        '#value' => $this->t('Previous step'),
+        '#submit' => ['::prevSubmitForm'],
+        '#ajax' => [
+          'wrapper' => 'user-entry-form-wrapper',
+          'callback' => '::prompt',
+        ],
+      ];
+    }
+
     if($currentPage !== count($atCategoryContainers)-1){
       $form['actions']['next'] = [
         '#type' => 'submit',
         '#button_type' => 'primary',
         '#value' => $this->t('Next'),
         // Custom submission handler for page 1.
-        // '#submit' => ['::pageOneSubmit'],
+        '#submit' => ['::nextSubmitForm'],
         // Custom validation handler for page 1.
-        '#validate' => ['::pageOneSubmitValidate'],
+    //    '#validate' => ['::pageOneSubmitValidate'],
         '#ajax' => [
           'wrapper' => 'user-entry-form-wrapper',
           'callback' => '::prompt',
         ],
+
       ];
     }else{
 
@@ -122,8 +191,10 @@ class UserProfilePreferencesForm extends FormBase
 
 
 
+
     $form['#prefix'] = '<div id="user-entry-form-wrapper">';
     $form['#suffix'] = '</div>';
+    $form['#attached']['library'][] = 'buddy/user_profile_forms';
     return $form;
   }
 
@@ -131,106 +202,34 @@ class UserProfilePreferencesForm extends FormBase
   public function submitForm(array &$form, FormStateInterface $form_state)
   {
 
-    $currentPages = $form_state->get('page_num');
-    $currentPages++;
-
-    $form_state->set('page_num', $currentPages);
-    $form_state
-      /*  ->set('page_values', [
-          // Keep only first step values to minimize stored data.
-          'type' => $form_state->getValue('type'),
-        ])*/
-      //   ->set('page_num', 2)
-      // Since we have logic in our buildForm() method, we have to tell the form
-      // builder to rebuild the form. Otherwise, even though we set 'page_num'
-      // to 2, the AJAX-rendered form will still show page 1.
-      ->setRebuild(TRUE);
-
-      return;
-    $page_values = $form_state->get('page_values');
-    $id = 0;
-    if ($page_values['type'] == "software") {
-
-      $id = $this->saveSoftwareType($form, $form_state);
-    } else if ($page_values['type'] == "app") {
-      $id = $this->saveAppTypeForm($form, $form_state);
-    } else {
-      //browser_extension
-      $id = $this->saveBrowserExtensionType($form, $form_state);
-
-    }
-
-
-    $this->atEntry->field_at_types[] = ['target_id' => $id];
-    $this->atEntry->save();
     $form_state->setRedirect('buddy.at_entry_overview');
 
 
   }
 
-
-  public function pageOneSubmitValidate(array &$form, FormStateInterface $form_state)
+  public function nextSubmitForm(array &$form, FormStateInterface $form_state)
   {
 
-
-  }
-
-
-  public function pageOneSubmit(array &$form, FormStateInterface $form_state)
-  {
+    $valus = $this->getSelectedCategories($form,$form_state);
 
     $currentPages = $form_state->get('page_num');
     $currentPages++;
 
-    $form_state->set('page_num', $currentPages);
-    $form_state
-      /*  ->set('page_values', [
-          // Keep only first step values to minimize stored data.
-          'type' => $form_state->getValue('type'),
-        ])*/
-      //   ->set('page_num', 2)
-      // Since we have logic in our buildForm() method, we have to tell the form
-      // builder to rebuild the form. Otherwise, even though we set 'page_num'
-      // to 2, the AJAX-rendered form will still show page 1.
-      ->setRebuild(TRUE);
+    $form_state->set('page_num', $currentPages)->setRebuild(TRUE);
+
   }
 
-
-  public function pageTwoForm(array &$form, FormStateInterface $form_state)
+  public function prevSubmitForm(array &$form, FormStateInterface $form_state)
   {
+    $currentPages = $form_state->get('page_num');
+    $currentPages--;
 
-    $page_values = $form_state->get('page_values');
-
-
-    if ($page_values['type'] == "software") {
-
-      $form = $this->createSoftwareTypeForm($form, $form_state);
-    } else if ($page_values['type'] == "app") {
-      $form = $this->createAppTypeForm($form, $form_state);
-    } else {
-      //browser_extension
-      $form = $this->createBrowserExtensionTypeForm($form, $form_state);
-
-    }
-
-
-    $form['back'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Back'),
-      // Custom submission handler for 'Back' button.
-      '#submit' => ['::pageTwoBackSubmit'],
-      // We won't bother validating the required 'color' field, since they
-      // have to come back to this page to submit anyway.
-      '#limit_validation_errors' => [],
-    ];
-    $form['submit'] = [
-      '#type' => 'submit',
-      '#button_type' => 'primary',
-      '#value' => $this->t('Submit'),
-    ];
-
-    return $form;
+    $form_state->set('page_num', $currentPages);
+    $form_state->set('page_num', $currentPages)->setRebuild(TRUE);
   }
+
+
+
 
   /**
    * UserEntryPoint Ajax callback function.
@@ -241,6 +240,8 @@ class UserProfilePreferencesForm extends FormBase
    *   Form API form.
    */
   public function prompt(array $form, FormStateInterface $form_state) {
+
+
     /*
     $step_no = $form_state->getValue('step');
     switch ($step_no) {
@@ -260,4 +261,24 @@ class UserProfilePreferencesForm extends FormBase
     return $form;
   }
 
+  protected function getSelectedCategories(array &$form, FormStateInterface $form_state){
+    $values = $form_state->getValues();
+    $selectedCategories = array();
+
+    foreach ($values as $key => $value){
+
+      if(str_starts_with ($key,"category_")){
+
+        $selectedCategories[] = [
+          'id' => $key,
+          'value' => $value
+        ];
+
+
+      }
+
+    }
+
+    return $selectedCategories;
+  }
 }

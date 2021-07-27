@@ -152,3 +152,9 @@ footer{
 .buddy_ec_logo{
   text-align: right;
 }
+
+@media (max-width: 991px) {
+  .navbar-expand .navbar-nav {
+    flex-direction: column;
+  }
+}
