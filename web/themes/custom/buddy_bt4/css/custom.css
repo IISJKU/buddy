@@ -170,6 +170,16 @@ footer{
   margin-top: 0;
 }
 
+#block-dropdownlanguage fieldset legend {
+  display: none;
+}
+
+#block-dropdownlanguage .dropbutton-wrapper {
+  position: absolute;
+  z-index: 1;
+  margin: 10px 0;
+}
+
 @media (min-width: 992px) {
   #block-dropdownlanguage fieldset {
     margin-left: 8px;
