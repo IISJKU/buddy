@@ -140,6 +140,10 @@ class UserProfilePreferencesForm extends FormBase
 
 
 
+
+
+
+
     if ($atCategoryContainer->field_category_container_descrip->value) {
 
       $form['category_container_' . $categoryContainerId]['container_description'] = array(
@@ -147,6 +151,11 @@ class UserProfilePreferencesForm extends FormBase
         '#markup' => $atCategoryContainer->field_category_container_descrip->value,
       );
     }
+
+    $form['category_container_' . $categoryContainerId]['current_step']  = array(
+      '#type' => 'markup',
+      '#markup' => "<h4>".$this->t("Current step:").($currentPage+1)."/".count($atCategoryContainers)."</h4>",
+    );
 
 
     foreach ($atCategories as $categoryID => $category) {
@@ -217,7 +226,7 @@ class UserProfilePreferencesForm extends FormBase
       $form['actions']['next'] = [
         '#type' => 'submit',
         '#button_type' => 'primary',
-        '#value' => $this->t('Next'),
+        '#value' => $this->t('Next step'),
         // Custom submission handler for page 1.
         '#submit' => ['::nextSubmitForm'],
         // Custom validation handler for page 1.
@@ -289,7 +298,7 @@ class UserProfilePreferencesForm extends FormBase
     $userProfile->save();
 
 
-    $form_state->setRedirect('buddy.at_entry_overview');
+    $form_state->setRedirect('user.page');
 
 
   }
@@ -354,22 +363,7 @@ class UserProfilePreferencesForm extends FormBase
     $response = new AjaxResponse();
     $response->addCommand(new InvokeCommand(NULL, 'myAjaxCallback', [$currentTitle]));
     $response->addCommand(new ReplaceCommand('#user-entry-form-wrapper',$form));
-    /*
-    $step_no = $form_state->getValue('step');
-    switch ($step_no) {
-      case UserEntryWizardStep::LoginForm:
-        $response = new AjaxResponse();
-        $url = Url::fromRoute('user.login');
-        $command = new RedirectCommand($url->toString());
-        $response->addCommand($command);
-        return $response;
-      case UserEntryWizardStep::RegisterForm:
-        $response = new AjaxResponse();
-        $url = Url::fromRoute('user.register');
-        $command = new RedirectCommand($url->toString());
-        $response->addCommand($command);
-        return $response;
-    }*/
+
     return $response;
   }
 
