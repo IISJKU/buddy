@@ -144,11 +144,11 @@ class UserProfilePreferencesForm extends FormBase
 
 
 
-    if ($atCategoryContainer->field_category_container_descrip->value) {
+    if ($atCategoryContainer->field_category_container_user_de->value) {
 
       $form['category_container_' . $categoryContainerId]['container_description'] = array(
         '#type' => 'markup',
-        '#markup' => $atCategoryContainer->field_category_container_descrip->value,
+        '#markup' => $atCategoryContainer->field_category_container_user_de->value,
       );
     }
 
@@ -175,7 +175,7 @@ class UserProfilePreferencesForm extends FormBase
 
         $form['category_container_' . $categoryContainerId]['category_' . $categoryID]["cat_".$categoryID] = array(
           '#type' => 'radios',
-          '#title' => $this->t("Do you want ")." ".$category->field_at_category_user_title->value."?",
+          '#title' => $this->t("Do you want support for")." ".$category->field_at_category_user_title->value."?",
           '#default_value' => $selectedAtCategories[$categoryID],
           '#options' => array(
             '100' => $this->t('Yes'),
