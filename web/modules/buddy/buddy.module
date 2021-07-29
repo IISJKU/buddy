@@ -1,11 +1,7 @@
 <?php
 
-use  \Drupal\Core\Form\FormStateInterface;
-
-function buddy_form_alter(&$form, FormStateInterface $form_state, $form_id)
-{
-  $i = 0;
-}
+use Drupal\Core\Link;
+use Drupal\node\Entity\Node;
 
 /**
  * Implement hook_entity_load
@@ -19,9 +15,28 @@ function buddy_entity_load(array $entities, $entity_type_id) {
     if ($node->getType() == 'at_description') {
       $node_lang = $node->get('field_at_description_language')->getString();
       $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
-      if ($node_lang !== $user_lang) {
+      if (!empty($node_lang) && !empty($user_lang) && $node_lang !== $user_lang) {
         // Check if translation in language of user exists
-
+        $entry_nid = $node->get('field_at_entry')->getString();
+        $query = \Drupal::entityQuery('node')
+          ->condition('type', 'at_description')
+          ->condition('field_at_entry', $entry_nid)
+          ->condition('field_at_description_language', $user_lang)
+          ->condition('status', 1);
+        $results = $query->execute();
+        if (!empty($results)) {
+          $messenger = \Drupal::messenger();
+          $languages = \Drupal::service('language_manager')->getStandardLanguageList();
+          $messenger->addMessage(
+            t('This entry is available in @language: @at_link.',
+              [ '@language' => $languages[$user_lang][0],
+                '@at_link' => Link::createFromRoute(
+                  t('click here to see'),
+                  'entity.node.canonical', ['node' => array_shift($results)])
+                  ->toString(),]),
+            $messenger::TYPE_STATUS,
+            FALSE);
+        }
       }
     }
   }
