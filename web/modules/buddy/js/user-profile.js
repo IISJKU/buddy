@@ -1,6 +1,5 @@
 function initCheckboxes(){
-
-  console.log("gogo");
+  //Todo later if icons are needed
 }
 
 
@@ -14,3 +13,11 @@ jQuery(document).ready(function (){
 
 
 
+(function($) {
+  // Argument passed from InvokeCommand.
+  $.fn.myAjaxCallback = function(argument) {
+    console.log('myAjaxCallback is called.');
+    // Set textfield's value to the passed arguments.
+    $(".page-title").text(argument);
+  };
+})(jQuery);

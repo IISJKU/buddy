@@ -158,3 +158,8 @@ footer{
     flex-direction: column;
   }
 }
+
+.navbar-expand-lg {
+  flex-flow: column;
+  justify-content: flex-start;
+}

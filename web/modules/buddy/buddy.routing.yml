@@ -20,7 +20,7 @@ buddy.user_profile:
     _form: '\Drupal\buddy\Form\UserProfilePreferencesForm'
     _title: 'Create Profile'
   requirements:
-    _role: 'anonymous'
+    _user_is_logged_in: 'TRUE'
   options:
     no_cache: 'TRUE'
 buddy.at_entry_overview:

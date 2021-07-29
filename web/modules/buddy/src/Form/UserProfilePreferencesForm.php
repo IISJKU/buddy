@@ -5,6 +5,9 @@ namespace Drupal\buddy\Form;
 
 
 use Drupal\buddy\Util\Util;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\InvokeCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\Node;
@@ -36,7 +39,7 @@ class UserProfilePreferencesForm extends FormBase
     $atCategoryContainersIDs = $storage->getQuery()
       ->condition('type', 'at_category_container')
       ->condition('status', 1)
-      ->sort('field_category_container_weight', 'DESC')
+      ->sort('field_category_container_weight', 'ASC')
       ->execute();
 
     $atCategoryContainers = $storage->loadMultiple($atCategoryContainersIDs);
@@ -52,13 +55,67 @@ class UserProfilePreferencesForm extends FormBase
 
     if (!$form_state->has('page_num')) {
 
-      $form_state->set('page_num', 0);
+
       $selectedAtCategories = [];
+
       foreach ($atCategories as $key=> $atCategory){
 
         $selectedAtCategories[$key] = 0;
         $form_state->set('selectedAtCategories', $selectedAtCategories);
       }
+
+
+
+
+      $form_state->set('page_num', 0);
+
+
+      $user = \Drupal::currentUser();
+      $user_profileID = \Drupal::entityQuery('node')
+        ->condition('type', 'user_profile')
+        ->condition('uid', $user->id(), '=')
+        ->execute();
+
+
+      if(count($user_profileID) == 0){
+        $node = Node::create([
+          'type'        => 'user_profile',
+          'title'       =>  'User Profile:'.$user->id(),
+
+        ]);
+        $node->save();
+
+        $form_state->set('user_profile_id',$node->id());
+
+      }else{
+
+        $form_state->set('user_profile_id', reset($user_profileID));
+
+        $existingUserNeedAssignmentIDs = \Drupal::entityQuery('node')
+          ->condition('type', 'user_need_assignment')
+          ->condition('field_user_need_ass_user_profile',reset($user_profileID), '=')
+          ->execute();
+
+
+        $existingUserNeedAssignments = $storage->loadMultiple($existingUserNeedAssignmentIDs);
+
+        foreach ($existingUserNeedAssignments as $existingUserNeedAssignment) {
+
+          $selectedAtCategories[$existingUserNeedAssignment->field_user_need_ass_support_cat->getValue()[0]['target_id']] = $existingUserNeedAssignment->field_user_need_ass_percentage->getValue()[0]['value'];
+
+        }
+        $form_state->set('selectedAtCategories', $selectedAtCategories);
+      }
+
+
+
+
+      /*
+
+      $node->save();
+      */
+
+
     }
 
     $selectedAtCategories = $form_state->get('selectedAtCategories');
@@ -73,21 +130,12 @@ class UserProfilePreferencesForm extends FormBase
     if ($atCategoryContainer->field_category_container_user_ti->value) {
 
       Util::setTitle($atCategoryContainer->field_category_container_user_ti->value);
-      /*
-      $form['category_container_' . $categoryContainerId]['container_description'] = array(
-        '#type' => 'markup',
-        '#markup' => $atCategoryContainer->field_category_container_user_ti->value,
-      );
-      */
+      $form_state->set('current_title',$atCategoryContainer->field_category_container_user_ti->value);
+
     }else{
 
       Util::setTitle($atCategoryContainer->title->value);
-      /*
-      $form['category_container_' . $categoryContainerId] = array(
-        '#type' => 'fieldset',
-        '#title' => $this->t($atCategoryContainer->title->value),
-      );
-      */
+      $form_state->set('current_title',$atCategoryContainer->title->value);
     }
 
 
@@ -116,17 +164,16 @@ class UserProfilePreferencesForm extends FormBase
           '#markup' => "<p>".$category->field_at_category_user_descript->value."</p>",
         ];
 
-        $form['category_container_' . $categoryContainerId]['category_' . $categoryID]['radio'] = array(
+        $form['category_container_' . $categoryContainerId]['category_' . $categoryID]["cat_".$categoryID] = array(
           '#type' => 'radios',
           '#title' => $this->t("Do you want ")." ".$category->field_at_category_user_title->value."?",
           '#default_value' => $selectedAtCategories[$categoryID],
           '#options' => array(
-            '0' => $this
-              ->t('Yes'),
-            '1' => $this
-              ->t('No'),
+            '100' => $this->t('Yes'),
+            '0' => $this->t('No'),
           ),
-          '#attributes' => array('class' => array('profile-radio')),
+
+
         );
 
         $form['category_container_' . $categoryContainerId]['category_' . $categoryID]['line'] = [
@@ -202,6 +249,46 @@ class UserProfilePreferencesForm extends FormBase
   public function submitForm(array &$form, FormStateInterface $form_state)
   {
 
+
+    $storage = \Drupal::service('entity_type.manager')->getStorage('node');
+
+    $userNeedAssignmentIDs = $storage->getQuery()
+      ->condition('type', 'user_need_assignment')
+      ->condition('field_user_need_ass_user_profile',  $form_state->get('user_profile_id'))
+      ->execute();
+
+    $userNeedAssignments = $storage->loadMultiple($userNeedAssignmentIDs);
+
+    foreach ($userNeedAssignments as $userNeedAssignment){
+      $userNeedAssignment->delete();
+    }
+
+
+    $user = \Drupal::currentUser();
+
+    $selectedAtCategories = $form_state->get('selectedAtCategories');
+
+    $userNeeds = [];
+    foreach ($selectedAtCategories as $categoryID => $percent){
+
+      $node = Node::create([
+        'type'        => 'user_need_assignment',
+        'title'       =>  'User Need Ass:'.$categoryID.'-'.$user->id().':'.$percent,
+        'field_user_need_ass_user_profile' => ['target_id' => $form_state->get('user_profile_id')],
+        'field_user_need_ass_support_cat' => ['target_id' => $categoryID],
+        'field_user_need_ass_percentage' => ['value' => $percent],
+      ]);
+      $node->save();
+
+
+      $userNeeds[] = ['target_id' => $node->id()];
+    }
+
+    $userProfile = Node::load($form_state->get('user_profile_id'));
+    $userProfile->field_user_profile_user_needs  = $userNeeds;
+    $userProfile->save();
+
+
     $form_state->setRedirect('buddy.at_entry_overview');
 
 
@@ -210,7 +297,19 @@ class UserProfilePreferencesForm extends FormBase
   public function nextSubmitForm(array &$form, FormStateInterface $form_state)
   {
 
-    $valus = $this->getSelectedCategories($form,$form_state);
+    $values = $this->getSelectedCategories($form,$form_state);
+
+
+    $selectedAtCategories = $form_state->get('selectedAtCategories');
+    foreach ($values as $value){
+
+      $selectedAtCategories[$value['id']] = $value['value'];
+    }
+
+    $form_state->set('selectedAtCategories', $selectedAtCategories);
+
+
+
 
     $currentPages = $form_state->get('page_num');
     $currentPages++;
@@ -221,6 +320,17 @@ class UserProfilePreferencesForm extends FormBase
 
   public function prevSubmitForm(array &$form, FormStateInterface $form_state)
   {
+
+    $values = $this->getSelectedCategories($form,$form_state);
+
+    $selectedAtCategories = $form_state->get('selectedAtCategories');
+    foreach ($values as $value){
+
+      $selectedAtCategories[$value['id']] = $value['value'];
+    }
+    $form_state->set('selectedAtCategories', $selectedAtCategories);
+
+
     $currentPages = $form_state->get('page_num');
     $currentPages--;
 
@@ -240,8 +350,10 @@ class UserProfilePreferencesForm extends FormBase
    *   Form API form.
    */
   public function prompt(array $form, FormStateInterface $form_state) {
-
-
+    $currentTitle = $form_state->get('current_title');
+    $response = new AjaxResponse();
+    $response->addCommand(new InvokeCommand(NULL, 'myAjaxCallback', [$currentTitle]));
+    $response->addCommand(new ReplaceCommand('#user-entry-form-wrapper',$form));
     /*
     $step_no = $form_state->getValue('step');
     switch ($step_no) {
@@ -258,7 +370,7 @@ class UserProfilePreferencesForm extends FormBase
         $response->addCommand($command);
         return $response;
     }*/
-    return $form;
+    return $response;
   }
 
   protected function getSelectedCategories(array &$form, FormStateInterface $form_state){
@@ -267,10 +379,11 @@ class UserProfilePreferencesForm extends FormBase
 
     foreach ($values as $key => $value){
 
-      if(str_starts_with ($key,"category_")){
+      if(str_starts_with ($key,"cat_")){
 
+        $id = intval(str_replace("cat_","",$key));
         $selectedCategories[] = [
-          'id' => $key,
+          'id' => $id,
           'value' => $value
         ];
 
@@ -281,4 +394,6 @@ class UserProfilePreferencesForm extends FormBase
 
     return $selectedCategories;
   }
+
 }
+
