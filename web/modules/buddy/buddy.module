@@ -4,7 +4,7 @@ use  \Drupal\Core\Form\FormStateInterface;
 
 function buddy_form_alter(&$form, FormStateInterface $form_state, $form_id)
 {
-
+  $i = 0;
 }
 
 /**
@@ -17,7 +17,12 @@ function buddy_entity_load(array $entities, $entity_type_id) {
   if ($entity_type_id == 'node' && count($entities) == 1) {
     $node = array_values($entities)[0];
     if ($node->getType() == 'at_description') {
-      // TODO: check for translation
+      $node_lang = $node->get('field_at_description_language')->getString();
+      $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
+      if ($node_lang !== $user_lang) {
+        // Check if translation in language of user exists
+
+      }
     }
   }
 }
