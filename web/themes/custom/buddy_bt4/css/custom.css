@@ -184,8 +184,16 @@ footer{
   top: 35px;
 }
 
-@media (min-width: 992px) {
+@media (max-width: 991px) {
+  .navbar-expand .navbar-nav {
+    flex-direction: column;
+  }
   #block-dropdownlanguage fieldset {
     margin-left: 8px;
   }
+}
+
+.navbar-expand-lg {
+  flex-flow: column;
+  justify-content: flex-start;
 }
