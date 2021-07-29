@@ -258,6 +258,15 @@ class UserProfilePreferencesForm extends FormBase
   public function submitForm(array &$form, FormStateInterface $form_state)
   {
 
+    $values = $this->getSelectedCategories($form,$form_state);
+
+    $selectedAtCategories = $form_state->get('selectedAtCategories');
+    foreach ($values as $value){
+
+      $selectedAtCategories[$value['id']] = $value['value'];
+    }
+    $form_state->set('selectedAtCategories', $selectedAtCategories);
+
 
     $storage = \Drupal::service('entity_type.manager')->getStorage('node');
 
