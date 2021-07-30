@@ -16,11 +16,18 @@ function buddy_entity_load(array $entities, $entity_type_id) {
       $node_lang = $node->get('field_at_description_language')->getString();
       $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
       if (!empty($node_lang) && !empty($user_lang) && $node_lang !== $user_lang) {
-        // Check if translation in language of user exists
-        $entry_nid = $node->get('field_at_entry')->getString();
+        // Fetch AT entry of AT description
+        $query = \Drupal::entityQuery('node')
+          ->condition('type', 'at_entry')
+          ->condition('field_at_descriptions', $node->id(), 'IN');
+        $results = $query->execute();
+        if (empty($results)) {
+          return;
+        }
+        // Find AT description in user's language
         $query = \Drupal::entityQuery('node')
           ->condition('type', 'at_description')
-          ->condition('field_at_entry', $entry_nid)
+          ->condition('field_at_entry', array_shift($results))
           ->condition('field_at_description_language', $user_lang)
           ->condition('status', 1);
         $results = $query->execute();
@@ -31,7 +38,7 @@ function buddy_entity_load(array $entities, $entity_type_id) {
             t('This entry is available in @language: @at_link.',
               [ '@language' => $languages[$user_lang][0],
                 '@at_link' => Link::createFromRoute(
-                  t('click here to see'),
+                  t('click here to see it'),
                   'entity.node.canonical', ['node' => array_shift($results)])
                   ->toString(),]),
             $messenger::TYPE_STATUS,
