@@ -86,10 +86,33 @@ function buddy_user_login($account) {
 
   if (!in_array($current_route, ['user.reset', 'user.reset.login'])) {
 
+    if( !in_array("at_moderator", $account->getRoles()) &&!in_array("administrator", $account->getRoles())){
+
+      $user = \Drupal::currentUser();
+      $user_profileID = \Drupal::entityQuery('node')
+        ->condition('type', 'user_profile')
+        ->condition('uid', $user->id(), '=')
+        ->condition('field_user_profile_finished', true, '=')
+        ->execute();
 
 
-   $redirectResponse = new RedirectResponse(URL::fromRoute('buddy.user_profile')->toString());
-   $middleware->setRedirectResponse($redirectResponse);
+      if(count($user_profileID) == 0){
+        $redirectResponse = new RedirectResponse(URL::fromRoute('buddy.user_profile')->toString());
+        $middleware->setRedirectResponse($redirectResponse);
+
+      }else{
+        $redirectResponse = new RedirectResponse(URL::fromRoute('buddy.user_overview')->toString());
+        $middleware->setRedirectResponse($redirectResponse);
+
+      }
+
+
+
+
+    }
+
+
+
     return;
 
   }

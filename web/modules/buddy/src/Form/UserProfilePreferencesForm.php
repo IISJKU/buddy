@@ -304,6 +304,7 @@ class UserProfilePreferencesForm extends FormBase
 
     $userProfile = Node::load($form_state->get('user_profile_id'));
     $userProfile->field_user_profile_user_needs  = $userNeeds;
+    $userProfile->field_user_profile_finished = ['value' => true];
     $userProfile->save();
 
 

@@ -23,6 +23,14 @@ buddy.user_profile:
     _user_is_logged_in: 'TRUE'
   options:
     no_cache: 'TRUE'
+buddy.user_overview:
+  path: '/user-overview'
+  defaults:
+    _controller: '\Drupal\buddy\Controller\UserOverviewController::content'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    no_cahce: 'TRUE'
 buddy.at_entry_overview:
   path: '/at-entries/my-at-entries'
   defaults:
