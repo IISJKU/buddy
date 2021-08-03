@@ -183,6 +183,10 @@ footer{
   margin: 10px 0;
 }
 
+.search-block-form {
+  top: -16px;
+}
+
 .block-system-breadcrumb-block {
   top: 35px;
 }
@@ -193,6 +197,21 @@ footer{
   }
   #block-dropdownlanguage fieldset {
     margin-left: 8px;
+  }
+}
+
+@media (max-width: 515px) {
+  #block-dropdownlanguage .dropbutton-wrapper {
+    position: relative !important;
+    display: inline-block;
+  }
+  #block-buddy-bt4-search-form {
+    position: relative !important;
+    display: inline-block;
+  }
+
+  #block-dropdownlanguage fieldset {
+    margin-left: 0 !important;
   }
 }
 
