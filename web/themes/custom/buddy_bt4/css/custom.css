@@ -191,6 +191,14 @@ footer{
   top: 35px;
 }
 
+.block-dropdown-language button:focus {
+  box-shadow: 0 0 0 2px #AC535F;
+}
+
+.block-dropdown-language a:focus {
+  box-shadow: inset 0 0 0 2px #AC535F;
+}
+
 @media (max-width: 991px) {
   .navbar-expand .navbar-nav {
     flex-direction: column;
