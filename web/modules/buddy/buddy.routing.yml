@@ -14,6 +14,8 @@ buddy.user_entry_point:
     _title: 'Log in or register'
   requirements:
     _role: 'anonymous'
+  options:
+    no_cache: 'TRUE'
 buddy.user_profile:
   path: '/user-profile'
   defaults:

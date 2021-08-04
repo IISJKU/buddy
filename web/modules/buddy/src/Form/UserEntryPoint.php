@@ -299,7 +299,7 @@ class UserEntryPoint extends FormBase {
         return $response;
       case UserEntryWizardStep::ForgotPassword:
         $response = new AjaxResponse();
-        $url = Url::fromRoute('user.reset.form');
+        $url = Url::fromRoute('user.pass');
         $command = new RedirectCommand($url->toString());
         $response->addCommand($command);
         return $response;
