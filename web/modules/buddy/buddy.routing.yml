@@ -3,7 +3,7 @@ buddy.at_backend_overview:
   defaults:
     _controller: '\Drupal\buddy\Controller\ATBackendOverviewController::content'
   requirements:
-    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
+    _custom_access: '\Drupal\buddy\Controller\ATProviderController::access'
     _role: 'administrator+at_provider'
   options:
     no_cache: 'TRUE'
@@ -14,6 +14,8 @@ buddy.user_entry_point:
     _title: 'Log in or register'
   requirements:
     _role: 'anonymous'
+  options:
+    no_cache: 'TRUE'
 buddy.user_profile:
   path: '/user-profile'
   defaults:
@@ -30,32 +32,51 @@ buddy.user_overview:
   requirements:
     _user_is_logged_in: 'TRUE'
   options:
-    no_cahce: 'TRUE'
+    no_cache: 'TRUE'
+buddy.user_at_recommendation:
+  path: '/user-at-recommendation'
+  defaults:
+    _form: '\Drupal\buddy\Form\ATRecommendationForm'
+    _title: 'My AT Recommendations'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+buddy.user_at_detail_form:
+  path: '/user-at-detail/{description}'
+  defaults:
+    _form: '\Drupal\buddy\Form\UserATEntryDetailForm'
+    _title: 'My AT'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _entity_bundles: 'description:at_description'
+  options:
+    parameters:
+      description:
+        type: entity:node
 buddy.at_entry_overview:
   path: '/at-entries/my-at-entries'
   defaults:
     _controller: '\Drupal\buddy\Controller\ATEntryOverviewController::ATEntryOverview'
   requirements:
-    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
+    _custom_access: '\Drupal\buddy\Controller\ATProviderController::access'
     _role: 'administrator+at_provider'
   options:
     no_cache: 'TRUE'
 buddy.at_entry_form:
   path: '/at-entries/create-at-entry'
   defaults:
-    _form:  '\Drupal\buddy\Form\ATEntryCreateForm'
+    _form: '\Drupal\buddy\Form\ATEntryCreateForm'
     _title: 'AT Entry Form'
   requirements:
     _permission: 'access content'
-    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
+    _custom_access: '\Drupal\buddy\Controller\ATProviderController::access'
 buddy.at_entry_edit_form:
   path: '/at-entries/edit-at-entry/{atEntry}'
   defaults:
-    _form:  '\Drupal\buddy\Form\ATEntryEditForm'
+    _form: '\Drupal\buddy\Form\ATEntryEditForm'
     _title: 'AT Entry Form'
   requirements:
     _permission: 'access content'
-    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
+    _custom_access: '\Drupal\buddy\Controller\ATProviderController::access'
     _entity_bundles: 'atEntry:at_entry'
   options:
     parameters:
@@ -64,11 +85,11 @@ buddy.at_entry_edit_form:
 buddy.at_entry_delete_form:
   path: '/at-entries/delete-at-entry/{atEntry}'
   defaults:
-    _form:  '\Drupal\buddy\Form\ATEntryDeleteForm'
+    _form: '\Drupal\buddy\Form\ATEntryDeleteForm'
     _title: 'AT Entry Form'
   requirements:
     _permission: 'access content'
-    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
+    _custom_access: '\Drupal\buddy\Controller\ATProviderController::access'
     _entity_bundles: 'atEntry:at_entry'
   options:
     parameters:
@@ -81,7 +102,7 @@ buddy.type_create_form:
     _title: 'Create type'
   requirements:
     _permission: 'access content'
-    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
+    _custom_access: '\Drupal\buddy\Controller\ATProviderController::access'
     _entity_bundles: 'atEntry:at_entry'
   options:
     parameters:
@@ -94,7 +115,7 @@ buddy.platform_edit_form:
     _title: 'Edit Type'
   requirements:
     _permission: 'access content'
-    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
+    _custom_access: '\Drupal\buddy\Controller\ATProviderController::access'
     _entity_bundles: 'type:at_type_app|at_type_browser_extension|at_type_software'
   options:
     parameters:
@@ -107,7 +128,7 @@ buddy.platform_delete_form:
     _title: 'Delete Type'
   requirements:
     _permission: 'access content'
-    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
+    _custom_access: '\Drupal\buddy\Controller\ATProviderController::access'
     _entity_bundles: 'type:at_type_app|at_type_browser_extension|at_type_software'
   options:
     parameters:
@@ -120,7 +141,7 @@ buddy.description_create_form:
     _title: 'Create Description'
   requirements:
     _permission: 'access content'
-    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
+    _custom_access: '\Drupal\buddy\Controller\ATProviderController::access'
     _entity_bundles: 'atEntry:at_entry'
   options:
     parameters:
@@ -133,7 +154,7 @@ buddy.description_edit_form:
     _title: 'Edit Description'
   requirements:
     _permission: 'access content'
-    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
+    _custom_access: '\Drupal\buddy\Controller\ATProviderController::access'
     _entity_bundles: 'description:at_description'
   options:
     parameters:
@@ -146,7 +167,7 @@ buddy.description_delete_form:
     _title: 'Delete Description'
   requirements:
     _permission: 'access content'
-    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
+    _custom_access: '\Drupal\buddy\Controller\ATProviderController::access'
     _entity_bundles: 'description:at_description'
   options:
     parameters:
@@ -159,7 +180,7 @@ buddy.description_view:
     _title: 'View Description'
   requirements:
     _permission: 'access content'
-    _custom_access:  '\Drupal\buddy\Controller\ATProviderController::access'
+    _custom_access: '\Drupal\buddy\Controller\ATProviderController::access'
     _entity_bundles: 'description:at_description'
   options:
     no_cache: 'TRUE'

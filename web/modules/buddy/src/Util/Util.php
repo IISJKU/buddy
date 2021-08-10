@@ -3,6 +3,7 @@
 namespace Drupal\buddy\Util;
 
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Url;
 
 class Util
 {
@@ -35,8 +36,9 @@ class Util
 
           $items = $node->get($fieldName);
           $items->filterEmptyItems();
-          $fields[] = $widget->form($items, $form, $form_state);
-
+          $currentField = $widget->form($items, $form, $form_state);
+          $currentField['#weight'] = $element['#weight'];
+          $fields[] = $currentField;
         }
       }
     }
@@ -81,6 +83,17 @@ class Util
 
 
     }
+  }
+
+  public static function getBaseURL(){
+
+    $url_options = [
+      'absolute' => TRUE,
+      'language' => \Drupal::languageManager()->getCurrentLanguage(),
+    ];
+    return Url::fromRoute('<front>', [], $url_options)->toString();
+
+
   }
 
 }
