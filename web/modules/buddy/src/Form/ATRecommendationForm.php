@@ -79,7 +79,14 @@ class ATRecommendationForm extends FormBase
     $html = "";
 
     $id = $atDescription->id();
-    $atEntryID = $atDescription->get("field_at_entry")->getValue()[0]['target_id'];
+
+    //Get AT Entry of description
+    $atEntriesID = \Drupal::entityQuery('node')
+      ->condition('type', 'at_entry')
+      ->condition('field_at_descriptions', $atDescription->id(), '=')
+      ->execute();
+
+    $atEntryID = intval(array_shift($atEntriesID));
     $title  = $atDescription->getTitle();
 
     $html.= "<h2>".$title."</h2>";

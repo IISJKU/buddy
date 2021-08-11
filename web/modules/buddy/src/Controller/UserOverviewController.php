@@ -25,7 +25,7 @@ class UserOverviewController extends ControllerBase
     $html.= Link::createFromRoute($this->t('My recommendations'),'buddy.user_at_recommendation',[],  ['attributes' => ['class' => 'btn btn-primary overview-button']])->toString()->getGeneratedLink();
     $html.= "<hr>";
 
-    $html.= "<h2>".$this->t("My at entries")."</h2><hr>";
+    $html.= "<h2>".$this->t("My AT Library")."</h2><hr>";
 
 
     $html.= "<h2>".$this->t("Preferences")."</h2>";

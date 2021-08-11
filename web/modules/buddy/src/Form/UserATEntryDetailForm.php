@@ -8,8 +8,10 @@ use Drupal\buddy\Util\Browser;
 use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\node\Entity\Node;
+use http\Url;
 
 class UserATEntryDetailForm extends FormBase
 {
@@ -17,10 +19,6 @@ class UserATEntryDetailForm extends FormBase
   protected $browser;
   protected $platform;
   protected $isMobile;
-
-
-  protected $tabHeaderHTML = "";
-  protected $tabPanelHTML = "";
 
 
 
@@ -47,16 +45,12 @@ class UserATEntryDetailForm extends FormBase
     ];
 
 
-
-
     $form['introduction_install'] = [
       '#type' => 'markup',
       '#markup' => '<hr><h2>'.$this->t("How do you get this AT?").'</h2><div><strong>'.$this->t("This at is available as:").'</strong></div>',
       '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','strong','hr'],
 
     ];
-
-
 
 
 
@@ -128,14 +122,20 @@ class UserATEntryDetailForm extends FormBase
       $activeTab = false;
     }
 
+    $tabHeader = "";
+    foreach ($formElements as $key => $value){
+      $tabHeader.= $value['tab_header'];
+    }
+
     $markup = '<nav>
-  <div class="nav nav-tabs" id="nav-tab" role="tablist">
-  '.$this->tabHeaderHTML.'  </div>
-</nav>
-<div class="tab-content" id="nav-tabContent">';
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        '.$tabHeader.'
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">';
 
 
-    $form['text'] = [
+    $form['tab_list_start'] = [
       '#type' => 'markup',
       '#markup' => $markup,
       '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
@@ -145,17 +145,16 @@ class UserATEntryDetailForm extends FormBase
     foreach ($formElements as $key => $value){
 
 
-      $form[$key] = $value;
+      $form[$key] = $value['form'];
     }
 
 
-    $form['text_2'] = [
+    $form['tab_list_end'] = [
       '#type' => 'markup',
       '#markup' => '</div>',
-      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
+      '#allowed_tags' => ['div'],
 
     ];
-
 
 
     $form['#attached']['library'][] = 'buddy/user_at_detail';
@@ -183,7 +182,7 @@ class UserATEntryDetailForm extends FormBase
 
     }
 
-    $this->tabHeaderHTML.= $this->renderTabHeader($this->t("Browser Extension"),Util::getBaseURL()."/modules/buddy/img/icons/browser-icon.png", "extension_tab","extension_tab_panel",$activeTab);
+    $tabHeader = $this->renderTabHeader($this->t("Browser Extension"),Util::getBaseURL()."/modules/buddy/img/icons/browser-icon.png", "extension_tab","extension_tab_panel",$activeTab);
 
     $tabPanelHeader = $this->renderTabPanelHeader("extension_tab","extension_tab_panel",$activeTab);
     $form['intro'] = [
@@ -213,7 +212,7 @@ class UserATEntryDetailForm extends FormBase
 
     ];
 
-    return $form;
+    return ["form" => $form, "tab_header" => $tabHeader];
 
   }
 
@@ -245,7 +244,7 @@ class UserATEntryDetailForm extends FormBase
 
     }
 
-    $this->tabHeaderHTML.= $this->renderTabHeader($this->t("Software"),Util::getBaseURL()."/modules/buddy/img/icons/desktop-icon.png", "software_tab","software_tab_panel",$activeTab);
+    $tabHeader = $this->renderTabHeader($this->t("Software"),Util::getBaseURL()."/modules/buddy/img/icons/desktop-icon.png", "software_tab","software_tab_panel",$activeTab);
     $tabPanelHeader = $this->renderTabPanelHeader("software_tab","software_tab_panel",$activeTab);
 
     $form['intro'] = [
@@ -275,7 +274,7 @@ class UserATEntryDetailForm extends FormBase
 
     ];
 
-    return $form;
+    return ["form" => $form, "tab_header" => $tabHeader];
 
   }
 
@@ -298,7 +297,7 @@ class UserATEntryDetailForm extends FormBase
 
     }
 
-    $this->tabHeaderHTML.= $this->renderTabHeader($this->t("Apps"),Util::getBaseURL()."/modules/buddy/img/icons/app-icon.png", "app_tab","app_tab_panel",$activeTab);
+    $tabHeader = $this->renderTabHeader($this->t("Apps"),Util::getBaseURL()."/modules/buddy/img/icons/app-icon.png", "app_tab","app_tab_panel",$activeTab);
 
     $tabPanelHeader = $this->renderTabPanelHeader("app_tab","app_tab_panel",$activeTab);
     $form['intro'] = [
@@ -316,13 +315,13 @@ class UserATEntryDetailForm extends FormBase
 
 
 
-      $form['app_'.$currentApp['app']->id()] = $this->renderOsDescription($currentApp['os'],$currentApp['app'], $this->t('You are currently using this operating system.'));
+      $form['app_'.$currentApp['app']->id()] = $this->renderOsDescription($currentApp['os'],$currentApp['app']->id(), $this->t('You are currently using this operating system.'));
 
 
     }
 
     foreach ($otherApps as $currentApp){
-      $form['app_'.$currentApp['app']->id()] = $this->renderOsDescription($currentApp['os'],$currentApp['app'], $this->t('You are currently using this operating system.'));
+      $form['app_'.$currentApp['app']->id()] = $this->renderOsDescription($currentApp['os'],$currentApp['app']->id(), $this->t('You are currently using this operating system.'));
 
     }
 
@@ -333,7 +332,7 @@ class UserATEntryDetailForm extends FormBase
 
     ];
 
-    return $form;
+    return ["form" => $form, "tab_header" => $tabHeader];
   }
 
 
@@ -361,8 +360,9 @@ class UserATEntryDetailForm extends FormBase
 
     return [
       '#type' => 'submit',
+      '#name' => $id,
       '#button_type' => 'primary',
-      '#value' => $this->t('Delete'),
+      '#value' => $this->t('Get it!'),
       '#prefix' => $description,
 
     ];
@@ -403,14 +403,6 @@ class UserATEntryDetailForm extends FormBase
 
   }
 
-  protected function renderTabPanel($tabID, $tabPanelID, $activeTab, $html){
-
-    $activeTabHTML = "";
-    if($activeTab){
-      $activeTabHTML =" show active";
-    }
-    return '  <div class="tab-pane fade'.$activeTabHTML.'" id="'.$tabPanelID.'" role="tabpanel" aria-labelledby="'.$tabID.'">'.$html.'</div>';
-  }
 
   protected function renderTabPanelHeader($tabID, $tabPanelID, $activeTab){
 
@@ -422,10 +414,6 @@ class UserATEntryDetailForm extends FormBase
   }
 
 
-  protected function createDownloadLink($url,$linkText = "Download"){
-
-    return '<a href="'.$url.'"><img src="'.Util::getBaseURL()."/modules/buddy/img/icons/download-icon.png".'" alt="" class="buddy-download-icon">'.$linkText.'</a>';
-  }
 
 
 
@@ -433,8 +421,15 @@ class UserATEntryDetailForm extends FormBase
   public function submitForm(array &$form, FormStateInterface $form_state)
   {
 
-    $a = 1;
-    // TODO: Implement submitForm() method.
+    $typID  = $form_state->getTriggeringElement()['#name'];
+
+    $type = Node::load($typID);
+
+    $link = $type->get("field_type_download_link")->getValue();
+
+
+    $form_state->setResponse(new TrustedRedirectResponse($link[0]['uri']));
+  //  $form_state->setRedirectUrl(\Drupal\Core\Url::fromUri($link[0]['uri']));
   }
 
 }
