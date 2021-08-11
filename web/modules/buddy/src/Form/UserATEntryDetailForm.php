@@ -34,15 +34,60 @@ class UserATEntryDetailForm extends FormBase
     $this->browser = $browser->getBrowser();
     $this->platform = $browser->getPlatform();
     $this->isMobile = $browser->isMobile();
-    $atEntryID = $description->get("field_at_entry")->getValue()[0]['target_id'];
-
-    $atEntry = Node::load($atEntryID);
 
 
+    $markup = '<nav>
+    <div class="nav nav-tabs" role="tablist">
+        <a class="nav-link active" id="short_version_tab" data-toggle="tab" href="#short_version_tab_panel" role="tab" aria-controls="extension_tab_panel" aria-selected="true">
+            <img src="http://localhost/buddy/web//modules/buddy/img/icons/browser-icon.png" width="50" height="50" alt="" title="">
+             '.$this->t('Short Description').'
+        </a>
+         <a class="nav-link" id="long_version_tab" data-toggle="tab" href="#long_version_tab_panel" role="tab" aria-controls="extension_tab_panel" aria-selected="false">
+            <img src="http://localhost/buddy/web//modules/buddy/img/icons/browser-icon.png" width="50" height="50" alt="" title="">
+            '.$this->t('Long Description').'
+        </a>
+     </div>
+    </nav>
+<div class="tab-content">
+ <div class="tab-pane fade show active" id="short_version_tab_panel" role="tabpanel" aria-labelledby="pills-home-tab">'.$description->get("field_at_description_short")->getValue()[0]['value'].'</div>
+ <div class="tab-pane fade" id="long_version_tab_panel" role="tabpanel" aria-labelledby="pills-profile-tab">'.$description->get("field_at_description")->getValue()[0]['value'].'</div>
+</div>';
+
+    $form['description'] = [
+      '#type' => 'markup',
+      '#markup' => $markup,
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
+
+    ];
+
+
+
+
+    $form['introduction_install'] = [
+      '#type' => 'markup',
+      '#markup' => '<hr><h2>'.$this->t("How do you get this AT?").'</h2><div><strong>'.$this->t("This at is available as:").'</strong></div>',
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','strong','hr'],
+
+    ];
+
+
+
+
+
+    //Get AT Entry of description
+    $atEntriesID = \Drupal::entityQuery('node')
+      ->condition('type', 'at_entry')
+      ->condition('field_at_descriptions', $description->id(), '=')
+      ->execute();
+
+    $atEntries = \Drupal::entityTypeManager()->getStorage('node')
+      ->loadMultiple($atEntriesID);
+
+    $atEntry = array_shift($atEntries);
+
+
+    //Get all types (extensions, software and apps)
     $typesIDs = $atEntry->get("field_at_types")->getValue();
-
-
-
     $browserExtensions = [];
     $software = [];
     $apps = [];
@@ -94,21 +139,6 @@ class UserATEntryDetailForm extends FormBase
       $activeTab = false;
     }
 
-
-    $markup = '<nav>
-  <div class="nav nav-tabs" id="nav-tab" role="tablist">
-    <a class="nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true"><img src="https://orf.at/mojo/1_4_1/storyserver//news/news/images/target_news.svg" width="101" height="39" alt="ORF.at" title="" class="orfon-target-logo">Home</a>
-    <a class="nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false"><img src="https://orf.at/mojo/1_4_1/storyserver//news/news/images/target_news.svg" width="101" height="39" alt="ORF.at" title="" class="orfon-target-logo">Profile</a>
-    <a class="nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false"><img src="https://orf.at/mojo/1_4_1/storyserver//news/news/images/target_news.svg" width="101" height="39" alt="ORF.at" title="" class="orfon-target-logo">Contact</a>
-  </div>
-</nav>
-<div class="tab-content" id="nav-tabContent">
-  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">asdf</div>
-  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">asdfffff</div>
-  <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">ddfsf</div>
-</div>';
-
-
     $markup = '<nav>
   <div class="nav nav-tabs" id="nav-tab" role="tablist">
   '.$this->tabHeaderHTML.'  </div>
@@ -126,33 +156,29 @@ class UserATEntryDetailForm extends FormBase
     ];
 
 
+    /*
     $form['text2'] = [
       '#type' => 'markup',
       '#markup' => $_SERVER['HTTP_USER_AGENT'],
 
     ];
+    */
     $form['#attached']['library'][] = 'buddy/user_at_detail';
     return $form;
   }
 
 
   protected function renderBrowserExtensions($extensions,$activeTab){
-    $sortedExtensions = [];
+    $compatibleExtensions = [];
+    $otherExtensions = [];
     foreach ($extensions as $extension){
 
-      $browser = $extension->get("field_type_browser")->getValue()[0]['value'];
+      $browser = Node::load($extension->get("field_type_browser")->getValue()[0]['target_id']);
 
-      if(strtolower($this->browser) === strtolower($browser)){
-        array_unshift($sortedExtensions,[
-          'extension' => $extension,
-          'actual_browser' => true
-          ]);;
+      if(strtolower($this->browser) === strtolower($browser->getTitle())){
+        $compatibleExtensions[] = ['extension' => $extension, 'browser' => $browser];
       }else{
-
-        $sortedExtensions[] = [
-          'extension' => $extension,
-          'actual_browser' => false,
-        ];
+        $otherExtensions[] = ['extension' => $extension, 'browser' => $browser];
 
       }
 
@@ -162,21 +188,31 @@ class UserATEntryDetailForm extends FormBase
     $this->tabHeaderHTML.= $this->renderTabHeader($this->t("Browser Extension"),Util::getBaseURL()."/modules/buddy/img/icons/browser-icon.png", "extension_tab","extension_tab_panel",$activeTab);
 
     $extensionHTML = "<h3>".$this->t("This browser extension is available for:")."</h3>";
-    foreach ($sortedExtensions as $sortedExtension){
 
-      if($sortedExtension['actual_browser']){
+    foreach ($compatibleExtensions as $currentExtension){
 
-        $extensionHTML.="<h2>Actual Browser:".$sortedExtension['extension']->getTitle();
-      }else{
-        $extensionHTML.="<h2>Browser:".$sortedExtension['extension']->getTitle();
-      }
+      $icon = $currentExtension['browser']->field_icon->getValue();
+      $altText = $icon[0]['alt'];
+      $styled_image_url = ImageStyle::load('medium')->buildUrl($currentExtension['browser']->field_icon->entity->getFileUri());
 
 
+      $extensionHTML.= "<h3>".$currentExtension['browser']->getTitle()."</h3><div><div><b>".$this->t('You are currently using this browser.')."</b></div><p>
+                    <img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>".$currentExtension['browser']->field_description->getValue()[0]['value']."</p></div>";
+      $extensionHTML.= $this->createDownloadLink("asdf","Download the extension");
     }
 
+    foreach ($otherExtensions as $currentExtension){
+
+      $icon = $currentExtension['browser']->field_icon->getValue();
+      $altText = $icon[0]['alt'];
+      $styled_image_url = ImageStyle::load('medium')->buildUrl($currentExtension['browser']->field_icon->entity->getFileUri());
+
+      $extensionHTML.="<hr>";
+      $extensionHTML.= "<h3>".$currentExtension['browser']->getTitle()."</h3><p><img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>".$currentExtension['browser']->field_description->getValue()[0]['value']."</p>";
+      $extensionHTML.= $this->createDownloadLink("asdf","Download the extension");
+    }
 
     $this->tabPanelHTML.= $this->renderTabPanel("extension_tab","extension_tab_panel",$activeTab,$extensionHTML);
-
 
   }
 

@@ -118,4 +118,3 @@ function buddy_user_login($account) {
   }
 
 }
-
