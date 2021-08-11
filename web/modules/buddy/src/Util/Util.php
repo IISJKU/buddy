@@ -4,6 +4,7 @@ namespace Drupal\buddy\Util;
 
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Url;
+use Drupal\image\Entity\ImageStyle;
 
 class Util
 {
@@ -92,6 +93,59 @@ class Util
       'language' => \Drupal::languageManager()->getCurrentLanguage(),
     ];
     return Url::fromRoute('<front>', [], $url_options)->toString();
+
+
+  }
+
+  public static function renderDescriptionTabs($description,$shortDescription = false){
+
+
+    $plainLanguageAvailable = false;
+    if($shortDescription){
+      if(!empty($description->get("field_at_description_short_plain")->getValue()[0]['value'])){
+        $plainLanguageAvailable = true;
+      }
+    }else{
+      if(!empty($description->get("field_at_description_plain_lang")->getValue()[0]['value'])){
+        $plainLanguageAvailable = true;
+      }
+    }
+
+    $header = $shortDescription ? t("Short description") : t("Description");
+
+    $markup = '<nav>
+    <div class="nav nav-tabs" role="tablist">
+        <a class="nav-link active" id="short_version_tab" data-toggle="tab" href="#short_version_tab_panel" role="tab" aria-controls="extension_tab_panel" aria-selected="true">
+            <img src="http://localhost/buddy/web//modules/buddy/img/icons/browser-icon.png" width="50" height="50" alt="" title="">
+             '.$header.'
+        </a>';
+    if($plainLanguageAvailable){
+      $headerPlain = $shortDescription ? t("Short description in plain language") : t("Description in plain language");
+
+      $markup.= '<a class="nav-link" id="long_version_tab" data-toggle="tab" href="#long_version_tab_panel" role="tab" aria-controls="extension_tab_panel" aria-selected="false">
+            <img src="http://localhost/buddy/web//modules/buddy/img/icons/browser-icon.png" width="50" height="50" alt="" title="">
+            '.$headerPlain.'
+        </a>';
+    }
+
+    $content = $shortDescription ?$description->get("field_at_description_short")->getValue()[0]['value'] : $description->get("field_at_description")->getValue()[0]['value'];
+
+    $markup.= ' </div>
+    </nav>
+    <div class="tab-content">
+              <div class="tab-pane fade show active" id="short_version_tab_panel" role="tabpanel" aria-labelledby="pills-home-tab">
+              '.$content.'
+            </div>';
+
+    if($plainLanguageAvailable){
+      $contentPlain  = $shortDescription ? $description->get("field_at_description_short_plain")->getValue()[0]['value'] : $description->get("field_at_description_plain_lang")->getValue()[0]['value'];
+      $markup.= '<div class="tab-pane fade" id="long_version_tab_panel" role="tabpanel" aria-labelledby="pills-profile-tab">
+                '.$contentPlain.'</div>';
+    }
+
+    $markup.= ' </div>';
+
+    return $markup;
 
 
   }

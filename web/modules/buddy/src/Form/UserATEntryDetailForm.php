@@ -35,23 +35,7 @@ class UserATEntryDetailForm extends FormBase
     $this->platform = $browser->getPlatform();
     $this->isMobile = $browser->isMobile();
 
-
-    $markup = '<nav>
-    <div class="nav nav-tabs" role="tablist">
-        <a class="nav-link active" id="short_version_tab" data-toggle="tab" href="#short_version_tab_panel" role="tab" aria-controls="extension_tab_panel" aria-selected="true">
-            <img src="http://localhost/buddy/web//modules/buddy/img/icons/browser-icon.png" width="50" height="50" alt="" title="">
-             '.$this->t('Short Description').'
-        </a>
-         <a class="nav-link" id="long_version_tab" data-toggle="tab" href="#long_version_tab_panel" role="tab" aria-controls="extension_tab_panel" aria-selected="false">
-            <img src="http://localhost/buddy/web//modules/buddy/img/icons/browser-icon.png" width="50" height="50" alt="" title="">
-            '.$this->t('Long Description').'
-        </a>
-     </div>
-    </nav>
-<div class="tab-content">
- <div class="tab-pane fade show active" id="short_version_tab_panel" role="tabpanel" aria-labelledby="pills-home-tab">'.$description->get("field_at_description_short")->getValue()[0]['value'].'</div>
- <div class="tab-pane fade" id="long_version_tab_panel" role="tabpanel" aria-labelledby="pills-profile-tab">'.$description->get("field_at_description")->getValue()[0]['value'].'</div>
-</div>';
+    $markup = Util::renderDescriptionTabs($description,true);
 
     $form['description'] = [
       '#type' => 'markup',
