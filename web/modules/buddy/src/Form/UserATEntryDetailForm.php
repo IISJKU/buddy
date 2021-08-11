@@ -119,12 +119,12 @@ class UserATEntryDetailForm extends FormBase
 
 
     if(count($software)){
-      $this->renderSoftware($software,$activeTab);
+      $formElements['software'] = $this->renderSoftware($software,$activeTab);
       $activeTab = false;
     }
 
     if(count($apps)){
-      $this->renderApps($apps,$activeTab);
+      $formElements['apps'] = $this->renderApps($apps,$activeTab);
       $activeTab = false;
     }
 
@@ -132,9 +132,7 @@ class UserATEntryDetailForm extends FormBase
   <div class="nav nav-tabs" id="nav-tab" role="tablist">
   '.$this->tabHeaderHTML.'  </div>
 </nav>
-<div class="tab-content" id="nav-tabContent">
-'.$this->tabPanelHTML.'
-</div>';
+<div class="tab-content" id="nav-tabContent">';
 
 
     $form['text'] = [
@@ -144,16 +142,21 @@ class UserATEntryDetailForm extends FormBase
 
     ];
 
+    foreach ($formElements as $key => $value){
 
 
-    $form['actions']['delete'] = [
-      '#type' => 'button',
-      '#button_type' => 'primary',
-      '#value' => $this->t('Delete'),
-      '#submit' => ['::deleteFormSubmit'],
-      '#prefix' => '<h1>asdfdfs</h1><p>asdfjsdklfds</p><img src="http://localhost/buddy/web//modules/buddy/img/icons/browser-icon.png" width="50" height="50" alt="" title="">'
+      $form[$key] = $value;
+    }
+
+
+    $form['text_2'] = [
+      '#type' => 'markup',
+      '#markup' => '</div>',
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
 
     ];
+
+
 
     $form['#attached']['library'][] = 'buddy/user_at_detail';
     return $form;
@@ -216,7 +219,6 @@ class UserATEntryDetailForm extends FormBase
                    ".$currentExtension['browser']->field_description->getValue()[0]['value']."
 
                 </p>
-                </div>
             </div>";
 
 
@@ -250,7 +252,6 @@ class UserATEntryDetailForm extends FormBase
                    ".$currentExtension['browser']->field_description->getValue()[0]['value']."
 
                 </p>
-                </div>
             </div>";
 
 
@@ -280,54 +281,6 @@ class UserATEntryDetailForm extends FormBase
 
   }
 
-  protected function renderApps($apps,$activeTab){
-
-    $compatibleApps = [];
-    $otherApps = [];
-    foreach ($apps as $application){
-
-    //  $os = $application->get("field_app_operating_system")->getValue()[0]['value'];
-      $appOs = Node::load($application->get("field_app_os")->getValue()[0]['target_id']);
-
-      if(strtolower($this->platform) === strtolower($appOs->getTitle())){
-        $compatibleApps[] = ['app' => $application, 'os' => $appOs];
-      }else{
-
-        $otherApps[] = ['app' => $application, 'os' => $appOs];
-      }
-
-
-    }
-    $this->tabHeaderHTML.= $this->renderTabHeader($this->t("Apps"),Util::getBaseURL()."/modules/buddy/img/icons/app-icon.png", "app_tab","app_tab_panel",$activeTab);
-
-
-    $appHTML = '<h2>'.$this->t("This assistive technology is available for the following operating system(s):").'</h2>';
-    foreach ($compatibleApps as $currentApp){
-
-      $icon = $currentApp['os']->field_icon->getValue();
-      $altText = $icon[0]['alt'];
-      $styled_image_url = ImageStyle::load('medium')->buildUrl($currentApp['os']->field_icon->entity->getFileUri());
-
-
-      $appHTML.= "<h3>".$currentApp['os']->getTitle()."</h3><p><b>".$this->t('You are currently using this system.')."</b>
-                    <br><img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>".$currentApp['os']->field_description->getValue()[0]['value']."</p>";
-      $appHTML.= $this->createDownloadLink("asdf","Download the extension");
-    }
-
-    foreach ($otherApps as $currentApp){
-
-      $icon = $currentApp['os']->field_icon->getValue();
-      $altText = $icon[0]['alt'];
-      $styled_image_url = ImageStyle::load('medium')->buildUrl($currentApp['os']->field_icon->entity->getFileUri());
-
-      $appHTML.="<hr>";
-      $appHTML.= "<h3>".$currentApp['os']->getTitle()."</h3><p><img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>".$currentApp['os']->field_description->getValue()[0]['value']."</p>";
-      $appHTML.= $this->createDownloadLink("asdf","Download the extension");
-    }
-
-
-    $this->tabPanelHTML.= $this->renderTabPanel("app_tab","app_tab_panel",$activeTab,$appHTML);
-  }
 
   protected function renderSoftware($software,$activeTab){
     $compatibleSoftware = [];
@@ -359,7 +312,17 @@ class UserATEntryDetailForm extends FormBase
 
     $this->tabHeaderHTML.= $this->renderTabHeader($this->t("Software"),Util::getBaseURL()."/modules/buddy/img/icons/desktop-icon.png", "software_tab","software_tab_panel",$activeTab);
 
+    $tabPanelHeader = $this->renderTabPanelHeader("software_tab","software_tab_panel",$activeTab);
+    $form['intro'] = [
+      '#type' => 'markup',
+      '#markup' =>  $tabPanelHeader."<h3>".$this->t("This software is available for the following  desktop operating system(s):")."</h3>",
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
+
+    ];
+
     $softwareHTML =  '<h2>'.$this->t("This assistive technology is available for the following  desktop operating system(s):").'</h2>';
+
+
     foreach ($compatibleSoftware as $currentSoft){
 
       $icon = $currentSoft['os']->field_icon->getValue();
@@ -370,6 +333,30 @@ class UserATEntryDetailForm extends FormBase
       $softwareHTML.= "<h3>".$currentSoft['os']->getTitle()."</h3><p><b>".$this->t('You are currently using this system.')."</b>
                     <br><img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>".$currentSoft['os']->field_description->getValue()[0]['value']."</p>";
       $softwareHTML.= $this->createDownloadLink("asdf","Download the extension");
+
+
+      $softwareDescription = "
+            <h3>".$currentSoft['os']->getTitle()."</h3>
+            <div>
+                <div>
+                    <b>".$this->t('You are currently using this system.')."</b>
+                </div>
+                <p>
+                   <img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>
+                   ".$currentSoft['os']->field_description->getValue()[0]['value']."
+
+                </p>
+            </div>";
+
+
+      $form['software_'.$currentSoft['software']->id()] = [
+        '#type' => 'button',
+        '#button_type' => 'primary',
+        '#value' => $this->t('Delete'),
+        '#submit' => ['::deleteFormSubmit'],
+        '#prefix' => $softwareDescription,
+
+      ];
     }
 
     foreach ($otherSoftware as $currentSoft){
@@ -380,13 +367,154 @@ class UserATEntryDetailForm extends FormBase
       $softwareHTML.="<hr>";
       $softwareHTML.= "<h3>".$currentSoft['os']->getTitle()."</h3><p><img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>".$currentSoft['os']->field_description->getValue()[0]['value']."</p>";
       $softwareHTML.= $this->createDownloadLink("asdf","Download the extension");
+
+      $softwareDescription = "
+            <h3>".$currentSoft['os']->getTitle()."</h3>
+            <div>
+                <p>
+                   <img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>
+                   ".$currentSoft['os']->field_description->getValue()[0]['value']."
+
+                </p>
+            </div>";
+
+
+      $form['software_'.$currentSoft['software']->id()] = [
+        '#type' => 'button',
+        '#button_type' => 'primary',
+        '#value' => $this->t('Delete'),
+        '#submit' => ['::deleteFormSubmit'],
+        '#prefix' => $softwareDescription,
+
+      ];
     }
+
+    $form['outro'] = [
+      '#type' => 'markup',
+      '#markup' =>  '</div>',
+      '#allowed_tags' => ['div'],
+
+    ];
 
 
     $this->tabPanelHTML.= $this->renderTabPanel("software_tab","software_tab_panel",$activeTab,$softwareHTML);
 
 
+    return $form;
+
   }
+
+  protected function renderApps($apps,$activeTab){
+
+    $compatibleApps = [];
+    $otherApps = [];
+    foreach ($apps as $application){
+
+    //  $os = $application->get("field_app_operating_system")->getValue()[0]['value'];
+      $appOs = Node::load($application->get("field_app_os")->getValue()[0]['target_id']);
+
+      if(strtolower($this->platform) === strtolower($appOs->getTitle())){
+        $compatibleApps[] = ['app' => $application, 'os' => $appOs];
+      }else{
+
+        $otherApps[] = ['app' => $application, 'os' => $appOs];
+      }
+
+
+    }
+
+    $this->tabHeaderHTML.= $this->renderTabHeader($this->t("Apps"),Util::getBaseURL()."/modules/buddy/img/icons/app-icon.png", "app_tab","app_tab_panel",$activeTab);
+
+    $tabPanelHeader = $this->renderTabPanelHeader("app_tab","app_tab_panel",$activeTab);
+    $form['intro'] = [
+      '#type' => 'markup',
+      '#markup' =>  $tabPanelHeader."<h3>".$this->t("This apps are available for the following system(s):")."</h3>",
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
+
+    ];
+
+
+
+    $appHTML = '<h2>'.$this->t("This assistive technology is available for the following operating system(s):").'</h2>';
+    foreach ($compatibleApps as $currentApp){
+
+      $icon = $currentApp['os']->field_icon->getValue();
+      $altText = $icon[0]['alt'];
+      $styled_image_url = ImageStyle::load('medium')->buildUrl($currentApp['os']->field_icon->entity->getFileUri());
+
+      $appDescription = "
+            <h3>".$currentApp['os']->getTitle()."</h3>
+            <div>
+                <div>
+                    <b>".$this->t('You are currently using this system.')."</b>
+                </div>
+                <p>
+                   <img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>
+                   ".$currentApp['os']->field_description->getValue()[0]['value']."
+
+                </p>
+            </div>";
+
+
+      $form['app_'.$currentApp['app']->id()] = [
+        '#type' => 'button',
+        '#button_type' => 'primary',
+        '#value' => $this->t('Delete'),
+        '#submit' => ['::deleteFormSubmit'],
+        '#prefix' => $appDescription,
+
+      ];
+
+      $appHTML.= "<h3>".$currentApp['os']->getTitle()."</h3><p><b>".$this->t('You are currently using this system.')."</b>
+                    <br><img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>".$currentApp['os']->field_description->getValue()[0]['value']."</p>";
+      $appHTML.= $this->createDownloadLink("asdf","Download the extension");
+    }
+
+    foreach ($otherApps as $currentApp){
+
+      $icon = $currentApp['os']->field_icon->getValue();
+      $altText = $icon[0]['alt'];
+      $styled_image_url = ImageStyle::load('medium')->buildUrl($currentApp['os']->field_icon->entity->getFileUri());
+
+
+      $appDescription = "
+            <hr>
+            <h3>".$currentApp['os']->getTitle()."</h3>
+            <div>
+                <p>
+                   <img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>
+                   ".$currentApp['os']->field_description->getValue()[0]['value']."
+
+                </p>
+            </div>";
+
+
+      $form['app_'.$currentApp['app']->id()] = [
+        '#type' => 'button',
+        '#button_type' => 'primary',
+        '#value' => $this->t('Delete'),
+        '#submit' => ['::deleteFormSubmit'],
+        '#prefix' => $appDescription,
+
+      ];
+      $appHTML.="<hr>";
+      $appHTML.= "<h3>".$currentApp['os']->getTitle()."</h3><p><img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>".$currentApp['os']->field_description->getValue()[0]['value']."</p>";
+      $appHTML.= $this->createDownloadLink("asdf","Download the extension");
+    }
+
+    $form['outro'] = [
+      '#type' => 'markup',
+      '#markup' =>  '</div>',
+      '#allowed_tags' => ['div'],
+
+    ];
+
+    $this->tabPanelHTML.= $this->renderTabPanel("app_tab","app_tab_panel",$activeTab,$appHTML);
+
+    return $form;
+  }
+
+
 
 
   protected function renderTabHeader($name, $icon, $tabID, $tabPanelID, $activeTab){
