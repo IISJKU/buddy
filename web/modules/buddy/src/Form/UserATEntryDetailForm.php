@@ -22,6 +22,8 @@ class UserATEntryDetailForm extends FormBase
   protected $tabHeaderHTML = "";
   protected $tabPanelHTML = "";
 
+
+
   public function getFormId()
   {
     return "user_entry_detail_form";
@@ -102,12 +104,15 @@ class UserATEntryDetailForm extends FormBase
       }
     }
 
+
     Util::setTitle($description->getTitle());
 
+    $formElements = [];
     $activeTab = true;
     if(count($browserExtensions)){
 
-      $this->renderBrowserExtensions($browserExtensions,$activeTab);
+      $formElements['browser_extension'] = $this->renderBrowserExtensions($browserExtensions, $form, $activeTab);
+
 
       $activeTab = false;
     }
@@ -140,19 +145,25 @@ class UserATEntryDetailForm extends FormBase
     ];
 
 
-    /*
-    $form['text2'] = [
-      '#type' => 'markup',
-      '#markup' => $_SERVER['HTTP_USER_AGENT'],
+
+    $form['actions']['delete'] = [
+      '#type' => 'button',
+      '#button_type' => 'primary',
+      '#value' => $this->t('Delete'),
+      '#submit' => ['::deleteFormSubmit'],
+      '#prefix' => '<h1>asdfdfs</h1><p>asdfjsdklfds</p><img src="http://localhost/buddy/web//modules/buddy/img/icons/browser-icon.png" width="50" height="50" alt="" title="">'
 
     ];
-    */
+
     $form['#attached']['library'][] = 'buddy/user_at_detail';
     return $form;
   }
 
 
   protected function renderBrowserExtensions($extensions,$activeTab){
+
+    $form = [];
+
     $compatibleExtensions = [];
     $otherExtensions = [];
     foreach ($extensions as $extension){
@@ -171,6 +182,15 @@ class UserATEntryDetailForm extends FormBase
 
     $this->tabHeaderHTML.= $this->renderTabHeader($this->t("Browser Extension"),Util::getBaseURL()."/modules/buddy/img/icons/browser-icon.png", "extension_tab","extension_tab_panel",$activeTab);
 
+
+    $tabPanelHeader = $this->renderTabPanelHeader("extension_tab","extension_tab_panel",$activeTab);
+    $form['intro'] = [
+      '#type' => 'markup',
+      '#markup' =>  $tabPanelHeader."<h3>".$this->t("This browser extension is available for:")."</h3>",
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
+
+    ];
+
     $extensionHTML = "<h3>".$this->t("This browser extension is available for:")."</h3>";
 
     foreach ($compatibleExtensions as $currentExtension){
@@ -183,6 +203,32 @@ class UserATEntryDetailForm extends FormBase
       $extensionHTML.= "<h3>".$currentExtension['browser']->getTitle()."</h3><div><div><b>".$this->t('You are currently using this browser.')."</b></div><p>
                     <img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>".$currentExtension['browser']->field_description->getValue()[0]['value']."</p></div>";
       $extensionHTML.= $this->createDownloadLink("asdf","Download the extension");
+
+
+      $extensionDescription = "
+            <h3>".$currentExtension['browser']->getTitle()."</h3>
+            <div>
+                <div>
+                    <b>".$this->t('You are currently using this browser.')."</b>
+                </div>
+                <p>
+                   <img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>
+                   ".$currentExtension['browser']->field_description->getValue()[0]['value']."
+
+                </p>
+                </div>
+            </div>";
+
+
+      $form['extension_'.$currentExtension['extension']->id()] = [
+        '#type' => 'button',
+        '#button_type' => 'primary',
+        '#value' => $this->t('Delete'),
+        '#submit' => ['::deleteFormSubmit'],
+        '#prefix' => $extensionDescription,
+
+      ];
+
     }
 
     foreach ($otherExtensions as $currentExtension){
@@ -193,10 +239,44 @@ class UserATEntryDetailForm extends FormBase
 
       $extensionHTML.="<hr>";
       $extensionHTML.= "<h3>".$currentExtension['browser']->getTitle()."</h3><p><img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>".$currentExtension['browser']->field_description->getValue()[0]['value']."</p>";
+
+
+      $extensionDescription = "
+            <hr>
+            <h3>".$currentExtension['browser']->getTitle()."</h3>
+            <div>
+                <p>
+                   <img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>
+                   ".$currentExtension['browser']->field_description->getValue()[0]['value']."
+
+                </p>
+                </div>
+            </div>";
+
+
+      $form['extension_'.$currentExtension['extension']->id()] = [
+        '#type' => 'button',
+        '#button_type' => 'primary',
+        '#value' => $this->t('Delete'),
+        '#submit' => ['::deleteFormSubmit'],
+        '#prefix' => $extensionDescription,
+        ];
+
+
       $extensionHTML.= $this->createDownloadLink("asdf","Download the extension");
     }
 
+    $form['outro'] = [
+      '#type' => 'markup',
+      '#markup' =>  '</div>',
+      '#allowed_tags' => ['div'],
+
+    ];
+
+
     $this->tabPanelHTML.= $this->renderTabPanel("extension_tab","extension_tab_panel",$activeTab,$extensionHTML);
+
+    return $form;
 
   }
 
@@ -329,6 +409,15 @@ class UserATEntryDetailForm extends FormBase
       $activeTabHTML =" show active";
     }
     return '  <div class="tab-pane fade'.$activeTabHTML.'" id="'.$tabPanelID.'" role="tabpanel" aria-labelledby="'.$tabID.'">'.$html.'</div>';
+  }
+
+  protected function renderTabPanelHeader($tabID, $tabPanelID, $activeTab){
+
+    $activeTabHTML = "";
+    if($activeTab){
+      $activeTabHTML =" show active";
+    }
+    return '  <div class="tab-pane fade'.$activeTabHTML.'" id="'.$tabPanelID.'" role="tabpanel" aria-labelledby="'.$tabID.'">';
   }
 
 
