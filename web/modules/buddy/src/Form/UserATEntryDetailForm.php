@@ -196,60 +196,14 @@ class UserATEntryDetailForm extends FormBase
 
     foreach ($compatibleExtensions as $currentExtension){
 
-      $icon = $currentExtension['browser']->field_icon->getValue();
-      $altText = $icon[0]['alt'];
-      $styled_image_url = ImageStyle::load('medium')->buildUrl($currentExtension['browser']->field_icon->entity->getFileUri());
-
-      $extensionDescription = "
-            <h3>".$currentExtension['browser']->getTitle()."</h3>
-            <div>
-                <div>
-                    <b>".$this->t('You are currently using this browser.')."</b>
-                </div>
-                <p>
-                   <img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>
-                   ".$currentExtension['browser']->field_description->getValue()[0]['value']."
-
-                </p>
-            </div>";
-
-
-      $form['extension_'.$currentExtension['extension']->id()] = [
-        '#type' => 'button',
-        '#button_type' => 'primary',
-        '#value' => $this->t('Delete'),
-        '#submit' => ['::deleteFormSubmit'],
-        '#prefix' => $extensionDescription,
-
-      ];
+      $form['extension_'.$currentExtension['extension']->id()] = $this->renderBrowserDescription($currentExtension['browser'],$currentExtension['extension']->id(), $this->t('You are currently using this browser.'));
 
     }
 
     foreach ($otherExtensions as $currentExtension){
 
-      $icon = $currentExtension['browser']->field_icon->getValue();
-      $altText = $icon[0]['alt'];
-      $styled_image_url = ImageStyle::load('medium')->buildUrl($currentExtension['browser']->field_icon->entity->getFileUri());
+      $form['extension_'.$currentExtension['extension']->id()] = $this->renderBrowserDescription($currentExtension['browser'],$currentExtension['extension']->id());
 
-      $extensionDescription = "
-            <hr>
-            <h3>".$currentExtension['browser']->getTitle()."</h3>
-            <div>
-                <p>
-                   <img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>
-                   ".$currentExtension['browser']->field_description->getValue()[0]['value']."
-
-                </p>
-            </div>";
-
-
-      $form['extension_'.$currentExtension['extension']->id()] = [
-        '#type' => 'button',
-        '#button_type' => 'primary',
-        '#value' => $this->t('Delete'),
-        '#submit' => ['::deleteFormSubmit'],
-        '#prefix' => $extensionDescription,
-        ];
     }
 
     $form['outro'] = [
@@ -289,7 +243,6 @@ class UserATEntryDetailForm extends FormBase
 
       }
 
-
     }
 
     $this->tabHeaderHTML.= $this->renderTabHeader($this->t("Software"),Util::getBaseURL()."/modules/buddy/img/icons/desktop-icon.png", "software_tab","software_tab_panel",$activeTab);
@@ -305,60 +258,14 @@ class UserATEntryDetailForm extends FormBase
 
     foreach ($compatibleSoftware as $currentSoft){
 
-      $icon = $currentSoft['os']->field_icon->getValue();
-      $altText = $icon[0]['alt'];
-      $styled_image_url = ImageStyle::load('medium')->buildUrl($currentSoft['os']->field_icon->entity->getFileUri());
+      $form['software_'.$currentSoft['software']->id()] = $this->renderOsDescription($currentSoft['os'],$currentSoft['software']->id(), $this->t('You are currently using this operating system.'));
 
 
-      $softwareDescription = "
-            <h3>".$currentSoft['os']->getTitle()."</h3>
-            <div>
-                <div>
-                    <b>".$this->t('You are currently using this system.')."</b>
-                </div>
-                <p>
-                   <img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>
-                   ".$currentSoft['os']->field_description->getValue()[0]['value']."
-
-                </p>
-            </div>";
-
-
-      $form['software_'.$currentSoft['software']->id()] = [
-        '#type' => 'button',
-        '#button_type' => 'primary',
-        '#value' => $this->t('Delete'),
-        '#submit' => ['::deleteFormSubmit'],
-        '#prefix' => $softwareDescription,
-
-      ];
     }
 
     foreach ($otherSoftware as $currentSoft){
-      $icon = $currentSoft['os']->field_icon->getValue();
-      $altText = $icon[0]['alt'];
-      $styled_image_url = ImageStyle::load('medium')->buildUrl($currentSoft['os']->field_icon->entity->getFileUri());
+      $form['software_'.$currentSoft['software']->id()] = $this->renderOsDescription($currentSoft['os'],$currentSoft['software']->id());
 
-      $softwareDescription = "
-            <hr>
-            <h3>".$currentSoft['os']->getTitle()."</h3>
-            <div>
-                <p>
-                   <img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>
-                   ".$currentSoft['os']->field_description->getValue()[0]['value']."
-
-                </p>
-            </div>";
-
-
-      $form['software_'.$currentSoft['software']->id()] = [
-        '#type' => 'button',
-        '#button_type' => 'primary',
-        '#value' => $this->t('Delete'),
-        '#submit' => ['::deleteFormSubmit'],
-        '#prefix' => $softwareDescription,
-
-      ];
     }
 
     $form['outro'] = [
@@ -406,68 +313,17 @@ class UserATEntryDetailForm extends FormBase
     $appHTML = '<h2>'.$this->t("This assistive technology is available for the following operating system(s):").'</h2>';
     foreach ($compatibleApps as $currentApp){
 
-      $icon = $currentApp['os']->field_icon->getValue();
-      $altText = $icon[0]['alt'];
-      $styled_image_url = ImageStyle::load('medium')->buildUrl($currentApp['os']->field_icon->entity->getFileUri());
-
-      $appDescription = "
-            <h3>".$currentApp['os']->getTitle()."</h3>
-            <div>
-                <div>
-                    <b>".$this->t('You are currently using this system.')."</b>
-                </div>
-                <p>
-                   <img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>
-                   ".$currentApp['os']->field_description->getValue()[0]['value']."
-
-                </p>
-            </div>";
 
 
-      $form['app_'.$currentApp['app']->id()] = [
-        '#type' => 'button',
-        '#button_type' => 'primary',
-        '#value' => $this->t('Delete'),
-        '#submit' => ['::deleteFormSubmit'],
-        '#prefix' => $appDescription,
 
-      ];
+      $form['app_'.$currentApp['app']->id()] = $this->renderOsDescription($currentApp['os'],$currentApp['app'], $this->t('You are currently using this operating system.'));
 
-      $appHTML.= "<h3>".$currentApp['os']->getTitle()."</h3><p><b>".$this->t('You are currently using this system.')."</b>
-                    <br><img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>".$currentApp['os']->field_description->getValue()[0]['value']."</p>";
-      $appHTML.= $this->createDownloadLink("asdf","Download the extension");
+
     }
 
     foreach ($otherApps as $currentApp){
+      $form['app_'.$currentApp['app']->id()] = $this->renderOsDescription($currentApp['os'],$currentApp['app'], $this->t('You are currently using this operating system.'));
 
-      $icon = $currentApp['os']->field_icon->getValue();
-      $altText = $icon[0]['alt'];
-      $styled_image_url = ImageStyle::load('medium')->buildUrl($currentApp['os']->field_icon->entity->getFileUri());
-
-
-      $appDescription = "
-            <hr>
-            <h3>".$currentApp['os']->getTitle()."</h3>
-            <div>
-                <p>
-                   <img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>
-                   ".$currentApp['os']->field_description->getValue()[0]['value']."
-
-                </p>
-            </div>";
-
-
-      $form['app_'.$currentApp['app']->id()] = [
-        '#type' => 'button',
-        '#button_type' => 'primary',
-        '#value' => $this->t('Delete'),
-        '#submit' => ['::deleteFormSubmit'],
-        '#prefix' => $appDescription,
-
-      ];
-      $appHTML.="<hr>";
-      $appHTML.= "<h3>".$currentApp['os']->getTitle()."</h3><p><img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>".$currentApp['os']->field_description->getValue()[0]['value']."</p>";
-      $appHTML.= $this->createDownloadLink("asdf","Download the extension");
     }
 
     $form['outro'] = [
@@ -477,10 +333,59 @@ class UserATEntryDetailForm extends FormBase
 
     ];
 
-    $this->tabPanelHTML.= $this->renderTabPanel("app_tab","app_tab_panel",$activeTab,$appHTML);
-
     return $form;
   }
+
+
+  protected function renderTypeDescription($type,$id,$currentMessage){
+    $icon = $type->field_icon->getValue();
+    $altText = $icon[0]['alt'];
+    $styled_image_url = ImageStyle::load('medium')->buildUrl($type->field_icon->entity->getFileUri());
+    $description = "";
+    if($currentMessage != ""){
+      $description.="<hr>";
+      $currentMessage = "<div><strong>".$currentMessage."</strong></div>";
+    }
+
+    $description.= "
+            <h3>".$type->getTitle()."</h3>
+            ".$currentMessage."
+            <div>
+                <p>
+                   <img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>
+                   ".$type->field_description->getValue()[0]['value']."
+
+                </p>
+            </div>";
+
+
+    return [
+      '#type' => 'submit',
+      '#button_type' => 'primary',
+      '#value' => $this->t('Delete'),
+      '#prefix' => $description,
+
+    ];
+
+
+  }
+
+  protected function renderBrowserDescription($browser,$id,$currentBrowserMessage =""){
+    return $this->renderTypeDescription($browser,$id,$currentBrowserMessage);
+  }
+
+  protected function renderOsDescription($os,$id, $currentOSMessage = ""){
+    return $this->renderTypeDescription($os,$id, $currentOSMessage);
+  }
+
+  protected function renderMobileOSDescription($os,$id, $currentOSMessage = ""){
+
+    return $this->renderTypeDescription($os,$id, $currentOSMessage);
+  }
+
+
+
+
 
 
 
@@ -527,6 +432,8 @@ class UserATEntryDetailForm extends FormBase
 
   public function submitForm(array &$form, FormStateInterface $form_state)
   {
+
+    $a = 1;
     // TODO: Implement submitForm() method.
   }
 
