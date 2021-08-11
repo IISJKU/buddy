@@ -185,7 +185,6 @@ class UserATEntryDetailForm extends FormBase
 
     $this->tabHeaderHTML.= $this->renderTabHeader($this->t("Browser Extension"),Util::getBaseURL()."/modules/buddy/img/icons/browser-icon.png", "extension_tab","extension_tab_panel",$activeTab);
 
-
     $tabPanelHeader = $this->renderTabPanelHeader("extension_tab","extension_tab_panel",$activeTab);
     $form['intro'] = [
       '#type' => 'markup',
@@ -194,19 +193,12 @@ class UserATEntryDetailForm extends FormBase
 
     ];
 
-    $extensionHTML = "<h3>".$this->t("This browser extension is available for:")."</h3>";
 
     foreach ($compatibleExtensions as $currentExtension){
 
       $icon = $currentExtension['browser']->field_icon->getValue();
       $altText = $icon[0]['alt'];
       $styled_image_url = ImageStyle::load('medium')->buildUrl($currentExtension['browser']->field_icon->entity->getFileUri());
-
-
-      $extensionHTML.= "<h3>".$currentExtension['browser']->getTitle()."</h3><div><div><b>".$this->t('You are currently using this browser.')."</b></div><p>
-                    <img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>".$currentExtension['browser']->field_description->getValue()[0]['value']."</p></div>";
-      $extensionHTML.= $this->createDownloadLink("asdf","Download the extension");
-
 
       $extensionDescription = "
             <h3>".$currentExtension['browser']->getTitle()."</h3>
@@ -239,10 +231,6 @@ class UserATEntryDetailForm extends FormBase
       $altText = $icon[0]['alt'];
       $styled_image_url = ImageStyle::load('medium')->buildUrl($currentExtension['browser']->field_icon->entity->getFileUri());
 
-      $extensionHTML.="<hr>";
-      $extensionHTML.= "<h3>".$currentExtension['browser']->getTitle()."</h3><p><img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>".$currentExtension['browser']->field_description->getValue()[0]['value']."</p>";
-
-
       $extensionDescription = "
             <hr>
             <h3>".$currentExtension['browser']->getTitle()."</h3>
@@ -262,9 +250,6 @@ class UserATEntryDetailForm extends FormBase
         '#submit' => ['::deleteFormSubmit'],
         '#prefix' => $extensionDescription,
         ];
-
-
-      $extensionHTML.= $this->createDownloadLink("asdf","Download the extension");
     }
 
     $form['outro'] = [
@@ -273,9 +258,6 @@ class UserATEntryDetailForm extends FormBase
       '#allowed_tags' => ['div'],
 
     ];
-
-
-    $this->tabPanelHTML.= $this->renderTabPanel("extension_tab","extension_tab_panel",$activeTab,$extensionHTML);
 
     return $form;
 
@@ -311,8 +293,8 @@ class UserATEntryDetailForm extends FormBase
     }
 
     $this->tabHeaderHTML.= $this->renderTabHeader($this->t("Software"),Util::getBaseURL()."/modules/buddy/img/icons/desktop-icon.png", "software_tab","software_tab_panel",$activeTab);
-
     $tabPanelHeader = $this->renderTabPanelHeader("software_tab","software_tab_panel",$activeTab);
+
     $form['intro'] = [
       '#type' => 'markup',
       '#markup' =>  $tabPanelHeader."<h3>".$this->t("This software is available for the following  desktop operating system(s):")."</h3>",
@@ -320,19 +302,12 @@ class UserATEntryDetailForm extends FormBase
 
     ];
 
-    $softwareHTML =  '<h2>'.$this->t("This assistive technology is available for the following  desktop operating system(s):").'</h2>';
-
 
     foreach ($compatibleSoftware as $currentSoft){
 
       $icon = $currentSoft['os']->field_icon->getValue();
       $altText = $icon[0]['alt'];
       $styled_image_url = ImageStyle::load('medium')->buildUrl($currentSoft['os']->field_icon->entity->getFileUri());
-
-
-      $softwareHTML.= "<h3>".$currentSoft['os']->getTitle()."</h3><p><b>".$this->t('You are currently using this system.')."</b>
-                    <br><img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>".$currentSoft['os']->field_description->getValue()[0]['value']."</p>";
-      $softwareHTML.= $this->createDownloadLink("asdf","Download the extension");
 
 
       $softwareDescription = "
@@ -364,11 +339,8 @@ class UserATEntryDetailForm extends FormBase
       $altText = $icon[0]['alt'];
       $styled_image_url = ImageStyle::load('medium')->buildUrl($currentSoft['os']->field_icon->entity->getFileUri());
 
-      $softwareHTML.="<hr>";
-      $softwareHTML.= "<h3>".$currentSoft['os']->getTitle()."</h3><p><img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>".$currentSoft['os']->field_description->getValue()[0]['value']."</p>";
-      $softwareHTML.= $this->createDownloadLink("asdf","Download the extension");
-
       $softwareDescription = "
+            <hr>
             <h3>".$currentSoft['os']->getTitle()."</h3>
             <div>
                 <p>
@@ -395,10 +367,6 @@ class UserATEntryDetailForm extends FormBase
       '#allowed_tags' => ['div'],
 
     ];
-
-
-    $this->tabPanelHTML.= $this->renderTabPanel("software_tab","software_tab_panel",$activeTab,$softwareHTML);
-
 
     return $form;
 
