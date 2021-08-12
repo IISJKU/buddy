@@ -40,6 +40,13 @@ buddy.user_at_recommendation:
     _title: 'My AT Recommendations'
   requirements:
     _user_is_logged_in: 'TRUE'
+buddy.user_at_library:
+  path: '/user-at-library'
+  defaults:
+    _form: '\Drupal\buddy\Form\ATLibraryForm'
+    _title: 'My AT Library'
+  requirements:
+    _user_is_logged_in: 'TRUE'
 buddy.user_at_detail_form:
   path: '/user-at-detail/{description}'
   defaults:

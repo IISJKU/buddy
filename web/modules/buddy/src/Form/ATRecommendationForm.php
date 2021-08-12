@@ -134,14 +134,15 @@ class ATRecommendationForm extends FormBase
   public function tryoutATSubmitHandler(array &$form, FormStateInterface $form_state)
   {
 
-
+    $user = \Drupal::currentUser();
     $arguments = explode("_",$form_state->getTriggeringElement()['#name']);
 
     $atEntryID = $arguments[0];
     $descriptionID = $arguments[1];
     $query = \Drupal::entityQuery('node')
       ->condition('type', 'user_at_record')
-      ->condition('field_user_at_record_at_entry', $atEntryID);
+      ->condition('field_user_at_record_at_entry', $atEntryID)
+      ->condition('uid', $user->id(), '=');
 
     $results = $query->execute();
     if (!empty($results)) {

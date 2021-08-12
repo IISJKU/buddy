@@ -429,7 +429,7 @@ class UserATEntryDetailForm extends FormBase
 
 
     $form_state->setResponse(new TrustedRedirectResponse($link[0]['uri']));
-  //  $form_state->setRedirectUrl(\Drupal\Core\Url::fromUri($link[0]['uri']));
+
   }
 
 }

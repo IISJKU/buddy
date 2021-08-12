@@ -5,6 +5,7 @@ namespace Drupal\buddy\Util;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Url;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\node\Entity\Node;
 
 class Util
 {
@@ -147,6 +148,76 @@ class Util
 
     return $markup;
 
+
+  }
+
+  public static function getDescriptionOfAT($atID){
+
+    //Check current language
+    $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $query = \Drupal::entityQuery('node')
+      ->condition('type', 'at_description')
+      ->condition('field_at_description_language', $user_lang)
+      ->condition('status', 1);
+    $results = $query->execute();
+    if (!empty($results)) {
+
+
+      $nid = array_shift($results);
+
+      return Node::load($nid);
+
+    }else{
+
+      //Check user language
+      $user = \Drupal::currentUser();
+      $account = $user->getAccount();
+      $userLang = $account->getPreferredLangcode();
+
+      $query = \Drupal::entityQuery('node')
+        ->condition('type', 'at_description')
+        ->condition('field_at_description_language', $user_lang)
+        ->condition('status', 1);
+      $results = $query->execute();
+      if (!empty($results)) {
+
+
+        $nid = array_shift($results);
+        return Node::load($nid);
+
+      }else{
+
+        //Check if English version is available
+        $userLang = "en";
+
+        $query = \Drupal::entityQuery('node')
+          ->condition('type', 'at_description')
+          ->condition('field_at_description_language', $user_lang)
+          ->condition('status', 1);
+        $results = $query->execute();
+        if (!empty($results)) {
+          $nid = array_shift($results);
+          return Node::load($nid);
+
+        }else{
+
+          //Return first language we find ....
+          $query = \Drupal::entityQuery('node')
+            ->condition('type', 'at_description')
+            ->condition('status', 1);
+          $results = $query->execute();
+          if (!empty($results)) {
+            $nid = array_shift($results);
+            return Node::load($nid);
+
+          }
+
+        }
+
+
+      }
+
+    }
 
   }
 
