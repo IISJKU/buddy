@@ -151,7 +151,7 @@ class Util
 
   }
 
-  public static function getDescriptionOfAT($atID){
+  public static function getDescriptionOfATEntry($atID){
 
     //Check current language
     $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();

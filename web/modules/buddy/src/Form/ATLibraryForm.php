@@ -7,6 +7,8 @@ namespace Drupal\buddy\Form;
 use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\node\Entity\Node;
 
 class ATLibraryForm  extends FormBase
 {
@@ -21,6 +23,15 @@ class ATLibraryForm  extends FormBase
 
     $user = \Drupal::currentUser();
 
+
+
+    $form['library_description'] = [
+      '#type' => 'markup',
+      '#markup' => '<div>'.$this->t("Here is your current library of assistive technologies").'</div>',
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
+
+    ];
+
     //Get AT Entry of description
     $atRecordsIDs = \Drupal::entityQuery('node')
       ->condition('type', 'user_at_record')
@@ -31,29 +42,80 @@ class ATLibraryForm  extends FormBase
     $atRecords = \Drupal::entityTypeManager()->getStorage('node')
       ->loadMultiple($atRecordsIDs);
 
-    foreach ($atRecords as $atRecord){
+    foreach ($atRecords as $key => $atRecord){
 
-      $atID = $atRecord->get("field_user_at_record_at_entry")->getValue()[0]['target_id'];
+      $atEntryID = $atRecord->get("field_user_at_record_at_entry")->getValue()[0]['target_id'];
 
 
-      $description = Util::getDescriptionOfAT($atID);
+      $description = Util::getDescriptionOfATEntry($atEntryID);
+      $form['description_header'.$key] = [
+        '#type' => 'markup',
+        '#markup' => '<h2>'.$description->getTitle().'</h2>',
+        '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
 
-      $a = 1;
+      ];
+
+      $form['description_'.$key] = [
+        '#type' => 'markup',
+        '#markup' => Util::renderDescriptionTabs($description,true),
+        '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
+
+      ];
+
+      $form['description_actions_'.$key] = array(
+        '#type' => 'fieldset',
+        '#title' => $this
+          ->t('Actions'),
+      );
+      $form['description_actions_'.$key]['install'] = [
+        '#type' => 'submit',
+        '#name' => $atEntryID,
+        '#value' => $this->t('Installation instructions'),
+
+      ];
+
+      $form['description_actions_'.$key]['rate'] = [
+        '#type' => 'submit',
+        '#name' => $atEntryID,
+        '#value' => $this->t('Rate this assistive technology'),
+
+      ];
+
+      $form['description_actions_'.$key]['remove'] = [
+        '#type' => 'submit',
+        '#name' => $atRecord->id(),
+        '#value' => $this->t('Remove the assistive technology from my library'),
+
+      ];
+
+
     }
 
 
-    $form['description'] = [
-      '#type' => 'markup',
-      '#markup' => "<p>asdfdasfdasf</p>",
-      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
-
-    ];
 
     return $form;
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state)
   {
-    // TODO: Implement submitForm() method.
+
+    $triggeringElement = $form_state->getTriggeringElement();
+    $elementID  = $form_state->getTriggeringElement()['#name'];
+    $operation = $triggeringElement['#parents'][0];
+
+
+    if($operation === "install"){
+
+      $description = Util::getDescriptionOfATEntry($elementID);
+      $url = Url::fromUserInput("/user-at-detail/".$description->id());
+      $form_state->setRedirectUrl($url);
+    }else if($operation === "rate"){
+
+    }else if($operation == "remove"){
+
+      $userATRecord = Node::load($elementID);
+      $userATRecord->field_user_at_record_library = ["value" => false];
+      $userATRecord->save();
+    }
   }
 }
