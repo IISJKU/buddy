@@ -107,7 +107,7 @@ class ATLibraryForm  extends FormBase
     if($operation === "install"){
 
       $description = Util::getDescriptionOfATEntry($elementID);
-      $url = Url::fromUserInput("/user-at-detail/".$description->id());
+      $url = Url::fromUserInput("/user-at-install/".$description->id());
       $form_state->setRedirectUrl($url);
     }else if($operation === "rate"){
 

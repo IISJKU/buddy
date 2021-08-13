@@ -8,12 +8,13 @@ use Drupal\buddy\Util\Browser;
 use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\node\Entity\Node;
 use http\Url;
 
-class UserATEntryDetailForm extends FormBase
+class UserATEntryInstallInstructionsForm extends FormBase
 {
 
   protected $browser;
@@ -99,7 +100,7 @@ class UserATEntryDetailForm extends FormBase
     }
 
 
-    Util::setTitle($description->getTitle());
+    Util::setTitle($this->t("Install instructions for:")." ".$description->getTitle());
 
     $formElements = [];
     $activeTab = true;
@@ -155,6 +156,17 @@ class UserATEntryDetailForm extends FormBase
       '#allowed_tags' => ['div'],
 
     ];
+
+    $markup = Link::createFromRoute($this->t('Back to my AT library'),'buddy.user_at_library',[],  ['attributes' => ['class' => 'btn btn-primary overview-button']])->toString()->getGeneratedLink();
+
+    $form['links'] = [
+      '#type' => 'markup',
+      '#markup' => $markup,
+      '#prefix' => '<hr>',
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
+
+    ];
+
 
 
     $form['#attached']['library'][] = 'buddy/user_at_detail';

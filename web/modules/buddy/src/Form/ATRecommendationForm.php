@@ -166,7 +166,7 @@ class ATRecommendationForm extends FormBase
 
     }
 
-      $url = Url::fromUserInput("/user-at-detail/".$descriptionID);
+      $url = Url::fromUserInput("/user-at-install/".$descriptionID);
       $form_state->setRedirectUrl($url);
 
   }

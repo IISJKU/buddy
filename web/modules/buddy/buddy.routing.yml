@@ -47,11 +47,11 @@ buddy.user_at_library:
     _title: 'My AT Library'
   requirements:
     _user_is_logged_in: 'TRUE'
-buddy.user_at_detail_form:
-  path: '/user-at-detail/{description}'
+buddy.user_at_install_form:
+  path: '/user-at-install/{description}'
   defaults:
-    _form: '\Drupal\buddy\Form\UserATEntryDetailForm'
-    _title: 'My AT'
+    _form: '\Drupal\buddy\Form\UserATEntryInstallInstructionsForm'
+    _title: 'Install Instructions'
   requirements:
     _user_is_logged_in: 'TRUE'
     _entity_bundles: 'description:at_description'

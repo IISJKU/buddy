@@ -86,7 +86,7 @@ function buddy_user_login($account) {
 
   if (!in_array($current_route, ['user.reset', 'user.reset.login'])) {
 
-    if( !in_array("at_moderator", $account->getRoles()) &&!in_array("administrator", $account->getRoles())){
+    if( !in_array("at_moderator", $account->getRoles()) && !in_array("at_provider", $account->getRoles()) &&  !in_array("administrator", $account->getRoles())){
 
       $user = \Drupal::currentUser();
       $user_profileID = \Drupal::entityQuery('node')
@@ -119,4 +119,24 @@ function buddy_user_login($account) {
 
 }
 
+function buddy_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode) {
 
+  if($entity->getEntityTypeId() == "user") {
+
+    $account = \Drupal::currentUser();
+    if (!in_array("at_moderator", $account->getRoles()) && !in_array("at_provider", $account->getRoles()) && !in_array("administrator", $account->getRoles())){
+      $markup= "<h2>".t("Preferences")."</h2>";
+      $markup.= Link::createFromRoute(t('Adjust my preferences'),'buddy.user_profile',[],  ['attributes' => ['class' => 'btn btn-primary overview-button']])->toString()->getGeneratedLink();
+      $markup.= "<hr>";
+
+      $build['buddy_user_view_markup'] = array(
+        '#markup' => $markup,
+      );
+
+    }
+
+
+
+  }
+
+}
