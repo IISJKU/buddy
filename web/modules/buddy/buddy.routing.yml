@@ -47,6 +47,13 @@ buddy.user_at_library:
     _title: 'My AT Library'
   requirements:
     _user_is_logged_in: 'TRUE'
+buddy.user_at_catalogue:
+  path: '/user-at-catalogue'
+  defaults:
+    _form: '\Drupal\buddy\Form\ATCatalogueForm'
+    _title: 'AT Catalogue'
+  requirements:
+    _access: 'TRUE'
 buddy.user_at_install_form:
   path: '/user-at-install/{description}'
   defaults:

@@ -8,18 +8,18 @@ use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\image\Entity\ImageStyle;
 use Drupal\node\Entity\Node;
 
-class ATRecommendationForm extends FormBase
+class ATCatalogueForm extends FormBase
 {
+  protected int $maxNumberOfATEntries = 10;
 
-  protected int $maxNumberOfATEntries = 1;
 
   public function getFormId()
   {
-    return "buddy_recommendation_form";
+    return "buddy_at_catalogue_form";
   }
+
 
   public function buildForm(array $form, FormStateInterface $form_state)
   {
@@ -27,7 +27,7 @@ class ATRecommendationForm extends FormBase
       $form_state->set('page_num', 0);
     }
     $currentPage = $form_state->get('page_num');
-    $user = \Drupal::currentUser();
+
     $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
     $query = \Drupal::entityQuery('node')
@@ -35,8 +35,17 @@ class ATRecommendationForm extends FormBase
       ->condition('field_at_description_language', $user_lang)
       ->condition('status', 1)
       ->range($currentPage*$this->maxNumberOfATEntries, ($currentPage+1)*$this->maxNumberOfATEntries);
-
     $results = $query->execute();
+
+    $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $query = \Drupal::entityQuery('node')
+      ->condition('type', 'at_description')
+      ->condition('field_at_description_language', $user_lang)
+      ->condition('status', 1);
+
+    $count_query = $query->count()->execute();
+
+
     if (!empty($results)) {
 
 
@@ -65,10 +74,21 @@ class ATRecommendationForm extends FormBase
       '#type' => 'actions',
     ];
 
+    if($currentPage > 0){
+      $form['actions']['previous'] = [
+        '#type' => 'submit',
+        '#name' => 'prev',
+        '#value' => $this->t('Previous'),
+      ];
+    }
+
+
+    if(($form_state->get('page_num')+1)*$this->maxNumberOfATEntries < $count_query)
     // Add a submit button that handles the submission of the form.
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Show me more assitive technology!'),
+      '#name' => 'next',
+      '#value' => $this->t('Next'),
     ];
 
 
@@ -79,8 +99,6 @@ class ATRecommendationForm extends FormBase
   private function renderATEntry($atDescription)
   {
 
-
-    $html = "";
 
     $id = $atDescription->id();
 
@@ -109,17 +127,28 @@ class ATRecommendationForm extends FormBase
     ];
 
 
-    $form['submit'] = [
-      '#name' => $atEntryID . "_" . $id,
-      '#type' => 'submit',
-      '#button_type' => 'primary',
-      '#value' => $this->t('I want to try this!'),
-      // Custom submission handler for page 1.
-      '#submit' => ['::tryoutATSubmitHandler'],
-      '#suffix' => '</div>'
+    if( \Drupal::currentUser()->isAuthenticated()){
+
+      $form['submit'] = [
+        '#name' => $atEntryID . "_" . $id,
+        '#type' => 'submit',
+        '#button_type' => 'primary',
+        '#value' => $this->t('Install this AT'),
+        // Custom submission handler for page 1.
+        '#submit' => ['::tryoutATSubmitHandler'],
+        '#suffix' => '</div>'
+      ];
+    }else{
+      $form['submit'] = [
+        '#type' => 'markup',
+        '#markup' => '</div>',
+        '#allowed_tags' => ['button', 'a', 'div', 'img', 'h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
+      ];
+    }
 
 
-    ];
+
+
 
     return $form;
 
@@ -127,22 +156,12 @@ class ATRecommendationForm extends FormBase
 
   public function submitForm(array &$form, FormStateInterface $form_state)
   {
-    $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
-    $query = \Drupal::entityQuery('node')
-      ->condition('type', 'at_description')
-      ->condition('field_at_description_language', $user_lang)
-      ->condition('status', 1);
 
-    $count_query = $query->count()->execute();
-
-
-    if(($form_state->get('page_num')+1)*$this->maxNumberOfATEntries >= $count_query){
-      $form_state->set('page_num', 0);
-
-    }else{
+    if($form_state->getTriggeringElement()['#name'] === "prev"){
+      $form_state->set('page_num', $form_state->get('page_num')-1);
+    }else  if($form_state->getTriggeringElement()['#name'] === "next"){
       $form_state->set('page_num', $form_state->get('page_num')+1);
     }
-
 
     $form_state->setRebuild(true);
   }

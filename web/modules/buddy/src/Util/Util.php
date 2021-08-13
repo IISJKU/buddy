@@ -116,14 +116,14 @@ class Util
 
     $markup = '<nav>
     <div class="nav nav-tabs" role="tablist">
-        <a class="nav-link active" id="short_version_tab" data-toggle="tab" href="#short_version_tab_panel" role="tab" aria-controls="extension_tab_panel" aria-selected="true">
+        <a class="nav-link active" id="short_version_tab" data-toggle="tab" href="#description_tab_panel_'.$description->id().'" role="tab" aria-controls="description_tab_panel_'.$description->id().'" aria-selected="true">
             <img src="'.Util::getBaseURL().'/modules/buddy/img/icons/information-icon.png" width="50" height="50" alt="" title="">
              '.$header.'
         </a>';
     if($plainLanguageAvailable){
       $headerPlain = $shortDescription ? t("Information in plain language") : t("Description in plain language");
 
-      $markup.= '<a class="nav-link" id="long_version_tab" data-toggle="tab" href="#long_version_tab_panel" role="tab" aria-controls="extension_tab_panel" aria-selected="false">
+      $markup.= '<a class="nav-link" id="long_version_tab" data-toggle="tab" href="#plain_description_tab_panel_'.$description->id().'" role="tab" aria-controls="plain_description_tab_panel_'.$description->id().'" aria-selected="false">
             <img src="'.Util::getBaseURL().'/modules/buddy/img/icons/plain-language-icon.png" width="50" height="50" alt="" title="">
             '.$headerPlain.'
         </a>';
@@ -137,13 +137,13 @@ class Util
      $markup.= ' </div>
     </nav>
     <div class="tab-content">
-              <div class="tab-pane fade show active" id="short_version_tab_panel" role="tabpanel" aria-labelledby="pills-home-tab">
+              <div class="tab-pane fade show active" id="description_tab_panel_'.$description->id().'" role="tabpanel" aria-labelledby="pills-home-tab">
               '.Util::renderDescriptionContent($content,$description,$shortDescription).'
     </div>';
 
     if($plainLanguageAvailable){
       $contentPlain  = $shortDescription ? $description->get("field_at_description_short_plain")->getValue()[0]['value'] : $description->get("field_at_description_plain_lang")->getValue()[0]['value'];
-      $markup.= '<div class="tab-pane fade" id="long_version_tab_panel" role="tabpanel" aria-labelledby="pills-profile-tab">
+      $markup.= '<div class="tab-pane fade" id="plain_description_tab_panel_'.$description->id().'" role="tabpanel" aria-labelledby="pills-profile-tab">
                  '.Util::renderDescriptionContent($contentPlain,$description,$shortDescription).'
             </div>';
     }
