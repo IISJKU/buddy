@@ -112,42 +112,71 @@ class Util
       }
     }
 
-    $header = $shortDescription ? t("Short description") : t("Description");
+    $header = $shortDescription ? t("Information") : t("Description");
 
     $markup = '<nav>
     <div class="nav nav-tabs" role="tablist">
         <a class="nav-link active" id="short_version_tab" data-toggle="tab" href="#short_version_tab_panel" role="tab" aria-controls="extension_tab_panel" aria-selected="true">
-            <img src="http://localhost/buddy/web//modules/buddy/img/icons/browser-icon.png" width="50" height="50" alt="" title="">
+            <img src="'.Util::getBaseURL().'/modules/buddy/img/icons/information-icon.png" width="50" height="50" alt="" title="">
              '.$header.'
         </a>';
     if($plainLanguageAvailable){
-      $headerPlain = $shortDescription ? t("Short description in plain language") : t("Description in plain language");
+      $headerPlain = $shortDescription ? t("Information in plain language") : t("Description in plain language");
 
       $markup.= '<a class="nav-link" id="long_version_tab" data-toggle="tab" href="#long_version_tab_panel" role="tab" aria-controls="extension_tab_panel" aria-selected="false">
-            <img src="http://localhost/buddy/web//modules/buddy/img/icons/browser-icon.png" width="50" height="50" alt="" title="">
+            <img src="'.Util::getBaseURL().'/modules/buddy/img/icons/plain-language-icon.png" width="50" height="50" alt="" title="">
             '.$headerPlain.'
         </a>';
     }
 
-    $content = $shortDescription ?$description->get("field_at_description_short")->getValue()[0]['value'] : $description->get("field_at_description")->getValue()[0]['value'];
+    $image = $description->field_at_description_at_image->getValue();
+    $altText = $image[0]['alt'];
+    $styled_image_url = ImageStyle::load('medium')->buildUrl($description->field_at_description_at_image->entity->getFileUri());
 
-    $markup.= ' </div>
+    $content = $shortDescription ?$description->get("field_at_description_short")->getValue()[0]['value'] : $description->get("field_at_description")->getValue()[0]['value'];
+     $markup.= ' </div>
     </nav>
     <div class="tab-content">
               <div class="tab-pane fade show active" id="short_version_tab_panel" role="tabpanel" aria-labelledby="pills-home-tab">
-              '.$content.'
-            </div>';
+              '.Util::renderDescriptionContent($content,$description,$shortDescription).'
+    </div>';
 
     if($plainLanguageAvailable){
       $contentPlain  = $shortDescription ? $description->get("field_at_description_short_plain")->getValue()[0]['value'] : $description->get("field_at_description_plain_lang")->getValue()[0]['value'];
       $markup.= '<div class="tab-pane fade" id="long_version_tab_panel" role="tabpanel" aria-labelledby="pills-profile-tab">
-                '.$contentPlain.'</div>';
+                 '.Util::renderDescriptionContent($contentPlain,$description,$shortDescription).'
+            </div>';
     }
 
     $markup.= ' </div>';
 
     return $markup;
 
+
+  }
+
+  private static function renderDescriptionContent($content, $description,$shortDescription = false){
+
+    if($shortDescription){
+      $image = $description->field_at_description_at_image->getValue();
+      $altText = $image[0]['alt'];
+      $styled_image_url = ImageStyle::load('medium')->buildUrl($description->field_at_description_at_image->entity->getFileUri());
+
+      return '
+       <div class="container">
+                <div class="row">
+                    <div class="col-2">
+                        <img src="'.$styled_image_url.'" alt="'.$altText.'" class="img-fluid w-100 at_description_image">
+                    </div>
+                    <div class="col-10">
+                    '.$content.'
+                    </div>
+                </div>
+            </div>';
+    }else{
+
+      return $content;
+    }
 
   }
 

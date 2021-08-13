@@ -1,5 +1,24 @@
 /* General */
 
+.button:first-child, .image-button:first-child {
+  margin-right: 1em;
+  margin-left: 1em;
+}
+
+
+.nav-tabs {
+  border-bottom: 2px solid #000000;
+}
+.nav-tabs .nav-link {
+  border: 2px solid transparent;
+}
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+  color: #495057;
+  background-color: #fff;
+  border-color: #000000 #000000 #fff;
+}
+
+
 
 footer {
   background-color: #343a40;

@@ -7,6 +7,7 @@ namespace Drupal\buddy\Form;
 use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 
@@ -23,6 +24,16 @@ class ATLibraryForm  extends FormBase
 
     $user = \Drupal::currentUser();
 
+    $markup = "<h2>".$this->t("Discover New Assistive Technology")."</h2>";
+    $markup.= Link::createFromRoute($this->t('My recommendations'),'buddy.user_at_recommendation',[],  ['attributes' => ['class' => 'btn btn-primary overview-button']])->toString()->getGeneratedLink();
+    $markup.= "<hr>";
+
+    $form['recommendation'] = [
+      '#type' => 'markup',
+      '#markup' => $markup,
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
+
+    ];
 
 
     $form['library_description'] = [

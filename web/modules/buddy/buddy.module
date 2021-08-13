@@ -101,7 +101,7 @@ function buddy_user_login($account) {
         $middleware->setRedirectResponse($redirectResponse);
 
       }else{
-        $redirectResponse = new RedirectResponse(URL::fromRoute('buddy.user_overview')->toString());
+        $redirectResponse = new RedirectResponse(URL::fromRoute('buddy.user_at_library')->toString());
         $middleware->setRedirectResponse($redirectResponse);
 
       }

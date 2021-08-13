@@ -4,6 +4,7 @@
 namespace Drupal\buddy\Form;
 
 
+use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -39,6 +40,7 @@ class ATRecommendationForm extends FormBase
       $maxResults =  min(count($results), $this->maxNumberOfATEntries);
 
       for($i=0; $i < $maxResults; $i++){
+
 
 
         $textForm = $this->renderATEntry(array_shift($atEntries));
@@ -89,25 +91,19 @@ class ATRecommendationForm extends FormBase
     $atEntryID = intval(array_shift($atEntriesID));
     $title  = $atDescription->getTitle();
 
-    $html.= "<h2>".$title."</h2>";
-
-
-
-
-
-    $description = ($atDescription->get("field_at_description")->getValue())[0]['value'];
-    $html.= $description;
-
-
-    $image = $atDescription->field_at_description_at_image->getValue();
-    $altText = $image[0]['alt'];
-    $styled_image_url = ImageStyle::load('medium')->buildUrl($atDescription->field_at_description_at_image->entity->getFileUri());
-    $html.='<div><img src="'.$styled_image_url.'" alt="'.$altText.'"></div>';
     $form = [];
+
+    $form['title'] = [
+      '#type' => 'markup',
+      '#markup' => "<h2>".$title."</h2>",
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
+
+    ];
 
     $form['text'] = [
       '#type' => 'markup',
-      '#markup' => $html,
+      '#markup' => Util::renderDescriptionTabs($atDescription,false),
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
     ];
 
 
