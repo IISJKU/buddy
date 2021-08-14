@@ -122,12 +122,20 @@ class ATCatalogueForm extends FormBase
 
     $form['text'] = [
       '#type' => 'markup',
-      '#markup' => Util::renderDescriptionTabs($atDescription, false),
+      '#markup' => Util::renderDescriptionTabs($atDescription, true),
       '#allowed_tags' => ['button', 'a', 'div', 'img', 'h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
     ];
 
 
     if( \Drupal::currentUser()->isAuthenticated()){
+
+      $form['detail'] = [
+        '#name' => $id,
+        '#type' => 'submit',
+        '#button_type' => 'primary',
+        '#value' => $this->t('More Information'),
+        '#submit' => ['::moreInformationSubmitHandler'],
+      ];
 
       $form['submit'] = [
         '#name' => $atEntryID . "_" . $id,
@@ -164,6 +172,14 @@ class ATCatalogueForm extends FormBase
     }
 
     $form_state->setRebuild(true);
+  }
+
+  public function moreInformationSubmitHandler(array &$form, FormStateInterface $form_state)
+  {
+
+    $url = Url::fromUserInput("/user-at-detail/" . $form_state->getTriggeringElement()['#name']);
+    $form_state->setRedirectUrl($url);
+
   }
 
   public function tryoutATSubmitHandler(array &$form, FormStateInterface $form_state)

@@ -59,6 +59,8 @@ class ATLibraryForm  extends FormBase
 
 
       $description = Util::getDescriptionOfATEntry($atEntryID);
+
+      $nid = $description->id();
       $form['description_header'.$key] = [
         '#type' => 'markup',
         '#markup' => '<h2>'.$description->getTitle().'</h2>',

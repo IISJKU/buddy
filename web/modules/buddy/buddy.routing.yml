@@ -66,6 +66,18 @@ buddy.user_at_install_form:
     parameters:
       description:
         type: entity:node
+buddy.user_at_detail_form:
+  path: '/user-at-detail/{description}'
+  defaults:
+    _form: '\Drupal\buddy\Form\UserATEntryDetailForm'
+    _title: 'Details'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _entity_bundles: 'description:at_description'
+  options:
+    parameters:
+      description:
+        type: entity:node
 buddy.at_entry_overview:
   path: '/at-entries/my-at-entries'
   defaults:

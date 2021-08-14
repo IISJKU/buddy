@@ -186,6 +186,7 @@ class Util
     $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
     $query = \Drupal::entityQuery('node')
       ->condition('type', 'at_description')
+      ->condition('field_at_entry', $atID)
       ->condition('field_at_description_language', $user_lang)
       ->condition('status', 1);
     $results = $query->execute();
