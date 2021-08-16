@@ -20,6 +20,11 @@
   border-color: #000000 #000000 #fff;
 }
 
+.nav-tabs .nav-link {
+  margin-bottom: -2px;
+
+}
+
 
 
 footer {
