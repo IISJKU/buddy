@@ -74,6 +74,8 @@ class UserEntryPoint extends FormBase {
               ->t('Yes, I already have an account.'),
             0 => $this
               ->t('No, I would like to create a new account.'),
+            2 => $this
+              ->t('I forgot my password.'),
           ),
           '#required' => TRUE,
         );
@@ -243,8 +245,10 @@ class UserEntryPoint extends FormBase {
 
     switch ($step_no) {
       case UserEntryWizardStep::LoginOrRegister:
-        if ($form_state->getValue([$step, 'is_login'])) {
+        if ($form_state->getValue([$step, 'is_login']) == 1) {
           $form_state->setValue('step', UserEntryWizardStep::LoginProvider);
+        } else if ($form_state->getValue([$step, 'is_login']) == 2) {
+          $form_state->setValue('step', UserEntryWizardStep::ForgotPassword);
         } else {
           $form_state->setValue('step', UserEntryWizardStep::RegisterProvider);
         }
@@ -293,6 +297,12 @@ class UserEntryPoint extends FormBase {
         $command = new RedirectCommand($url->toString());
         $response->addCommand($command);
         return $response;
+      case UserEntryWizardStep::ForgotPassword:
+        $response = new AjaxResponse();
+        $url = Url::fromRoute('user.pass');
+        $command = new RedirectCommand($url->toString());
+        $response->addCommand($command);
+        return $response;
     }
     return $form;
   }
@@ -308,4 +318,5 @@ abstract class UserEntryWizardStep
   const RegisterForm = 5;
   const FederalizedOptionsLogin = 6;
   const FederalizedOptionsRegister = 7;
+  const ForgotPassword = 8;
 }
