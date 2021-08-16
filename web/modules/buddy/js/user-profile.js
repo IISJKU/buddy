@@ -20,6 +20,11 @@ jQuery(document).ready(function (){
     // Set textfield's value to the passed arguments.
     $(".page-title").text(argument);
 
-    $(window).scrollTop(0);
+    let element       = $(".page-title");
+    let elementHeight = element.height();
+    let windowHeight  = $(window).height();
+
+    let offset = Math.min(elementHeight, windowHeight) + element.offset().top;
+    $('html, body').animate({ scrollTop: offset }, 500);
   };
 })(jQuery);
