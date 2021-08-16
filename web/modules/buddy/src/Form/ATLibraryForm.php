@@ -24,6 +24,7 @@ class ATLibraryForm  extends FormBase
 
     $user = \Drupal::currentUser();
 
+    /*
     $markup = "<h2>".$this->t("Discover New Assistive Technology")."</h2>";
     $markup.= Link::createFromRoute($this->t('My recommendations'),'buddy.user_at_recommendation',[],  ['attributes' => ['class' => 'btn btn-primary overview-button']])->toString()->getGeneratedLink();
     $markup.= "<hr>";
@@ -34,7 +35,7 @@ class ATLibraryForm  extends FormBase
       '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
 
     ];
-
+    */
 
     $form['library_description'] = [
       '#type' => 'markup',
