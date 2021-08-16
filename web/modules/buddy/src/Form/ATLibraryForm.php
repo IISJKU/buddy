@@ -37,12 +37,7 @@ class ATLibraryForm  extends FormBase
     ];
     */
 
-    $form['library_description'] = [
-      '#type' => 'markup',
-      '#markup' => '<div>'.$this->t("Here is your current library of assistive technologies").'</div>',
-      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
 
-    ];
 
     //Get AT Entry of description
     $atRecordsIDs = \Drupal::entityQuery('node')
@@ -50,6 +45,24 @@ class ATLibraryForm  extends FormBase
       ->condition('field_user_at_record_library', true, '=')
       ->condition('uid', $user->id(), '=')
       ->execute();
+
+    if(count($atRecordsIDs) == 0){
+
+      return [
+        '#type' => 'markup',
+        '#markup' => '<div>'.$this->t("Your library is currently empty.").' </div><div>'
+                            .$this->t("Use the AT Catalogue or the recommender to add AT to your library."). '</div>',
+        '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
+
+      ];
+    }
+
+    $form['library_description'] = [
+      '#type' => 'markup',
+      '#markup' => '<div>'.$this->t("Here is your current library of assistive technologies").'</div>',
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
+
+    ];
 
     $atRecords = \Drupal::entityTypeManager()->getStorage('node')
       ->loadMultiple($atRecordsIDs);
