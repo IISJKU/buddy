@@ -25,6 +25,6 @@ jQuery(document).ready(function (){
     let windowHeight  = $(window).height();
 
     let offset = Math.min(elementHeight, windowHeight) + element.offset().top;
-    $('html, body').animate({ scrollTop: offset }, 0);
+    $('html, body').animate({ scrollTop: offset }, 500);
   };
 })(jQuery);
