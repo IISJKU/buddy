@@ -20,7 +20,7 @@ jQuery(document).ready(function (){
     // Set textfield's value to the passed arguments.
     $(".page-title").text(argument);
 
-    let element       = $(".page-title");
+    let element       = $(".site-title");
     let elementHeight = element.height();
     let windowHeight  = $(window).height();
 
