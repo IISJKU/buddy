@@ -194,7 +194,7 @@ class UserATEntryInstallInstructionsForm extends FormBase
 
     }
 
-    $tabHeader = $this->renderTabHeader($this->t("Browser Extension"),Util::getBaseURL()."/modules/buddy/img/icons/browser-icon.png", "extension_tab","extension_tab_panel",$activeTab);
+    $tabHeader = $this->renderTabHeader($this->t("Browser Extension"),Util::getBaseURL(false)."/modules/buddy/img/icons/browser-icon.png", "extension_tab","extension_tab_panel",$activeTab);
 
     $tabPanelHeader = $this->renderTabPanelHeader("extension_tab","extension_tab_panel",$activeTab);
     $form['intro'] = [
@@ -256,7 +256,7 @@ class UserATEntryInstallInstructionsForm extends FormBase
 
     }
 
-    $tabHeader = $this->renderTabHeader($this->t("Software"),Util::getBaseURL()."/modules/buddy/img/icons/desktop-icon.png", "software_tab","software_tab_panel",$activeTab);
+    $tabHeader = $this->renderTabHeader($this->t("Software"),Util::getBaseURL(false)."/modules/buddy/img/icons/desktop-icon.png", "software_tab","software_tab_panel",$activeTab);
     $tabPanelHeader = $this->renderTabPanelHeader("software_tab","software_tab_panel",$activeTab);
 
     $form['intro'] = [
@@ -309,7 +309,7 @@ class UserATEntryInstallInstructionsForm extends FormBase
 
     }
 
-    $tabHeader = $this->renderTabHeader($this->t("Apps"),Util::getBaseURL()."/modules/buddy/img/icons/app-icon.png", "app_tab","app_tab_panel",$activeTab);
+    $tabHeader = $this->renderTabHeader($this->t("Apps"),Util::getBaseURL(false)."/modules/buddy/img/icons/app-icon.png", "app_tab","app_tab_panel",$activeTab);
 
     $tabPanelHeader = $this->renderTabPanelHeader("app_tab","app_tab_panel",$activeTab);
     $form['intro'] = [

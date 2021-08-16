@@ -87,12 +87,15 @@ class Util
     }
   }
 
-  public static function getBaseURL(){
+  public static function getBaseURL($useLanguage = true){
 
     $url_options = [
       'absolute' => TRUE,
-      'language' => \Drupal::languageManager()->getCurrentLanguage(),
+
     ];
+    if($useLanguage){
+      $url_options['language'] = \Drupal::languageManager()->getCurrentLanguage();
+    }
     return Url::fromRoute('<front>', [], $url_options)->toString();
 
 
@@ -117,14 +120,14 @@ class Util
     $markup = '<nav>
     <div class="nav nav-tabs" role="tablist">
         <a class="nav-link active" id="short_version_tab" data-toggle="tab" href="#description_tab_panel_'.$description->id().'" role="tab" aria-controls="description_tab_panel_'.$description->id().'" aria-selected="true">
-            <img src="'.Util::getBaseURL().'/modules/buddy/img/icons/information-icon.png" width="50" height="50" alt="" title="">
+            <img src="'.Util::getBaseURL(false).'/modules/buddy/img/icons/information-icon.png" width="50" height="50" alt="" title="">
              '.$header.'
         </a>';
     if($plainLanguageAvailable){
       $headerPlain = $shortDescription ? t("Information in plain language") : t("Description in plain language");
 
       $markup.= '<a class="nav-link" id="long_version_tab" data-toggle="tab" href="#plain_description_tab_panel_'.$description->id().'" role="tab" aria-controls="plain_description_tab_panel_'.$description->id().'" aria-selected="false">
-            <img src="'.Util::getBaseURL().'/modules/buddy/img/icons/plain-language-icon.png" width="50" height="50" alt="" title="">
+            <img src="'.Util::getBaseURL(false).'/modules/buddy/img/icons/plain-language-icon.png" width="50" height="50" alt="" title="">
             '.$headerPlain.'
         </a>';
     }
