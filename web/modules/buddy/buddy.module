@@ -48,3 +48,14 @@ function buddy_entity_load(array $entities, $entity_type_id) {
     }
   }
 }
+
+/**
+ * Implement hook_local_tasks_alter
+ * Remove local tasks from user login/registration page
+ * @param array $local_tasks
+ */
+function buddy_local_tasks_alter(&$local_tasks) {
+  unset($local_tasks['user.login']);
+  unset($local_tasks['user.register']);
+  unset($local_tasks['user.pass']);
+}
