@@ -94,35 +94,21 @@ function buddy_user_login($account) {
         ->condition('uid', $user->id(), '=')
         ->condition('field_user_profile_finished', true, '=')
         ->execute();
-
-
-      if(count($user_profileID) == 0){
+      if (count($user_profileID) == 0) {
         $redirectResponse = new RedirectResponse(URL::fromRoute('buddy.user_profile')->toString());
         $middleware->setRedirectResponse($redirectResponse);
-
-      }else{
+      } else {
         $redirectResponse = new RedirectResponse(URL::fromRoute('buddy.user_at_library')->toString());
         $middleware->setRedirectResponse($redirectResponse);
-
       }
-
-
-
-
     }
-
-
-
     return;
-
   }
 
 }
 
 function buddy_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode) {
-
   if($entity->getEntityTypeId() == "user") {
-
     $account = \Drupal::currentUser();
     if (!in_array("at_moderator", $account->getRoles()) && !in_array("at_provider", $account->getRoles()) && !in_array("administrator", $account->getRoles())){
       $markup= "<h2>".t("Preferences")."</h2>";
@@ -132,11 +118,17 @@ function buddy_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $e
       $build['buddy_user_view_markup'] = array(
         '#markup' => $markup,
       );
-
     }
-
-
-
   }
+}
 
+/**
+ * Implement hook_local_tasks_alter
+ * Remove local tasks from user login/registration page
+ * @param array $local_tasks
+ */
+function buddy_local_tasks_alter(&$local_tasks) {
+  unset($local_tasks['user.login']);
+  unset($local_tasks['user.register']);
+  unset($local_tasks['user.pass']);
 }

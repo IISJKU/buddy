@@ -207,6 +207,7 @@ footer{
   position: absolute;
   z-index: 1;
   margin: 10px 0;
+  max-width: 200px;
 }
 
 .search-block-form {
