@@ -37,7 +37,6 @@ class ATCatalogueForm extends FormBase
       ->range($currentPage*$this->maxNumberOfATEntries, ($currentPage+1)*$this->maxNumberOfATEntries);
     $results = $query->execute();
 
-    $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
     $query = \Drupal::entityQuery('node')
       ->condition('type', 'at_description')
       ->condition('field_at_description_language', $user_lang)
@@ -47,8 +46,6 @@ class ATCatalogueForm extends FormBase
 
 
     if (!empty($results)) {
-
-
       $atEntries = \Drupal::entityTypeManager()->getStorage('node')
         ->loadMultiple($results);
 
@@ -126,9 +123,8 @@ class ATCatalogueForm extends FormBase
       '#allowed_tags' => ['button', 'a', 'div', 'img', 'h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
     ];
 
-
-    if( \Drupal::currentUser()->isAuthenticated()){
-
+    if (\Drupal::currentUser()->isAuthenticated()) {
+      $closeDiv = true;
       $form['detail'] = [
         '#name' => $id,
         '#type' => 'submit',
@@ -136,27 +132,52 @@ class ATCatalogueForm extends FormBase
         '#value' => $this->t('More Information'),
         '#submit' => ['::moreInformationSubmitHandler'],
       ];
-
       $form['submit'] = [
         '#name' => $atEntryID . "_" . $id,
         '#type' => 'submit',
         '#button_type' => 'primary',
         '#value' => $this->t('Install this AT'),
-        // Custom submission handler for page 1.
         '#submit' => ['::tryoutATSubmitHandler'],
-        '#suffix' => '</div>'
       ];
-    }else{
-      $form['submit'] = [
-        '#type' => 'markup',
-        '#markup' => '</div>',
-        '#allowed_tags' => ['button', 'a', 'div', 'img', 'h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
-      ];
+
+      $query = \Drupal::entityQuery('rate_widget');
+      $query->condition('entity_types.*', ['node.at_entry'], 'IN');
+      $widget_ids = $query->execute();
+
+      if (isset($widget_ids) && count($widget_ids) > 0) {
+        $widget_storage = \Drupal::service('entity_type.manager')->getStorage('rate_widget');
+        $rate_widget_base_service = \Drupal::service('rate.vote_widget_base');
+
+        $widget_name = array_shift($widget_ids);
+        $widget = $widget_storage->load($widget_name);
+        $widget_template = $widget->get('template');
+        $value_type = $widget->get('value_type');
+
+        $vote_type = ($widget_template == 'fivestar') ? $widget_template : 'updown';
+        $rate_form = $rate_widget_base_service->getForm('node', 'at_entry', $id, $vote_type, $value_type, $widget_name, $widget);
+        $rate_form_container = [
+          'rating' => [
+            '#theme' => 'container',
+            '#attributes' => [
+              'class' => ['rate-widget', $widget_template],
+            ],
+            '#children' => [
+              'form' => $rate_form,
+            ],
+          ],
+          '#attached' => [
+            'library' => ['rate/w-' . $widget_template],
+          ],
+        ];
+        $form['rate'] = $rate_form_container;
+      }
+      if ($closeDiv) {
+        $form['submit'] = [
+          '#type' => 'markup',
+          '#markup' => '</div>',
+        ];
+      }
     }
-
-
-
-
 
     return $form;
 

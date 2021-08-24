@@ -28,6 +28,7 @@
         "drupal/fontawesome_menu_icons": "^1.9",
         "drupal/mailsystem": "^4.3",
         "drupal/phpmailer_smtp": "^2.0",
+        "drupal/rate": "^2.0@beta",
         "drupal/redirect_after_login": "^2.7",
         "drupal/social_auth_facebook": "^3.0",
         "drupal/social_auth_google": "^3.0@RC",
