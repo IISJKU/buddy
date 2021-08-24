@@ -124,7 +124,6 @@ class ATCatalogueForm extends FormBase
     ];
 
     if (\Drupal::currentUser()->isAuthenticated()) {
-      $closeDiv = true;
       $form['detail'] = [
         '#name' => $id,
         '#type' => 'submit',
@@ -171,12 +170,10 @@ class ATCatalogueForm extends FormBase
         ];
         $form['rate'] = $rate_form_container;
       }
-      if ($closeDiv) {
         $form['submit'] = [
           '#type' => 'markup',
           '#markup' => '</div>',
         ];
-      }
     }
 
     return $form;
