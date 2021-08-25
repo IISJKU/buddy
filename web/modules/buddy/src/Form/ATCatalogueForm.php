@@ -152,8 +152,13 @@ class ATCatalogueForm extends FormBase
         $widget_template = $widget->get('template');
         $value_type = $widget->get('value_type');
 
+        // Apply overrides
+        $results_settings = $widget->get('results');
+        $results_settings['result_position'] = 'hidden';
+        $widget->set('results', $results_settings);
+
         $vote_type = ($widget_template == 'fivestar') ? $widget_template : 'updown';
-        $rate_form = $rate_widget_base_service->getForm('node', 'at_entry', $id, $vote_type, $value_type, $widget_name, $widget);
+        $rate_form = $rate_widget_base_service->getForm('node', 'at_entry', $atEntryID, $vote_type, $value_type, $widget_name, $widget);
         $rate_form_container = [
           'rating' => [
             '#theme' => 'container',
