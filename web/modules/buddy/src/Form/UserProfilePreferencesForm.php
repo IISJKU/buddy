@@ -47,13 +47,13 @@ class UserProfilePreferencesForm extends FormBase
     $atCategoryIDs = $storage->getQuery()
       ->condition('type', 'at_category')
       ->condition('status', 1)
-      ->sort('field_category_description', 'DESC')
+      ->sort('field_category_weight', 'ASC')
       ->execute();
 
     $atCategories = $storage->loadMultiple($atCategoryIDs);
 
 
-    if (!$form_state->has('page_num')) {
+    if (!$form_state->has('category_container_num')) {
 
 
       $selectedAtCategories = [];
@@ -67,7 +67,8 @@ class UserProfilePreferencesForm extends FormBase
 
 
 
-      $form_state->set('page_num', 0);
+      $form_state->set('category_container_num', 0);
+      $form_state->set('category_num', 0);
 
 
       $user = \Drupal::currentUser();
@@ -119,11 +120,32 @@ class UserProfilePreferencesForm extends FormBase
     }
 
     $selectedAtCategories = $form_state->get('selectedAtCategories');
-    $currentPage = $form_state->get('page_num');
+    $currentPage = $form_state->get('category_container_num');
+    $currentCategoryNumber = $form_state->get('category_num');
     $keys = array_keys($atCategoryContainers);
     $categoryContainerId = $keys[$currentPage];
     $atCategoryContainer = $atCategoryContainers[$categoryContainerId];
 
+    $sortedCategories = [];
+    $index = 0;
+    $currentCategory = null;
+    foreach ($atCategories as $categoryID => $category) {
+
+
+      if ($atCategoryContainer->id() == $category->get('field_at_category_container')->target_id) {
+        $sortedCategories[] = [
+          'id' => $category->id(),
+          ];
+
+        if($index == $currentCategoryNumber){
+          $currentCategory = $category;
+        }
+        $index++;
+
+      }
+    }
+
+    $form_state->set('categories', $sortedCategories);
 
 
 
@@ -158,6 +180,30 @@ class UserProfilePreferencesForm extends FormBase
     );
 
 
+
+    $form['category_container_' . $categoryContainerId]['category_' . $currentCategory->id()]['title'] = [
+      '#type' => 'item',
+      '#markup' => "<h2>".$currentCategory->field_at_category_user_title->value."</h2>",
+    ];
+
+    $form['category_container_' . $categoryContainerId]['category_' . $currentCategory->id()]['description'] = [
+      '#type' => 'item',
+      '#markup' => "<p>".$currentCategory->field_at_category_user_descript->value."</p>",
+    ];
+
+    $form['category_container_' . $categoryContainerId]['category_' . $currentCategory->id()]["cat_".$currentCategory->id()] = array(
+      '#type' => 'radios',
+      '#title' => $this->t("Do you want support for")." ".$currentCategory->field_at_category_user_title->value."?",
+      '#default_value' => $selectedAtCategories[$currentCategory->id()],
+      '#options' => array(
+        '100' => $this->t('Yes'),
+        '0' => $this->t('No'),
+      ),
+
+
+    );
+
+    /*
     foreach ($atCategories as $categoryID => $category) {
 
 
@@ -190,17 +236,9 @@ class UserProfilePreferencesForm extends FormBase
           '#markup' => "<hr>",
         ];
 
-        /*
-        $form['category_container_' . $categoryContainerId]['category_' . $categoryID] = array(
-          '#type' => 'checkboxes',
-          '#title' => $category->title->value,
-          '#options' => array(
-            $categoryID => $category->field_category_description->value,
-          ),
-        );
-        */
       }
     }
+    */
 
 
     // Group submit handlers in an actions element with a key of "actions" so
@@ -218,6 +256,10 @@ class UserProfilePreferencesForm extends FormBase
         '#ajax' => [
           'wrapper' => 'user-entry-form-wrapper',
           'callback' => '::prompt',
+          'progress' => [
+            'type' => 'throbber',
+            'message' => $this->t('Verifying entry...'),
+          ],
         ],
       ];
     }
@@ -329,11 +371,11 @@ class UserProfilePreferencesForm extends FormBase
 
 
 
+    $categories = $form_state->get('categories');
+    $currentCategoryContainer = $form_state->get('category_container_num');
+    $currentCategoryContainer++;
 
-    $currentPages = $form_state->get('page_num');
-    $currentPages++;
-
-    $form_state->set('page_num', $currentPages)->setRebuild(TRUE);
+    $form_state->set('category_container_num', $currentCategoryContainer)->setRebuild(TRUE);
 
   }
 
@@ -350,11 +392,11 @@ class UserProfilePreferencesForm extends FormBase
     $form_state->set('selectedAtCategories', $selectedAtCategories);
 
 
-    $currentPages = $form_state->get('page_num');
-    $currentPages--;
+    $currentCategoryContainer = $form_state->get('category_container_num');
+    $currentCategoryContainer--;
 
-    $form_state->set('page_num', $currentPages);
-    $form_state->set('page_num', $currentPages)->setRebuild(TRUE);
+    $form_state->set('category_container_num', $currentCategoryContainer);
+    $form_state->set('category_container_num', $currentCategoryContainer)->setRebuild(TRUE);
   }
 
 
