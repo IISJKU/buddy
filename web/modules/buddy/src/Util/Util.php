@@ -256,4 +256,10 @@ class Util
 
   }
 
+  public static function getNthItemFromArr($arr, $nth = 0){
+    $keys = array_keys($arr);
+    return $arr[$keys[$nth]];
+
+  }
+
 }

@@ -127,15 +127,23 @@ class UserProfilePreferencesForm extends FormBase
     $atCategoryContainer = $atCategoryContainers[$categoryContainerId];
 
     $sortedCategories = [];
+
+    foreach ($atCategoryContainers as $categoryContainer){
+
+      $sortedCategories[$categoryContainer->id()] = [];
+    }
+
     $index = 0;
     $currentCategory = null;
     foreach ($atCategories as $categoryID => $category) {
 
+      $sortedCategories[$category->get('field_at_category_container')->target_id][] = [
+        'id' => $category->id(),
+        'skipped' => false,
+      ];
 
       if ($atCategoryContainer->id() == $category->get('field_at_category_container')->target_id) {
-        $sortedCategories[] = [
-          'id' => $category->id(),
-          ];
+
 
         if($index == $currentCategoryNumber){
           $currentCategory = $category;
@@ -248,7 +256,7 @@ class UserProfilePreferencesForm extends FormBase
       '#type' => 'actions',
     ];
 
-    if ($currentPage > 0) {
+    if ($currentPage > 0 || $currentCategoryNumber > 0) {
       $form['actions']['prev'] = [
         '#type' => 'submit',
         '#value' => $this->t('Previous step'),
@@ -264,7 +272,7 @@ class UserProfilePreferencesForm extends FormBase
       ];
     }
 
-    if($currentPage !== count($atCategoryContainers)-1){
+    if($currentPage !== count($atCategoryContainers)-1 && $currentCategoryNumber != count($sortedCategories)){
       $form['actions']['next'] = [
         '#type' => 'submit',
         '#button_type' => 'primary',
@@ -371,11 +379,20 @@ class UserProfilePreferencesForm extends FormBase
 
 
 
-    $categories = $form_state->get('categories');
+    $categories = Util::getNthItemFromArr($form_state->get('categories'),$form_state->get('category_container_num'));
     $currentCategoryContainer = $form_state->get('category_container_num');
-    $currentCategoryContainer++;
+    $currentCategory = $form_state->get('category_num');
+    if($currentCategory == count($categories)-1){
+      $currentCategoryContainer++;
+      $currentCategory = 0;
+    }else{
+      $currentCategory++;
+    }
 
-    $form_state->set('category_container_num', $currentCategoryContainer)->setRebuild(TRUE);
+
+    $form_state->set('category_container_num', $currentCategoryContainer)
+      ->set('category_num', $currentCategory)
+      ->setRebuild(TRUE);
 
   }
 
@@ -392,11 +409,21 @@ class UserProfilePreferencesForm extends FormBase
     $form_state->set('selectedAtCategories', $selectedAtCategories);
 
 
+    $categories =  Util::getNthItemFromArr($form_state->get('categories'),$form_state->get('category_container_num'));
     $currentCategoryContainer = $form_state->get('category_container_num');
-    $currentCategoryContainer--;
+    $currentCategory = $form_state->get('category_num');
+    if($currentCategory == 0){
+      $currentCategoryContainer--;
+      $prevCategories =  Util::getNthItemFromArr($form_state->get('categories'),$currentCategoryContainer);
+      $currentCategory = count($prevCategories)-1;
+    }else{
+      $currentCategory--;
 
-    $form_state->set('category_container_num', $currentCategoryContainer);
-    $form_state->set('category_container_num', $currentCategoryContainer)->setRebuild(TRUE);
+    }
+
+    $form_state->set('category_container_num', $currentCategoryContainer)
+      ->set('category_num', $currentCategory)
+      ->setRebuild(TRUE);
   }
 
 
