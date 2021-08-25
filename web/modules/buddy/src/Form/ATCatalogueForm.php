@@ -137,6 +137,7 @@ class ATCatalogueForm extends FormBase
         '#button_type' => 'primary',
         '#value' => $this->t('Install this AT'),
         '#submit' => ['::tryoutATSubmitHandler'],
+        '#suffix' => '</div>',
       ];
 
       $query = \Drupal::entityQuery('rate_widget');
@@ -159,6 +160,7 @@ class ATCatalogueForm extends FormBase
 
         $vote_type = ($widget_template == 'fivestar') ? $widget_template : 'updown';
         $rate_form = $rate_widget_base_service->getForm('node', 'at_entry', $atEntryID, $vote_type, $value_type, $widget_name, $widget);
+
         $rate_form_container = [
           'rating' => [
             '#theme' => 'container',
@@ -175,10 +177,11 @@ class ATCatalogueForm extends FormBase
         ];
         $form['rate'] = $rate_form_container;
       }
-        $form['submit'] = [
-          '#type' => 'markup',
-          '#markup' => '</div>',
-        ];
+    } else {
+      $form['submit'] = [
+        '#type' => 'markup',
+        '#markup' => '</div>',
+      ];
     }
 
     return $form;
