@@ -127,17 +127,24 @@ class UserProfilePreferencesForm extends FormBase
     $atCategoryContainer = $atCategoryContainers[$categoryContainerId];
 
     $sortedCategories = [];
-
+    $index = 0;
     foreach ($atCategoryContainers as $categoryContainer){
 
-      $sortedCategories[$categoryContainer->id()] = [];
+      $sortedCategories[$index] = ['id'=>$categoryContainer->id(),
+                              'categories' => []];
+      $index++;
     }
 
     $index = 0;
     $currentCategory = null;
     foreach ($atCategories as $categoryID => $category) {
-
-      $sortedCategories[$category->get('field_at_category_container')->target_id][] = [
+      $categoryIndex = 0;
+      foreach ($sortedCategories as $key => $sortedCategory){
+        if($sortedCategory['id'] == $category->get('field_at_category_container')->target_id){
+          $categoryIndex = $key;
+        }
+      }
+      $sortedCategories[$categoryIndex]['categories'][] = [
         'id' => $category->id(),
         'skipped' => false,
       ];
@@ -211,44 +218,6 @@ class UserProfilePreferencesForm extends FormBase
 
     );
 
-    /*
-    foreach ($atCategories as $categoryID => $category) {
-
-
-      if ($atCategoryContainer->id() == $category->get('field_at_category_container')->target_id) {
-
-        $form['category_container_' . $categoryContainerId]['category_' . $categoryID]['title'] = [
-          '#type' => 'item',
-          '#markup' => "<h2>".$category->field_at_category_user_title->value."</h2>",
-        ];
-
-        $form['category_container_' . $categoryContainerId]['category_' . $categoryID]['description'] = [
-          '#type' => 'item',
-          '#markup' => "<p>".$category->field_at_category_user_descript->value."</p>",
-        ];
-
-        $form['category_container_' . $categoryContainerId]['category_' . $categoryID]["cat_".$categoryID] = array(
-          '#type' => 'radios',
-          '#title' => $this->t("Do you want support for")." ".$category->field_at_category_user_title->value."?",
-          '#default_value' => $selectedAtCategories[$categoryID],
-          '#options' => array(
-            '100' => $this->t('Yes'),
-            '0' => $this->t('No'),
-          ),
-
-
-        );
-
-        $form['category_container_' . $categoryContainerId]['category_' . $categoryID]['line'] = [
-          '#type' => 'item',
-          '#markup' => "<hr>",
-        ];
-
-      }
-    }
-    */
-
-
     // Group submit handlers in an actions element with a key of "actions" so
     // that it gets styled correctly, and so that other modules may add actions
     // to the form. This is not required, but is convention.
@@ -264,29 +233,39 @@ class UserProfilePreferencesForm extends FormBase
         '#ajax' => [
           'wrapper' => 'user-entry-form-wrapper',
           'callback' => '::prompt',
-          'progress' => [
-            'type' => 'throbber',
-            'message' => $this->t('Verifying entry...'),
-          ],
+          'effect' => 'fade',
+          'speed' => 500
         ],
       ];
+
+      $form['actions']['prev']['#attributes']['class'][] = 'icon-search';
     }
 
-    if($currentPage !== count($atCategoryContainers)-1 && $currentCategoryNumber != count($sortedCategories)){
+    if($currentPage !== count($sortedCategories)-1 || $currentCategoryNumber != count($sortedCategories[$currentPage]['categories'])-1){
       $form['actions']['next'] = [
         '#type' => 'submit',
         '#button_type' => 'primary',
         '#value' => $this->t('Next step'),
-        // Custom submission handler for page 1.
         '#submit' => ['::nextSubmitForm'],
-        // Custom validation handler for page 1.
-    //    '#validate' => ['::pageOneSubmitValidate'],
         '#ajax' => [
           'wrapper' => 'user-entry-form-wrapper',
           'callback' => '::prompt',
+          'effect' => 'fade',
+          'speed' => 500
         ],
-
+        "#icon" => array(
+          '#type' => "html_tag",
+          '#tag' => "span",
+          '#value' => "",
+          '#attributes' =>  array(
+            'class' => array("fa","fa-facebook")
+          )
+        )
       ];
+      $form['actions']['next']['#attributes']['class'][] = 'buddy-icon-button';
+      $form['actions']['next']['#attributes']['icon'] = "fa-arrow-right";
+      /*   $form['actions']['next']['children'][] =   ['#type' => 'markup',
+        '#markup' => "HI"]; */
     }else{
 
       $form['actions']['submit'] = [
@@ -294,9 +273,6 @@ class UserProfilePreferencesForm extends FormBase
         '#value' => $this->t('Submit'),
       ];
     }
-
-
-
 
     $form['#prefix'] = '<div id="user-entry-form-wrapper">';
     $form['#suffix'] = '</div>';
@@ -379,13 +355,14 @@ class UserProfilePreferencesForm extends FormBase
 
 
 
-    $categories = Util::getNthItemFromArr($form_state->get('categories'),$form_state->get('category_container_num'));
+    $categories =  $form_state->get('categories');
     $currentCategoryContainer = $form_state->get('category_container_num');
     $currentCategory = $form_state->get('category_num');
-    if($currentCategory == count($categories)-1){
+    if($currentCategory == count($categories[$currentCategoryContainer]['categories'])-1){
       $currentCategoryContainer++;
       $currentCategory = 0;
     }else{
+
       $currentCategory++;
     }
 
@@ -409,13 +386,12 @@ class UserProfilePreferencesForm extends FormBase
     $form_state->set('selectedAtCategories', $selectedAtCategories);
 
 
-    $categories =  Util::getNthItemFromArr($form_state->get('categories'),$form_state->get('category_container_num'));
+    $categories =  $form_state->get('categories');
     $currentCategoryContainer = $form_state->get('category_container_num');
     $currentCategory = $form_state->get('category_num');
     if($currentCategory == 0){
       $currentCategoryContainer--;
-      $prevCategories =  Util::getNthItemFromArr($form_state->get('categories'),$currentCategoryContainer);
-      $currentCategory = count($prevCategories)-1;
+      $currentCategory =  count($categories[$currentCategory]['categories'])-1;
     }else{
       $currentCategory--;
 
@@ -440,7 +416,7 @@ class UserProfilePreferencesForm extends FormBase
   public function prompt(array $form, FormStateInterface $form_state) {
     $currentTitle = $form_state->get('current_title');
     $response = new AjaxResponse();
-    $response->addCommand(new InvokeCommand(NULL, 'myAjaxCallback', [$currentTitle]));
+    $response->addCommand(new InvokeCommand(NULL, 'user_profile_ajax_callback', [$currentTitle]));
     $response->addCommand(new ReplaceCommand('#user-entry-form-wrapper',$form));
 
     return $response;

@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Theme override for an 'input' #type form element.
+ *
+ * Available variables:
+ * - attributes: A list of HTML attributes for the input element.
+ * - children: Optional additional rendered elements.
+ *
+ * @see template_preprocess_input()
+ */
+#}
+{% if attributes.hasClass('button') and attributes.hasClass('buddy-icon-button') %}
+<button{{ attributes.addClass('btn btn-primary') }} >{{ attributes.value }}<i class="fas {{ attributes.icon }}"></i></button>
+{% elseif attributes.hasClass('button') and not attributes.hasClass('field-add-more-submit') %}
+  <input{{ attributes.addClass('btn btn-primary') }} />
+{% else %}
+  <input{{ attributes.addClass('form-control') }} />
+{% endif %}
+{{ children }}

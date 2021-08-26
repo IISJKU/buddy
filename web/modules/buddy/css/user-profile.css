@@ -2,3 +2,9 @@
   display: inline;
   margin-right: 20px;
 }
+
+.myclass:after {   content: '<i class="fa fa-arrow-circle-right"></i>' !important; }
+
+h1{
+  font-size: 500px;
+}

@@ -15,16 +15,19 @@ jQuery(document).ready(function (){
 
 (function($) {
   // Argument passed from InvokeCommand.
-  $.fn.myAjaxCallback = function(argument) {
-    console.log('myAjaxCallback is called.');
-    // Set textfield's value to the passed arguments.
-    $(".page-title").text(argument);
+  $.fn.user_profile_ajax_callback = function(argument) {
+    /*
+        console.log('myAjaxCallback is called.');
 
-    let element       = $(".site-title");
-    let elementHeight = element.height();
-    let windowHeight  = $(window).height();
+       // Set textfield's value to the passed arguments.
+       $(".page-title").text(argument);
 
-    let offset = Math.min(elementHeight, windowHeight) + element.offset().top;
-    $('html, body').animate({ scrollTop: offset }, 500);
+       let element       = $(".site-title");
+       let elementHeight = element.height();
+       let windowHeight  = $(window).height();
+
+       let offset = Math.min(elementHeight, windowHeight) + element.offset().top;
+       $('html, body').animate({ scrollTop: offset }, 500);
+       */
   };
 })(jQuery);
