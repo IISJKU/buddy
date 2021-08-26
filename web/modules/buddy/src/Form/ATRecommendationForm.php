@@ -4,6 +4,7 @@
 namespace Drupal\buddy\Form;
 
 
+use Drupal\buddy\Util\BuddyRecommender;
 use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -29,6 +30,8 @@ class ATRecommendationForm extends FormBase
     $currentPage = $form_state->get('page_num');
     $user = \Drupal::currentUser();
     $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
+
+    $recommendations = BuddyRecommender::recommend($user);
 
     $query = \Drupal::entityQuery('node')
       ->condition('type', 'at_description')

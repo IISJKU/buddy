@@ -256,4 +256,38 @@ class Util
 
   }
 
+  /**
+   * Returns a list of weighted user needs
+   * @param $user: a fully loaded user account
+   * @param bool $finished_only: whether to consider only finished user profiles
+   * @return array: an array of user need node ids (keys) and corresponding weights as percentage (values)
+   */
+  public static function getUserNeeds($user, bool $finished_only=false): array
+  {
+    $needs_weighted = array();
+    if ($user) {
+      $query = \Drupal::entityQuery('node')
+        ->condition('type', 'user_profile')
+        ->condition('uid', $user->id());
+      if ($finished_only) {
+        $query->condition('field_user_profile_finished', true);
+      }
+      $results = $query->execute();
+      if (!empty($results)) {
+        $storage = \Drupal::service('entity_type.manager')->getStorage('node');
+        $profile = $storage->load(array_shift($results));
+        $user_needs = $profile->get('field_user_profile_user_needs')->getValue();
+        foreach ($user_needs as $user_need) {
+          $need_entry = $storage->load($user_need['target_id']);
+          $category = $need_entry->get('field_user_need_ass_support_cat')->getString();
+          $percentage = $need_entry->get('field_user_need_ass_percentage')->getString();
+          if ($percentage > 0.009) {
+            $needs_weighted[$category] = $percentage;
+          }
+        }
+      }
+    }
+    return $needs_weighted;
+  }
+
 }
