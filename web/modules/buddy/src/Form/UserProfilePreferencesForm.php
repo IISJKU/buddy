@@ -238,7 +238,9 @@ class UserProfilePreferencesForm extends FormBase
         ],
       ];
 
-      $form['actions']['prev']['#attributes']['class'][] = 'icon-search';
+      $form['actions']['prev']['#attributes']['class'][] = 'buddy-icon-button';
+      $form['actions']['prev']['#attributes']['class'][] = 'buddy-icon-before';
+      $form['actions']['prev']['#attributes']['icon'] = "fa-arrow-left";
     }
 
     if($currentPage !== count($sortedCategories)-1 || $currentCategoryNumber != count($sortedCategories[$currentPage]['categories'])-1){
