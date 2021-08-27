@@ -18,13 +18,22 @@ class ReadingGameTTSSentence extends QuizScene{
 
     let soundtest = new QuizQuestion("day","", new Stimuli(null,"day"));
     soundtest.columnLayout = 2;
-    soundtest.addAnswer(new Answer("Heute ist\n ein schöner Tag!",true));
-    soundtest.addAnswer(new Answer("Heute regnet\n es!",false));
-    soundtest.addAnswer(new Answer("Heuer ist\n es kalt!",false));
-    soundtest.addAnswer(new Answer("Heute wird\n es regnen!",false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question1_a1"),true));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question1_a2"),false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question1_a3"),false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question1_a4"),false));
+    this.addQuestion(soundtest);
+
+    soundtest = new QuizQuestion("glory","", new Stimuli(null,"glory"));
+    soundtest.columnLayout = 2;
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question2_a1"),true));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question2_a2"),false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question2_a3"),false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question2_a4"),false));
     this.addQuestion(soundtest);
 
 
+    /*
     soundtest = new QuizQuestion("glory","", new Stimuli(null,"glory"));
     soundtest.columnLayout = 2;
     soundtest.addAnswer(new Answer("Die glorreichen\n Sieben!",true));
@@ -34,23 +43,24 @@ class ReadingGameTTSSentence extends QuizScene{
     soundtest.addAnswer(new Answer("Ein Tor reicht\n zum Siegen!",false));
     this.addQuestion(soundtest);
 
+
+     */
+
     soundtest = new QuizQuestion("football","", new Stimuli(null,"football"));
     soundtest.columnLayout = 2;
-    soundtest.addAnswer(new Answer("Ich spiele\n gerne Fussball!",true));
-    soundtest.addAnswer(new Answer("Ich spiele\n gerne Völkerball!",false));
-    soundtest.addAnswer(new Answer("Ich spiehle\n gehrne Fusbal!",false));
-    soundtest.addAnswer(new Answer("Ich spile\n gerne Fusbal!",false));
-    soundtest.addAnswer(new Answer("Ich spielle\n gehrne Fussbal!",false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question3_a1"),true));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question3_a2"),false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question3_a3"),false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question3_a4"),false));
     this.addQuestion(soundtest);
 
 
     soundtest = new QuizQuestion("spiders","", new Stimuli(null,"spiders"));
     soundtest.columnLayout = 2;
-    soundtest.addAnswer(new Answer("Spinnen sind meine\n Lieblingstiere!",true));
-    soundtest.addAnswer(new Answer("Spihnnen sind meine\n Lieblingstiere!",false));
-    soundtest.addAnswer(new Answer("Spinnen sind meine\n Lieblingsthere!",false));
-    soundtest.addAnswer(new Answer("Spiinnen sind maine\n Lieblingstiere!",false));
-    soundtest.addAnswer(new Answer("Spinnen sind maine\n Lieblingstire!",false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question4_a1"),true));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question4_a2"),false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question4_a3"),false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question4_a4"),false));
     this.addQuestion(soundtest);
 
 
