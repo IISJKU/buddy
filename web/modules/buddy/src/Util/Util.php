@@ -2,10 +2,12 @@
 
 namespace Drupal\buddy\Util;
 
-use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Url;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\node\Entity\Node;
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\Entity\EntityStorageException;
 
 class Util
 {
@@ -288,6 +290,49 @@ class Util
       }
     }
     return $needs_weighted;
+  }
+
+  /**
+   * Return a list of all AT entries available in the given language
+   * @param $language
+   * @param bool $ignorePermissions : TRUE to return all ATs regardless of user access permissions
+   * @return array
+   */
+  public static function listAllATs($language, bool $ignorePermissions=false): array
+  {
+    $query = \Drupal::entityQuery('node')
+      ->condition('type', 'at_entry')
+      ->condition('field_at_descriptions.entity:node.field_at_description_language', $language)
+      ->condition('status', 1)
+      ->accessCheck(!$ignorePermissions);
+    $results = $query->execute();
+    return array_values($results);
+  }
+
+  /**
+   * Retrieve a list of ATs in the given user's library
+   * @param $user : a loaded account
+   * @return array: list with AT Entries node ids
+   * @throws InvalidPluginDefinitionException
+   * @throws PluginNotFoundException
+   */
+  public static function userLibraryATs($user): array
+  {
+    $user_ats = array();
+    if ($user) {
+      $at_records_ids = \Drupal::entityQuery('node')
+        ->condition('type', 'user_at_record')
+        ->condition('field_user_at_record_library', true)
+        ->condition('uid', $user->id())
+        ->execute();
+      $at_records = \Drupal::entityTypeManager()->getStorage('node')
+        ->loadMultiple($at_records_ids);
+      foreach ($at_records as $record) {
+        $at_entry = $record->get('field_user_at_record_at_entry')->getString();
+        $user_ats[] = $at_entry;
+      }
+    }
+    return $user_ats;
   }
 
 }

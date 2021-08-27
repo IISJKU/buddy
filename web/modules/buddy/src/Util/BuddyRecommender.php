@@ -18,28 +18,11 @@ class BuddyRecommender
         $user = \Drupal::currentUser();
       }
       $user_needs = Util::getUserNeeds($user);
-
       $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
-      $ats = BuddyRecommender::listAllATs($user_lang);
+      $ats = Util::listAllATs($user_lang);
+      $user_ats = Util::userLibraryATs($user);
       if (!empty($ats)) {
 
       }
-    }
-
-  /**
-   * Return a list of all AT entries available in the given language
-   * @param $language
-   * @param bool $ignorePermissions : TRUE to return all ATs regardless of user access permissions
-   * @return array
-   */
-    public static function listAllATs($language, bool $ignorePermissions=false): array
-    {
-      $query = \Drupal::entityQuery('node')
-        ->condition('type', 'at_entry')
-        ->condition('field_at_descriptions.entity:node.field_at_description_language', $language)
-        ->condition('status', 1)
-        ->accessCheck(!$ignorePermissions);
-      $results = $query->execute();
-      return array_values($results);
     }
 }
