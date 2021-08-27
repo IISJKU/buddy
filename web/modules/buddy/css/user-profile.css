@@ -3,8 +3,26 @@
   margin-right: 20px;
 }
 
-.myclass:after {   content: '<i class="fa fa-arrow-circle-right"></i>' !important; }
 
-h1{
-  font-size: 500px;
+.buddy-icon-button{
+  font-size: 28px !important;
 }
+.buddy-icon-button>svg{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.buddy-user-profile-category-container{
+  min-height: 400px;
+}
+/*
+#user-entry-form-wrapper{
+
+  position: relative;
+}
+
+.buddy-user-profile-navigation{
+  position: absolute;
+  bottom: 0px;
+}
+*/

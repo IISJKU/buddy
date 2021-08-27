@@ -52,7 +52,7 @@ class UserProfilePreferencesForm extends FormBase
 
     $atCategories = $storage->loadMultiple($atCategoryIDs);
 
-
+    $form_state->set('category_count', count($atCategories));
     if (!$form_state->has('category_container_num')) {
 
 
@@ -69,7 +69,7 @@ class UserProfilePreferencesForm extends FormBase
 
       $form_state->set('category_container_num', 0);
       $form_state->set('category_num', 0);
-
+      $form_state->set('progress', 0);
 
       $user = \Drupal::currentUser();
       $user_profileID = \Drupal::entityQuery('node')
@@ -178,7 +178,13 @@ class UserProfilePreferencesForm extends FormBase
 
 
 
-
+    $form['progress']  = array(
+      '#type' => 'markup',
+      '#markup' => '<div class="progress">
+  <div id="profile-progress-bar" class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+  <span class="sr-only">0% complete</span>
+</div>',
+    );
 
 
     if ($atCategoryContainer->field_category_container_user_de->value) {
@@ -186,19 +192,18 @@ class UserProfilePreferencesForm extends FormBase
       $form['category_container_' . $categoryContainerId]['container_description'] = array(
         '#type' => 'markup',
         '#markup' => $atCategoryContainer->field_category_container_user_de->value,
+        '#allowed_tags' => ['style'],
       );
     }
 
-    $form['category_container_' . $categoryContainerId]['current_step']  = array(
-      '#type' => 'markup',
-      '#markup' => "<h4>".$this->t("Current step:").($currentPage+1)."/".count($atCategoryContainers)."</h4>",
-    );
+
 
 
 
     $form['category_container_' . $categoryContainerId]['category_' . $currentCategory->id()]['title'] = [
       '#type' => 'item',
       '#markup' => "<h2>".$currentCategory->field_at_category_user_title->value."</h2>",
+      '#prefix' => '<div class="buddy-user-profile-category-container">',
     ];
 
     $form['category_container_' . $categoryContainerId]['category_' . $currentCategory->id()]['description'] = [
@@ -215,6 +220,8 @@ class UserProfilePreferencesForm extends FormBase
         '0' => $this->t('No'),
       ),
 
+      '#suffix' => '</div>',
+
 
     );
 
@@ -223,6 +230,8 @@ class UserProfilePreferencesForm extends FormBase
     // to the form. This is not required, but is convention.
     $form['actions'] = [
       '#type' => 'actions',
+      '#prefix' => '<div class="buddy-user-profile-navigation">',
+      '#suffix' => '</div>',
     ];
 
     if ($currentPage > 0 || $currentCategoryNumber > 0) {
@@ -266,8 +275,7 @@ class UserProfilePreferencesForm extends FormBase
       ];
       $form['actions']['next']['#attributes']['class'][] = 'buddy-icon-button';
       $form['actions']['next']['#attributes']['icon'] = "fa-arrow-right";
-      /*   $form['actions']['next']['children'][] =   ['#type' => 'markup',
-        '#markup' => "HI"]; */
+
     }else{
 
       $form['actions']['submit'] = [
@@ -344,6 +352,7 @@ class UserProfilePreferencesForm extends FormBase
   public function nextSubmitForm(array &$form, FormStateInterface $form_state)
   {
 
+    $form_state->set('progress', $form_state->get('progress')+1);
     $values = $this->getSelectedCategories($form,$form_state);
 
 
@@ -377,7 +386,7 @@ class UserProfilePreferencesForm extends FormBase
 
   public function prevSubmitForm(array &$form, FormStateInterface $form_state)
   {
-
+    $form_state->set('progress', $form_state->get('progress')-1);
     $values = $this->getSelectedCategories($form,$form_state);
 
     $selectedAtCategories = $form_state->get('selectedAtCategories');
@@ -417,9 +426,17 @@ class UserProfilePreferencesForm extends FormBase
    */
   public function prompt(array $form, FormStateInterface $form_state) {
     $currentTitle = $form_state->get('current_title');
+    $categoryCount = $form_state->get('category_count');
+    $progress = $form_state->get('progress');
+
     $response = new AjaxResponse();
-    $response->addCommand(new InvokeCommand(NULL, 'user_profile_ajax_callback', [$currentTitle]));
     $response->addCommand(new ReplaceCommand('#user-entry-form-wrapper',$form));
+    $response->addCommand(new InvokeCommand(NULL, 'user_profile_ajax_callback', [$currentTitle]));
+    $response->addCommand(new InvokeCommand(NULL, 'user_profile_update_progress_ajax_callback', [$progress/$categoryCount]));
+
+
+
+
 
     return $response;
   }
