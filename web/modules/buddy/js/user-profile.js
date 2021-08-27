@@ -33,8 +33,10 @@ jQuery(document).ready(function (){
 
   $.fn.user_profile_update_progress_ajax_callback = function(argument) {
 
-    let progress = Math.floor( argument*100 );+
-      $('#profile-progress-bar').width(progress+'%');
+
+    let progress = Math.floor( argument*100 );
+
+    $('#profile-progress-bar').width(progress+'%');
 
     /*$('#profile-progress-bar').animate({
       width: progress+'%'

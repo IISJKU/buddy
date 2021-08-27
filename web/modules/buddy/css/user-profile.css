@@ -26,3 +26,8 @@
   bottom: 0px;
 }
 */
+
+.progress{
+  height: 100% !important;
+  background-color: #989898 !important;
+}

@@ -166,13 +166,14 @@ class UserProfilePreferencesForm extends FormBase
 
     if ($atCategoryContainer->field_category_container_user_ti->value) {
 
-      Util::setTitle($atCategoryContainer->field_category_container_user_ti->value);
-      $form_state->set('current_title',$atCategoryContainer->field_category_container_user_ti->value);
+      $title = $this->t("Create Profile:")." ".$atCategoryContainer->field_category_container_user_ti->value;
+      Util::setTitle($title);
+      $form_state->set('current_title',$title);
 
     }else{
-
-      Util::setTitle($atCategoryContainer->title->value);
-      $form_state->set('current_title',$atCategoryContainer->title->value);
+      $title = $this->t("Create Profile:")." ".$atCategoryContainer->title->value;
+      Util::setTitle($title);
+      $form_state->set('current_title',$title);
     }
 
 
@@ -180,9 +181,19 @@ class UserProfilePreferencesForm extends FormBase
 
     $form['progress']  = array(
       '#type' => 'markup',
-      '#markup' => '<div class="progress">
-  <div id="profile-progress-bar" class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-  <span class="sr-only">0% complete</span>
+      '#markup' => '<div class="container">
+  <div class="row">
+    <div class="col-2">
+      <b>Progress:</b>
+    </div>
+    <div class="col-10">
+      <div class="progress">
+        <div id="profile-progress-bar" class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        <span class="sr-only">0% complete</span>
+      </div>
+    </div>
+
+  </div>
 </div>',
     );
 
@@ -280,8 +291,12 @@ class UserProfilePreferencesForm extends FormBase
 
       $form['actions']['submit'] = [
         '#type' => 'submit',
-        '#value' => $this->t('Submit'),
+        '#value' => $this->t('Finish'),
       ];
+      $form['actions']['submit']['#attributes']['class'][] = 'buddy-icon-button';
+      $form['actions']['submit']['#attributes']['class'][] = 'buddy-icon-before';
+      $form['actions']['submit']['#attributes']['icon'] = "fa-check";
+
     }
 
     $form['#prefix'] = '<div id="user-entry-form-wrapper">';
