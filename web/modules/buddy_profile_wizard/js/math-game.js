@@ -19,7 +19,7 @@ class MathGame extends GameScene {
     this.load.audio('yes', 'modules/buddy_profile_wizard/assets/sounds/yes.wav');
     this.load.audio('no', 'modules/buddy_profile_wizard/assets/sounds/no.wav');
 
-    this.load.audio('math_intro', 'modules/buddy_profile_wizard/assets/sounds/math_game/de/math_intro.mp3');
+    this.load.audio('math_intro', soundFactory.getSound("math_game","math_intro.mp3"));
   }
 
   create() {

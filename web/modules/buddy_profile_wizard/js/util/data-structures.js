@@ -8,9 +8,12 @@ class QuizQuestion{
     this.answers = [];
   }
 
-  addAnswer(answer){
+  addAnswer(answer,shuffle=true){
     this.answers.push(answer);
-    this.answers = gameUtil.shuffle(this.answers);
+    if(shuffle){
+      this.answers = gameUtil.shuffle(this.answers);
+    }
+
   }
 
 }

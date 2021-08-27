@@ -37,7 +37,7 @@ class MemoryGameShortTerm extends GameScene {
     }
 
 
-    this.load.audio('memory_game_short_term_intro', 'modules/buddy_profile_wizard/assets/sounds/memory_game_short_term/de/short_term_intro.mp3');
+    this.load.audio('memory_game_short_term_intro', soundFactory.getSound("memory_game_short_term","short_term_intro.mp3"));
     this.load.audio('boing', 'modules/buddy_profile_wizard/assets/sounds/boing.wav');
     this.load.audio('impact', 'modules/buddy_profile_wizard/assets/sounds/soft_impact1.wav');
     this.load.audio('suitcase', 'modules/buddy_profile_wizard/assets/sounds/suitcase_sucks_in_item.wav');

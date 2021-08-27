@@ -5,11 +5,11 @@ class ReadingGameTTSWord extends QuizScene{
 
   preload() {
     super.preload();
-    this.load.audio('highway', 'modules/buddy_profile_wizard/assets/sounds/memory_game/de/highway.mp3');
-    this.load.audio('painter', 'modules/buddy_profile_wizard/assets/sounds/memory_game/de/painter.mp3');
-    this.load.audio('rain', 'modules/buddy_profile_wizard/assets/sounds/memory_game/de/rain.mp3');
-    this.load.audio('reading_intro', 'modules/buddy_profile_wizard/assets/sounds/reading_intro.mp3');
 
+    this.load.audio('highway', soundFactory.getSound("reading_game_tts_word","highway.mp3"));
+    this.load.audio('painter', soundFactory.getSound("reading_game_tts_word","painter.mp3"));
+    this.load.audio('rain', soundFactory.getSound("reading_game_tts_word","rain.mp3"));
+    this.load.audio('reading_intro', soundFactory.getSound("reading_game_tts_word","reading_intro.mp3"));
 
   }
 

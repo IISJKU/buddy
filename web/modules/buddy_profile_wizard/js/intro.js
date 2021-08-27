@@ -8,7 +8,7 @@ class Intro extends GameScene {
   preload() {
 
     super.preload();
-    this.load.audio('intro_message', 'modules/buddy_profile_wizard/assets/sounds/intro/de/intro.mp3');
+    this.load.audio('intro_message',  soundFactory.getSound("intro","intro.mp3"));
   }
 
 

@@ -5,13 +5,18 @@ class ReadingGameTTSSentence extends QuizScene{
 
   preload() {
     super.preload();
+    this.load.audio('intro', soundFactory.getSound("reading_game_tts_sentence","intro.mp3"));
+    this.load.audio('day', soundFactory.getSound("reading_game_tts_sentence","day.mp3"));
+    this.load.audio('pizza', soundFactory.getSound("reading_game_tts_sentence","pizza.mp3"));
+    this.load.audio('football', soundFactory.getSound("reading_game_tts_sentence","football.mp3"));
+    this.load.audio('spiders', soundFactory.getSound("reading_game_tts_sentence","spiders.mp3"));
+/*
     this.load.audio('intro', 'modules/buddy_profile_wizard/assets/sounds/reading_game_tts_sentence/de/intro.mp3');
     this.load.audio('day', 'modules/buddy_profile_wizard/assets/sounds/reading_game_tts_sentence/de/day.mp3');
-    this.load.audio('glory', 'modules/buddy_profile_wizard/assets/sounds/reading_game_tts_sentence/de/glory.mp3');
+    this.load.audio('pizza', 'modules/buddy_profile_wizard/assets/sounds/reading_game_tts_sentence/de/pizza.mp3');
     this.load.audio('football', 'modules/buddy_profile_wizard/assets/sounds/reading_game_tts_sentence/de/football.mp3');
     this.load.audio('spiders', 'modules/buddy_profile_wizard/assets/sounds/reading_game_tts_sentence/de/spiders.mp3');
-
-
+    */
   }
 
   create(){
@@ -24,7 +29,7 @@ class ReadingGameTTSSentence extends QuizScene{
     soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question1_a4"),false));
     this.addQuestion(soundtest);
 
-    soundtest = new QuizQuestion("glory","", new Stimuli(null,"glory"));
+    soundtest = new QuizQuestion("glory","", new Stimuli(null,"pizza"));
     soundtest.columnLayout = 2;
     soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question2_a1"),true));
     soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question2_a2"),false));
