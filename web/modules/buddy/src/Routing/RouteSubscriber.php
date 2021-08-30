@@ -21,8 +21,8 @@ class RouteSubscriber extends RouteSubscriberBase {
       $route = $collection->get('user.register');
     }
     if ($route) {
-      $wizard_path = Url::fromRoute('user.register');
-      $route->setPath($wizard_path);
+      $wizard_path = Url::fromRoute('buddy.user_entry_point');
+      $route->setPath($wizard_path->toString());
     }
   }
 
