@@ -2,3 +2,48 @@
   display: inline;
   margin-right: 20px;
 }
+
+
+.buddy-icon-button{
+  font-size: 28px !important;
+}
+.buddy-icon-button>svg{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.buddy-user-profile-category-container{
+  min-height: 400px;
+}
+/*
+#user-entry-form-wrapper{
+
+  position: relative;
+}
+
+.buddy-user-profile-navigation{
+  position: absolute;
+  bottom: 0px;
+}
+*/
+
+.progress{
+  height: 100% !important;
+  background-color: #989898 !important;
+}
+
+.ajax-progress {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+}
+/*
+.ajax-throbber {
+  left: 0;
+  position:absolute;
+  right:0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+*/

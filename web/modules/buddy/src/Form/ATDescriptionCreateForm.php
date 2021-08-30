@@ -45,6 +45,15 @@ class ATDescriptionCreateForm extends FormBase
     }
 
     $fields  = Util::getFormFieldsOfContentType("at_description",$form, $form_state,$atDescription);
+    foreach ($fields as $key => $field){
+
+      //Remove field at entry.... it is set automatically on node save
+      if($field['widget']["#field_name"] == "field_at_entry"){
+        unset($fields[$key]);
+        break;
+      }
+    }
+
     $form =  array_merge($form, $fields);
 
     // Group submit handlers in an actions element with a key of "actions" so
@@ -91,6 +100,7 @@ class ATDescriptionCreateForm extends FormBase
 
     $node = Node::create($nodeDef);
     try {
+      $node->field_at_entry[] =  ['target_id' =>  $this->atEntry->id()];
       $node->save();
       $this->atEntry->field_at_descriptions[] =  ['target_id' =>  $node->id()];
       $this->atEntry->save();

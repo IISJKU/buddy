@@ -6,6 +6,7 @@ use Drupal\buddy\Util\Util;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 
 class ATEntryOverviewController extends ControllerBase
@@ -141,6 +142,7 @@ class ATEntryOverviewController extends ControllerBase
         <table class="table table-hover table-responsive ">
             <tr>
               <th scope="col">Type</th>
+              <th scope="col">Platform</th>
               <th class="type_edit_header" scope="col">Edit</th>
               <th class="type_delete_header" scope="col">Delete</th>
             </tr>';
@@ -150,12 +152,25 @@ class ATEntryOverviewController extends ControllerBase
       $type = $atType->bundle();
       if ($type == "at_type_software") {
         $html.= "<td>".$this->t("Software").'</td>';
+
+        $os = Node::load( $atType->get("field_type_software_os")->getValue()[0]['target_id']);
+        $html.= "<td>".$os->getTitle().'</td>';
+
+
       } else if ($type == "at_type_app") {
         $html.= "<td>".$this->t("App").'</td>';
+        $os = Node::load($atType->get("field_app_os")->getValue()[0]['target_id']);
+        $html.= "<td>".$os->getTitle().'</td>';
       } else {
         //browser_extension
         $html.= "<td>".$this->t("Browser Extension").'</td>';
+
+
+        $browser = Node::load($atType->get("field_type_browser")->getValue()[0]['target_id']);
+        $html.= "<td>".$browser->getTitle().'</td>';
+
       }
+
 
 
       $html.= '<td><a href="edit-type/' . $atType->id() . '" title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i><span class="sr-only">Edit</span></a></td>';

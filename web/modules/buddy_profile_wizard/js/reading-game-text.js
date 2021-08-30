@@ -5,21 +5,21 @@ class ReadingGameText extends QuizScene{
 
   preload() {
     super.preload();
-    this.load.audio('intro_text', 'modules/buddy_profile_wizard/assets/sounds/reading_game_text/de/intro.mp3');
+    this.load.audio('intro_text', soundFactory.getSound("reading_game_text","intro.mp3"));
 
 
   }
 
   create(){
 
-    let test = new QuizQuestion("banane","Die Bannane ist gelb?");
-    test.addAnswer(new Answer("Nein",false));
-    test.addAnswer(new Answer("Ja",true));
+    let test = new QuizQuestion("banane",stringFactory.getString("reading_game_text_question1"));
+    test.addAnswer(new Answer(stringFactory.getString("yes"),true),false);
+    test.addAnswer(new Answer(stringFactory.getString("no"),false),false);
     this.addQuestion(test);
 
-    test = new QuizQuestion("bier","Bier schmeckt gut?");
-    test.addAnswer(new Answer("Nein",false));
-    test.addAnswer(new Answer("Ja",true));
+    test = new QuizQuestion("bier",stringFactory.getString("reading_game_text_question2"));
+    test.addAnswer(new Answer(stringFactory.getString("yes"),true));
+    test.addAnswer(new Answer(stringFactory.getString("no"),false));
     this.addQuestion(test);
 
 

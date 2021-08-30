@@ -17,3 +17,12 @@ user_profile_forms:
     js/user-profile.js: {}
   dependencies:
     - core/jquery
+user_at_detail:
+  version: 1.x
+  css:
+    theme:
+      css/user-at-detail.css: {}
+  js:
+    js/user-at-detail.js: {}
+  dependencies:
+    - core/jquery

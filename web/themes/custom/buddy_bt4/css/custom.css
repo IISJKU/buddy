@@ -1,4 +1,30 @@
 /* General */
+.at_container{
+  margin-bottom: 50px;
+}
+.button:first-child, .image-button:first-child {
+  margin-right: 1em;
+  margin-left: 1em;
+}
+
+
+.nav-tabs {
+  border-bottom: 2px solid #000000;
+}
+.nav-tabs .nav-link {
+  border: 2px solid transparent;
+}
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+  color: #495057;
+  background-color: #fff;
+  border-color: #000000 #000000 #fff;
+}
+
+.nav-tabs .nav-link {
+  margin-bottom: -2px;
+
+}
+
 
 
 footer {
@@ -74,7 +100,7 @@ table th:last-child, table td:last-child {
 
 header {
 
-  font-size: 1.5rem;
+  font-size: 1.39rem;
 }
 
 .navbar-brand a.site-title{

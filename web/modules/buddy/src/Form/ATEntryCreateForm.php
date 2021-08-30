@@ -148,6 +148,7 @@ class ATEntryCreateForm extends FormBase {
       'title'       =>  $form_state->getValue('title'),
       'field_at_categories' => $this->getSelectedCategories($form,$form_state),
     ]);
+    $node->setPublished(TRUE);
     $node->save();
     $form_state->setRedirect('buddy.at_entry_overview');
   }

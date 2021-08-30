@@ -5,39 +5,39 @@ class ReadingGameTTSWord extends QuizScene{
 
   preload() {
     super.preload();
-    this.load.audio('highway', 'modules/buddy_profile_wizard/assets/sounds/memory_game/de/highway.mp3');
-    this.load.audio('painter', 'modules/buddy_profile_wizard/assets/sounds/memory_game/de/painter.mp3');
-    this.load.audio('rain', 'modules/buddy_profile_wizard/assets/sounds/memory_game/de/rain.mp3');
-    this.load.audio('reading_intro', 'modules/buddy_profile_wizard/assets/sounds/reading_intro.mp3');
 
+    this.load.audio('highway', soundFactory.getSound("reading_game_tts_word","highway.mp3"));
+    this.load.audio('painter', soundFactory.getSound("reading_game_tts_word","painter.mp3"));
+    this.load.audio('rain', soundFactory.getSound("reading_game_tts_word","rain.mp3"));
+    this.load.audio('reading_intro', soundFactory.getSound("reading_game_tts_word","reading_intro.mp3"));
 
   }
 
   create(){
 
     let soundtest = new QuizQuestion("highway","", new Stimuli(null,"highway"));
-    soundtest.addAnswer(new Answer("Autobahn",true));
-    soundtest.addAnswer(new Answer("Rinderwahn",false));
-    soundtest.addAnswer(new Answer("Auerhahn",false));
-    soundtest.addAnswer(new Answer("Kameramann",false));
-    soundtest.addAnswer(new Answer("Wienerschnitzel",false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_word_question1_a1"),true));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_word_question1_a2"),false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_word_question1_a3"),false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_word_question1_a3"),false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_word_question1_a4"),false));
     this.addQuestion(soundtest);
 
 
     soundtest = new QuizQuestion("painter","", new Stimuli(null,"painter"));
-    soundtest.addAnswer(new Answer("Maler",true));
-    soundtest.addAnswer(new Answer("Taler",false));
-    soundtest.addAnswer(new Answer("Senf",false));
-    soundtest.addAnswer(new Answer("Müller",false));
-    soundtest.addAnswer(new Answer("Kraft",false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_word_question2_a1"),true));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_word_question2_a2"),false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_word_question2_a3"),false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_word_question2_a3"),false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_word_question2_a4"),false));
     this.addQuestion(soundtest);
 
     soundtest = new QuizQuestion("rain","", new Stimuli(null,"rain"));
-    soundtest.addAnswer(new Answer("Regen",true));
-    soundtest.addAnswer(new Answer("Degen",false));
-    soundtest.addAnswer(new Answer("Segen",false));
-    soundtest.addAnswer(new Answer("Franz",false));
-    soundtest.addAnswer(new Answer("Baum",false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_word_question3_a1"),true));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_word_question3_a2"),false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_word_question3_a3"),false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_word_question3_a3"),false));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_word_question3_a4"),false));
     this.addQuestion(soundtest);
 
 

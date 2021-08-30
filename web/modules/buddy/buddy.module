@@ -2,6 +2,10 @@
 
 use Drupal\Core\Link;
 use Drupal\node\Entity\Node;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+use Drupal\user\UserInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Implement hook_entity_load
@@ -45,6 +49,75 @@ function buddy_entity_load(array $entities, $entity_type_id) {
             FALSE);
         }
       }
+    }
+  }
+}
+
+
+/**
+ * Implements hook_user_login().
+ */
+
+function buddy_user_login($account) {
+
+
+  $current_route = Drupal::routeMatch()->getRouteName();
+  $request = Drupal::request();
+  if ($request->getRequestFormat() !== 'html') {
+    return;
+  }
+  $destination = $request->query->get('destination');
+  if ($destination && $destination != '/user/login') {
+    return;
+  }
+
+  $middleware = \Drupal::service('http_middleware.buddy');
+
+  //Accessing the site in maintenance mode.
+  if (\Drupal::state()
+      ->get('system.maintenance_mode') && !$account->hasPermission('access site in maintenance mode')) {
+    // The site is in maintenance mode and the user is not allowed in.
+    // Step out and let Drupal handle it.
+    $homeResponse = new RedirectResponse(URL::fromUserInput('/')->toString());
+    $middleware->setRedirectResponse($homeResponse);
+
+  }
+
+
+  if (!in_array($current_route, ['user.reset', 'user.reset.login'])) {
+
+    if( !in_array("at_moderator", $account->getRoles()) && !in_array("at_provider", $account->getRoles()) &&  !in_array("administrator", $account->getRoles())){
+
+      $user = \Drupal::currentUser();
+      $user_profileID = \Drupal::entityQuery('node')
+        ->condition('type', 'user_profile')
+        ->condition('uid', $user->id(), '=')
+        ->condition('field_user_profile_finished', true, '=')
+        ->execute();
+      if (count($user_profileID) == 0) {
+        $redirectResponse = new RedirectResponse(URL::fromRoute('buddy.user_profile')->toString());
+        $middleware->setRedirectResponse($redirectResponse);
+      } else {
+        $redirectResponse = new RedirectResponse(URL::fromRoute('buddy.user_at_library')->toString());
+        $middleware->setRedirectResponse($redirectResponse);
+      }
+    }
+    return;
+  }
+
+}
+
+function buddy_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode) {
+  if($entity->getEntityTypeId() == "user") {
+    $account = \Drupal::currentUser();
+    if (!in_array("at_moderator", $account->getRoles()) && !in_array("at_provider", $account->getRoles()) && !in_array("administrator", $account->getRoles())){
+      $markup= "<h2>".t("Preferences")."</h2>";
+      $markup.= Link::createFromRoute(t('Adjust my preferences'),'buddy.user_profile',[],  ['attributes' => ['class' => 'btn btn-primary overview-button']])->toString()->getGeneratedLink();
+      $markup.= "<hr>";
+
+      $build['buddy_user_view_markup'] = array(
+        '#markup' => $markup,
+      );
     }
   }
 }

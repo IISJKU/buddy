@@ -68,7 +68,9 @@ class ATDescriptionEditForm extends ATDescriptionCreateForm
           ];
         }else{
 
-          $this->atDescription->$fieldName = $values[$fieldName];
+          if($fieldName != "field_at_entry"){
+            $this->atDescription->$fieldName = $values[$fieldName];
+          }
         }
       }
     }
@@ -83,6 +85,7 @@ class ATDescriptionEditForm extends ATDescriptionCreateForm
       $this->atDescription->setRevisionLogMessage("new version");
       $this->atDescription->setRevisionUserId($this->currentUser()->id());
     }
+
     $this->atDescription->save();
 
 
