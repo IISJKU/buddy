@@ -222,19 +222,37 @@ class UserProfilePreferencesForm extends FormBase
       '#markup' => "<p>".$currentCategory->field_at_category_user_descript->value."</p>",
     ];
 
-    $form['category_container_' . $categoryContainerId]['category_' . $currentCategory->id()]["cat_".$currentCategory->id()] = array(
-      '#type' => 'radios',
-      '#title' => $this->t("Do you want support for")." ".$currentCategory->field_at_category_user_title->value."?",
-      '#default_value' => $selectedAtCategories[$currentCategory->id()],
-      '#options' => array(
-        '100' => $this->t('Yes'),
-        '0' => $this->t('No'),
-      ),
+    if ($currentCategory->field_at_category_user_question->value) {
+      $form['category_container_' . $categoryContainerId]['category_' . $currentCategory->id()]["cat_".$currentCategory->id()] = array(
+        '#type' => 'radios',
+        '#title' => $currentCategory->field_at_category_user_question->value,
+        '#default_value' => $selectedAtCategories[$currentCategory->id()],
+        '#options' => array(
+          '100' => $this->t('Yes'),
+          '0' => $this->t('No'),
+        ),
 
-      '#suffix' => '</div>',
+        '#suffix' => '</div>',
 
 
-    );
+      );
+    }else{
+      $form['category_container_' . $categoryContainerId]['category_' . $currentCategory->id()]["cat_".$currentCategory->id()] = array(
+        '#type' => 'radios',
+        '#title' => $this->t("Do you want support for")." ".$currentCategory->field_at_category_user_title->value."?",
+        '#default_value' => $selectedAtCategories[$currentCategory->id()],
+        '#options' => array(
+          '100' => $this->t('Yes'),
+          '0' => $this->t('No'),
+        ),
+
+        '#suffix' => '</div>',
+
+
+      );
+    }
+
+
 
     // Group submit handlers in an actions element with a key of "actions" so
     // that it gets styled correctly, and so that other modules may add actions
