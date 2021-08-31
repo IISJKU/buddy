@@ -7,7 +7,7 @@ namespace Drupal\buddy\Util;
 class BuddyRecommender
 {
 
-  protected static int $maxNumberOfATEntries = 1;
+  public static int $maxNumberOfATEntries = 1;
 
   /**
    * Return AT recommendations for the given user, or the current logged-in user if no user is given

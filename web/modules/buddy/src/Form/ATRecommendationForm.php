@@ -9,13 +9,10 @@ use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\image\Entity\ImageStyle;
 use Drupal\node\Entity\Node;
 
 class ATRecommendationForm extends FormBase
 {
-
-  protected int $maxNumberOfATEntries = 1;
 
   public function getFormId()
   {
@@ -27,53 +24,27 @@ class ATRecommendationForm extends FormBase
     if (!$form_state->has('page_num')) {
       $form_state->set('page_num', 0);
     }
-    $currentPage = $form_state->get('page_num');
     $user = \Drupal::currentUser();
-    $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
     $recommendations = BuddyRecommender::recommend($user);
 
-    $query = \Drupal::entityQuery('node')
-      ->condition('type', 'at_description')
-      ->condition('field_at_description_language', $user_lang)
-      ->condition('status', 1)
-      ->range($currentPage*$this->maxNumberOfATEntries, ($currentPage+1)*$this->maxNumberOfATEntries);
-
-    $results = $query->execute();
-    if (!empty($results)) {
-
-
-      $atEntries = \Drupal::entityTypeManager()->getStorage('node')
-        ->loadMultiple($results);
-
-      $maxResults = min(count($results), $this->maxNumberOfATEntries);
-
+    if (!empty($recommendations)) {
+      $maxResults = min(count($recommendations), BuddyRecommender::$maxNumberOfATEntries);
       for ($i = 0; $i < $maxResults; $i++) {
-
-
-        $textForm = $this->renderATEntry(array_shift($atEntries));
-
+        $atDesc = Util::getDescriptionOfATEntry(array_shift($recommendations));
+        $textForm = $this->renderATEntry($atDesc);
         $form[] = $textForm;
-
-
       }
-
     }
 
-
-    // Group submit handlers in an actions element with a key of "actions" so
-    // that it gets styled correctly, and so that other modules may add actions
-    // to the form. This is not required, but is convention.
     $form['actions'] = [
       '#type' => 'actions',
     ];
 
-    // Add a submit button that handles the submission of the form.
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Show me more assitive technology!'),
+      '#value' => $this->t('Show me more assistive technology!'),
     ];
-
 
     return $form;
   }
@@ -81,10 +52,6 @@ class ATRecommendationForm extends FormBase
 
   private function renderATEntry($atDescription)
   {
-
-
-    $html = "";
-
     $id = $atDescription->id();
 
     //Get AT Entry of description
@@ -111,7 +78,6 @@ class ATRecommendationForm extends FormBase
       '#allowed_tags' => ['button', 'a', 'div', 'img', 'h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
     ];
 
-
     $form['submit'] = [
       '#name' => $atEntryID . "_" . $id,
       '#type' => 'submit',
@@ -120,8 +86,6 @@ class ATRecommendationForm extends FormBase
       // Custom submission handler for page 1.
       '#submit' => ['::tryoutATSubmitHandler'],
       '#suffix' => '</div>'
-
-
     ];
 
     return $form;
@@ -139,7 +103,7 @@ class ATRecommendationForm extends FormBase
     $count_query = $query->count()->execute();
 
 
-    if(($form_state->get('page_num')+1)*$this->maxNumberOfATEntries >= $count_query){
+    if(($form_state->get('page_num')+1)*BuddyRecommender::$maxNumberOfATEntries >= $count_query){
       $form_state->set('page_num', 0);
 
     }else{

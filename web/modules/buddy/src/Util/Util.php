@@ -187,7 +187,7 @@ class Util
 
   }
 
-  public static function getDescriptionOfATEntry($atID){
+  public static function getDescriptionOfATEntry($atID) {
 
     //Check current language
     $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
@@ -198,35 +198,28 @@ class Util
       ->condition('status', 1);
     $results = $query->execute();
     if (!empty($results)) {
-
-
       $nid = array_shift($results);
-
       return Node::load($nid);
 
-    }else{
+    } else {
 
       //Check user language
       $user = \Drupal::currentUser();
       $account = $user->getAccount();
-      $userLang = $account->getPreferredLangcode();
-
+      $user_lang = $account->getPreferredLangcode();
       $query = \Drupal::entityQuery('node')
         ->condition('type', 'at_description')
         ->condition('field_at_description_language', $user_lang)
         ->condition('status', 1);
       $results = $query->execute();
       if (!empty($results)) {
-
-
         $nid = array_shift($results);
         return Node::load($nid);
 
-      }else{
+      } else {
 
         //Check if English version is available
-        $userLang = "en";
-
+        $user_lang = "en";
         $query = \Drupal::entityQuery('node')
           ->condition('type', 'at_description')
           ->condition('field_at_description_language', $user_lang)
@@ -236,7 +229,7 @@ class Util
           $nid = array_shift($results);
           return Node::load($nid);
 
-        }else{
+        } else {
 
           //Return first language we find ....
           $query = \Drupal::entityQuery('node')
@@ -246,16 +239,12 @@ class Util
           if (!empty($results)) {
             $nid = array_shift($results);
             return Node::load($nid);
-
           }
 
         }
-
-
       }
-
     }
-
+    return null;
   }
 
   /**
