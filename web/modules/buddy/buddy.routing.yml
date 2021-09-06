@@ -16,6 +16,22 @@ buddy.user_entry_point:
     _role: 'anonymous'
   options:
     no_cache: 'TRUE'
+buddy.login:
+  path: '/user/login'
+  defaults:
+    _form: '\Drupal\user\Form\UserLoginForm'
+    _title: 'Log in'
+  requirements:
+    _user_is_logged_in: 'FALSE'
+  options:
+    _maintenance_access: TRUE
+buddy.register:
+  path: '/user/register'
+  defaults:
+    _entity_form: 'user.register'
+    _title: 'Create new account'
+  requirements:
+    _access_user_register: 'TRUE'
 buddy.user_profile:
   path: '/user-profile'
   defaults:

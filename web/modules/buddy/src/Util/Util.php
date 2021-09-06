@@ -2,10 +2,12 @@
 
 namespace Drupal\buddy\Util;
 
-use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Url;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\node\Entity\Node;
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\Entity\EntityStorageException;
 
 class Util
 {
@@ -185,7 +187,7 @@ class Util
 
   }
 
-  public static function getDescriptionOfATEntry($atID){
+  public static function getDescriptionOfATEntry($atID) {
 
     //Check current language
     $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
@@ -196,35 +198,28 @@ class Util
       ->condition('status', 1);
     $results = $query->execute();
     if (!empty($results)) {
-
-
       $nid = array_shift($results);
-
       return Node::load($nid);
 
-    }else{
+    } else {
 
       //Check user language
       $user = \Drupal::currentUser();
       $account = $user->getAccount();
-      $userLang = $account->getPreferredLangcode();
-
+      $user_lang = $account->getPreferredLangcode();
       $query = \Drupal::entityQuery('node')
         ->condition('type', 'at_description')
         ->condition('field_at_description_language', $user_lang)
         ->condition('status', 1);
       $results = $query->execute();
       if (!empty($results)) {
-
-
         $nid = array_shift($results);
         return Node::load($nid);
 
-      }else{
+      } else {
 
         //Check if English version is available
-        $userLang = "en";
-
+        $user_lang = "en";
         $query = \Drupal::entityQuery('node')
           ->condition('type', 'at_description')
           ->condition('field_at_description_language', $user_lang)
@@ -234,7 +229,7 @@ class Util
           $nid = array_shift($results);
           return Node::load($nid);
 
-        }else{
+        } else {
 
           //Return first language we find ....
           $query = \Drupal::entityQuery('node')
@@ -244,16 +239,89 @@ class Util
           if (!empty($results)) {
             $nid = array_shift($results);
             return Node::load($nid);
-
           }
 
         }
-
-
       }
-
     }
+    return null;
+  }
 
+  /**
+   * Returns a list of weighted user needs
+   * @param $user: a fully loaded user account
+   * @param bool $finished_only: whether to consider only finished user profiles
+   * @return array: an array of user need node ids (keys) and corresponding weights as percentage (values)
+   */
+  public static function getUserNeeds($user, bool $finished_only=false): array
+  {
+    $needs_weighted = array();
+    if ($user) {
+      $query = \Drupal::entityQuery('node')
+        ->condition('type', 'user_profile')
+        ->condition('uid', $user->id());
+      if ($finished_only) {
+        $query->condition('field_user_profile_finished', true);
+      }
+      $results = $query->execute();
+      if (!empty($results)) {
+        $storage = \Drupal::service('entity_type.manager')->getStorage('node');
+        $profile = $storage->load(array_shift($results));
+        $user_needs = $profile->get('field_user_profile_user_needs')->getValue();
+        foreach ($user_needs as $user_need) {
+          $need_entry = $storage->load($user_need['target_id']);
+          $category = $need_entry->get('field_user_need_ass_support_cat')->getString();
+          $percentage = $need_entry->get('field_user_need_ass_percentage')->getString();
+          if ($percentage > 0.009) {
+            $needs_weighted[$category] = $percentage;
+          }
+        }
+      }
+    }
+    return $needs_weighted;
+  }
+
+  /**
+   * Return a list of all AT entries available in the given language
+   * @param $language
+   * @param bool $ignorePermissions : TRUE to return all ATs regardless of user access permissions
+   * @return array
+   */
+  public static function listAllATs($language, bool $ignorePermissions=false): array
+  {
+    $query = \Drupal::entityQuery('node')
+      ->condition('type', 'at_entry')
+      ->condition('field_at_descriptions.entity:node.field_at_description_language', $language)
+      ->condition('status', 1)
+      ->accessCheck(!$ignorePermissions);
+    $results = $query->execute();
+    return array_values($results);
+  }
+
+  /**
+   * Retrieve a list of ATs in the given user's library
+   * @param $user : a loaded account
+   * @return array: list with AT Entries node ids
+   * @throws InvalidPluginDefinitionException
+   * @throws PluginNotFoundException
+   */
+  public static function userLibraryATs($user): array
+  {
+    $user_ats = array();
+    if ($user) {
+      $at_records_ids = \Drupal::entityQuery('node')
+        ->condition('type', 'user_at_record')
+        ->condition('field_user_at_record_library', true)
+        ->condition('uid', $user->id())
+        ->execute();
+      $at_records = \Drupal::entityTypeManager()->getStorage('node')
+        ->loadMultiple($at_records_ids);
+      foreach ($at_records as $record) {
+        $at_entry = $record->get('field_user_at_record_at_entry')->getString();
+        $user_ats[] = $at_entry;
+      }
+    }
+    return $user_ats;
   }
 
   public static function getNthItemFromArr($arr, $nth = 0){

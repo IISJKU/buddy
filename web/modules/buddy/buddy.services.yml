@@ -3,3 +3,7 @@ services:
     class: Drupal\buddy\RedirectMiddleware
     tags:
       - { name: http_middleware }
+  buddy.route_subscriber:
+    class: Drupal\buddy\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }

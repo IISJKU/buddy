@@ -287,13 +287,13 @@ class UserEntryPoint extends FormBase {
     switch ($step_no) {
       case UserEntryWizardStep::LoginForm:
         $response = new AjaxResponse();
-        $url = Url::fromRoute('user.login');
+        $url = Url::fromRoute('buddy.login');
         $command = new RedirectCommand($url->toString());
         $response->addCommand($command);
         return $response;
       case UserEntryWizardStep::RegisterForm:
         $response = new AjaxResponse();
-        $url = Url::fromRoute('user.register');
+        $url = Url::fromRoute('buddy.register');
         $command = new RedirectCommand($url->toString());
         $response->addCommand($command);
         return $response;
