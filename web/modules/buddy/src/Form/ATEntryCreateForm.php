@@ -74,6 +74,7 @@ class ATEntryCreateForm extends FormBase {
 
     foreach ($atCategoryContainers as $categoryContainerId => $atCategoryContainer){
 
+      /*
       $form['category_container_'.$categoryContainerId] = array(
         '#type' => 'fieldset',
         '#title' => $this->t($atCategoryContainer->title->value),
@@ -85,7 +86,7 @@ class ATEntryCreateForm extends FormBase {
           '#type' => 'markup',
           '#markup' => $atCategoryContainer->field_category_container_descrip->value,
         );
-      }
+      }*/
 
 
       foreach ($atCategories as $categoryID => $category){
