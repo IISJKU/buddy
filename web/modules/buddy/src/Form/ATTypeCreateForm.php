@@ -143,6 +143,7 @@ class ATTypeCreateForm extends FormBase
     $form['back'] = [
       '#type' => 'submit',
       '#value' => $this->t('Back'),
+      '#weight' => 999999,
       // Custom submission handler for 'Back' button.
       '#submit' => ['::pageTwoBackSubmit'],
       // We won't bother validating the required 'color' field, since they
@@ -152,6 +153,7 @@ class ATTypeCreateForm extends FormBase
     $form['submit'] = [
       '#type' => 'submit',
       '#button_type' => 'primary',
+      '#weight' => 999999,
       '#value' => $this->t('Submit'),
     ];
 
