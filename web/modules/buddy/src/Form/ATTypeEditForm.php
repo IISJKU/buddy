@@ -44,10 +44,12 @@ class ATTypeEditForm extends ATTypeCreateForm {
     // to the form. This is not required, but is convention.
     $form['actions'] = [
       '#type' => 'actions',
+      '#weight' => 999999,
     ];
 
     $form['actions']['submit'] = [
       '#type' => 'submit',
+
       '#value' => $this->t('Submit'),
     ];
 
