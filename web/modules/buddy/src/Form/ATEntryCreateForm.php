@@ -45,7 +45,7 @@ class ATEntryCreateForm extends FormBase {
     $atCategoryContainersIDs = $storage->getQuery()
       ->condition('type', 'at_category_container')
       ->condition('status', 1)
-      ->sort('field_category_container_weight', 'DESC')
+      ->sort('field_category_container_weight', 'ASC')
       ->execute();
 
     $atCategoryContainers = $storage->loadMultiple($atCategoryContainersIDs);
