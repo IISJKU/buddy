@@ -38,6 +38,7 @@ function buddy_entity_load(array $entities, $entity_type_id) {
         if (!empty($results)) {
           $messenger = \Drupal::messenger();
           $languages = \Drupal::service('language_manager')->getStandardLanguageList();
+          return;
           $messenger->addMessage(
             t('This entry is available in @language: @at_link.',
               [ '@language' => $languages[$user_lang][0],
