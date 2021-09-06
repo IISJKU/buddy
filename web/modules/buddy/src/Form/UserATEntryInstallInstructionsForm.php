@@ -48,7 +48,7 @@ class UserATEntryInstallInstructionsForm extends FormBase
 
     $form['introduction_install'] = [
       '#type' => 'markup',
-      '#markup' => '<hr><h2>'.$this->t("How do you get this AT?").'</h2><div><strong>'.$this->t("This at is available as:").'</strong></div>',
+      '#markup' => '<hr><h2>'.$this->t("How do you get this AT?").'</h2><div><strong>'.$this->t("This AT is available as:").'</strong></div>',
       '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','strong','hr'],
 
     ];
@@ -162,7 +162,6 @@ class UserATEntryInstallInstructionsForm extends FormBase
     $form['links'] = [
       '#type' => 'markup',
       '#markup' => $markup,
-      '#prefix' => '<hr>',
       '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
 
     ];
@@ -234,15 +233,14 @@ class UserATEntryInstallInstructionsForm extends FormBase
     $otherSoftware = [];
     foreach ($software as $currentSoft){
 
-      $os = $currentSoft->get("field_type_desk_operating_system")->getValue()[0]['value'];
       $desktopOS = Node::load($currentSoft->get("field_type_software_os")->getValue()[0]['target_id']);
-
+      $osTitle = $desktopOS->getTitle();
       $generalOS = "N/A";
-      if(str_contains($os,"win")){
+      if(str_contains($osTitle,"win")){
         $generalOS = "windows";
-      }else if(str_contains($os,"linux")){
+      }else if(str_contains($osTitle,"linux")){
         $generalOS = "linux";
-      }else if(str_contains($os,"osx")){
+      }else if(str_contains($osTitle,"osx")){
         $generalOS = "osx";
       }
 
@@ -333,7 +331,7 @@ class UserATEntryInstallInstructionsForm extends FormBase
     }
 
     foreach ($otherApps as $currentApp){
-      $form['app_'.$currentApp['app']->id()] = $this->renderOsDescription($currentApp['os'],$currentApp['app']->id(), $this->t('You are currently using this operating system.'));
+      $form['app_'.$currentApp['app']->id()] = $this->renderOsDescription($currentApp['os'],$currentApp['app']->id());
 
     }
 
@@ -354,7 +352,7 @@ class UserATEntryInstallInstructionsForm extends FormBase
     $styled_image_url = ImageStyle::load('medium')->buildUrl($type->field_icon->entity->getFileUri());
     $description = "";
     if($currentMessage != ""){
-      $description.="<hr>";
+
       $currentMessage = "<div><strong>".$currentMessage."</strong></div>";
     }
 
@@ -376,6 +374,7 @@ class UserATEntryInstallInstructionsForm extends FormBase
       '#button_type' => 'primary',
       '#value' => $this->t('Get it!'),
       '#prefix' => $description,
+      '#suffix' => '<hr>',
 
     ];
 
