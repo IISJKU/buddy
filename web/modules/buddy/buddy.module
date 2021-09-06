@@ -1,54 +1,43 @@
 <?php
 
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Link;
-use Drupal\node\Entity\Node;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-/**
- * Implement hook_entity_load
- * Check for translations of AT descriptions and notify users
- * @param array $entities
- * @param $entity_type_id
- */
-function buddy_entity_load(array $entities, $entity_type_id) {
-  if ($entity_type_id == 'node' && count($entities) == 1) {
-    $node = array_values($entities)[0];
-    if ($node->getType() == 'at_description') {
-      $node_lang = $node->get('field_at_description_language')->getString();
-      $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
-      if (!empty($node_lang) && !empty($user_lang) && $node_lang !== $user_lang) {
-        // Fetch AT entry of AT description
-        $query = \Drupal::entityQuery('node')
-          ->condition('type', 'at_entry')
-          ->condition('field_at_descriptions', $node->id(), 'IN');
-        $results = $query->execute();
-        if (empty($results)) {
-          return;
-        }
-        // Find AT description in user's language
-        $query = \Drupal::entityQuery('node')
-          ->condition('type', 'at_description')
-          ->condition('field_at_entry', array_shift($results))
-          ->condition('field_at_description_language', $user_lang)
-          ->condition('status', 1);
-        $results = $query->execute();
-        if (!empty($results)) {
-          $messenger = \Drupal::messenger();
-          $languages = \Drupal::service('language_manager')->getStandardLanguageList();
-          return;
-          $messenger->addMessage(
-            t('This entry is available in @language: @at_link.',
-              [ '@language' => $languages[$user_lang][0],
-                '@at_link' => Link::createFromRoute(
-                  t('click here to see it'),
-                  'entity.node.canonical', ['node' => array_shift($results)])
-                  ->toString(),]),
-            $messenger::TYPE_STATUS,
-            FALSE);
-        }
+function buddy_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if ($entity->bundle() == 'at_description' && $view_mode == 'full') {
+    $node_lang = $entity->get('field_at_description_language')->getString();
+    $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    if (!empty($node_lang) && !empty($user_lang) && $node_lang !== $user_lang) {
+      // Fetch AT entry of AT description
+      $query = \Drupal::entityQuery('node')
+        ->condition('type', 'at_entry')
+        ->condition('field_at_descriptions', $entity->id(), 'IN');
+      $results = $query->execute();
+      if (empty($results)) {
+        return;
+      }
+      // Find AT description in user's language
+      $query = \Drupal::entityQuery('node')
+        ->condition('type', 'at_description')
+        ->condition('field_at_entry', array_shift($results))
+        ->condition('field_at_description_language', $user_lang)
+        ->condition('status', 1);
+      $results = $query->execute();
+      if (!empty($results)) {
+        $messenger = \Drupal::messenger();
+        $languages = \Drupal::service('language_manager')->getStandardLanguageList();
+        $messenger->addMessage(
+          t('This entry is available in @language: @at_link.',
+            [ '@language' => $languages[$user_lang][0],
+              '@at_link' => Link::createFromRoute(
+                t('click here to see it'),
+                'buddy.description_view', ['description' => array_shift($results)])
+                ->toString(),]),
+          $messenger::TYPE_STATUS,
+          FALSE);
       }
     }
   }
@@ -58,9 +47,7 @@ function buddy_entity_load(array $entities, $entity_type_id) {
 /**
  * Implements hook_user_login().
  */
-
 function buddy_user_login($account) {
-
 
   $current_route = Drupal::routeMatch()->getRouteName();
   $request = Drupal::request();

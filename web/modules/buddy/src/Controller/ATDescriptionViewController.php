@@ -70,9 +70,9 @@ class ATDescriptionViewController extends ControllerBase
       ]);
     }
 
-    // Invoke all view_alter hook implementations
+    // Invoke all implementations of hook_node_view
     $module_handler = \Drupal::moduleHandler();
-    $module_handler->invokeAll('node_view_alter', [$build, $description, $display]);
+    $module_handler->invokeAll('node_view', [$build, $description, $display, 'full']);
 
     return $build;
 
