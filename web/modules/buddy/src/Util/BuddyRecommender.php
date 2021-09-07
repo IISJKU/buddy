@@ -4,6 +4,9 @@
 namespace Drupal\buddy\Util;
 
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+
 class BuddyRecommender
 {
 
@@ -11,9 +14,14 @@ class BuddyRecommender
 
   /**
    * Return AT recommendations for the given user, or the current logged-in user if no user is given
-   * @param $user
+   * @param $user: a loaded user account. If none, the current logged-in user will be loaded
+   * @param array $ignore_ats: list of node ids of AT entries to ignore as recommendations
+   * @return array: list of node ids of AT entries (in the user's language) to recommend to the user
+   * @throws InvalidPluginDefinitionException
+   * @throws PluginNotFoundException
    */
-    public static function recommend($user) {
+    public static function recommend($user=null, array $ignore_ats=[]): array
+    {
       $final_recs = array();
       if (!$user) {
         $user = \Drupal::currentUser();
@@ -23,6 +31,7 @@ class BuddyRecommender
       if (!empty($ats)) {
         $user_ats = Util::userLibraryATs($user);
         $candidates = array_diff($ats, $user_ats);
+        $candidates = array_diff($candidates, $ignore_ats);
         if (!empty($candidates)) {
           $user_needs = Util::getUserNeeds($user);
           foreach ($candidates as $at) {

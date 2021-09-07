@@ -26,29 +26,50 @@ class ATRecommendationForm extends FormBase
     }
     $user = \Drupal::currentUser();
 
-    $recommendations = BuddyRecommender::recommend($user);
+    $recommendations_all = array();
+    $storage = $form_state->getStorage();
+    if (array_key_exists('recommendations', $storage)) {
+      $recommendations_all = $storage['recommendations'];
+    }
+
+    $recommendations = BuddyRecommender::recommend($user, $recommendations_all);
 
     if (!empty($recommendations)) {
       $maxResults = min(count($recommendations), BuddyRecommender::$maxNumberOfATEntries);
       for ($i = 0; $i < $maxResults; $i++) {
-        $atDesc = Util::getDescriptionOfATEntry(array_shift($recommendations));
+        $at_entry = array_shift($recommendations);
+        $atDesc = Util::getDescriptionOfATEntry($at_entry);
         $textForm = $this->renderATEntry($atDesc);
         $form[] = $textForm;
+        $recommendations_all[] = $at_entry;
       }
+      $form['actions'] = [
+        '#type' => 'actions',
+      ];
+
+      $form['actions']['submit'] = [
+        '#type' => 'submit',
+        '#value' => $this->t('Show me more assistive technology!'),
+      ];
+    } else {
+      $form['title'] = [
+        '#type' => 'markup',
+        '#markup' => "<div class='at_container'><h2>Nothing to show</h2>",
+        '#allowed_tags' => ['div','h2'],
+      ];
+
+      $form['text'] = [
+        '#type' => 'markup',
+        '#markup' => '<p>'. t("There are no more ATs to recommend at the moment!") .'</p>',
+        '#allowed_tags' => ['button', 'a', 'div', 'img', 'h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
+      ];
     }
 
-    $form['actions'] = [
-      '#type' => 'actions',
-    ];
-
-    $form['actions']['submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Show me more assistive technology!'),
-    ];
+    // Store recommendations
+    $form_state->setStorage(array('recommendations' => $recommendations_all));
 
     return $form;
   }
-
 
   private function renderATEntry($atDescription)
   {
@@ -94,23 +115,12 @@ class ATRecommendationForm extends FormBase
 
   public function submitForm(array &$form, FormStateInterface $form_state)
   {
-    $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
-    $query = \Drupal::entityQuery('node')
-      ->condition('type', 'at_description')
-      ->condition('field_at_description_language', $user_lang)
-      ->condition('status', 1);
-
-    $count_query = $query->count()->execute();
-
-
-    if(($form_state->get('page_num')+1)*BuddyRecommender::$maxNumberOfATEntries >= $count_query){
+    $recommendations = $form_state->getStorage()['recommendations'];
+    if (($form_state->get('page_num')+1)*BuddyRecommender::$maxNumberOfATEntries >= count($recommendations)) {
       $form_state->set('page_num', 0);
-
-    }else{
+    } else {
       $form_state->set('page_num', $form_state->get('page_num')+1);
     }
-
-
     $form_state->setRebuild(true);
   }
 
