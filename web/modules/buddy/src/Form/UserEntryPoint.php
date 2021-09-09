@@ -129,18 +129,22 @@ class UserEntryPoint extends FormBase {
 
         $html = '<div id="user-entry-social-auth" class="social-auth-container">';
 
+        global $base_url;
+        $module_path = drupal_get_path('module', 'buddy');
+        $social_path = $base_url . '/' . $module_path . '/img/social/';
+
         // Facebook button
         $html .= '<div class="auth-option">';
         $html .= '<a class="social-auth auth-link" href="user/login/facebook">';
         $html .= '<img class="social-auth auth-icon" ';
-        $html .= 'src="modules/buddy/img/social/facebook_logo.svg" alt="';
+        $html .= 'src="' . $social_path . 'facebook_logo.svg" alt="';
         $html .= $this->t('Authenticate through Facebook');
         $html .= '"></a></div>';
         // Google button
         $html .= '<div class="auth-option">';
         $html .= '<a class="social-auth auth-link" href="user/login/google">';
         $html .= '<img class="social-auth auth-icon" ';
-        $html .= 'src="modules/buddy/img/social/google_logo.svg" alt="';
+        $html .= 'src="' . $social_path . 'google_logo.svg" alt="';
         $html .= $this->t('Authenticate through Google');
         $html .= '"></a></div>';
 
