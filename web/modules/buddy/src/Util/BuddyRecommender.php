@@ -67,7 +67,8 @@ class BuddyRecommender
             }
           }
         }
+        $score = $score/count($user_needs);
       }
-      return $score/count($user_needs);
+      return $score;
     }
 }
