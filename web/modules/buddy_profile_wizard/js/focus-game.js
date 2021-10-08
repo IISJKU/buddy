@@ -33,10 +33,15 @@ class FocusGame extends GameScene {
     this.load.image('coin', 'modules/buddy_profile_wizard/assets/img/focus_game/coin.png');
     this.load.spritesheet('mummy', 'modules/buddy_profile_wizard/assets/img/focus_game/mummy37x45.png', { frameWidth: 37, frameHeight: 45 });
 
+    this.load.audio('focus_game_intro', soundFactory.getSound("focus_game","intro.mp3"));
+
     this.load.audio('zombie',  'modules/buddy_profile_wizard/assets/sounds/focus_game/zombie.wav');
     this.load.audio('wosh1',  'modules/buddy_profile_wizard/assets/sounds/focus_game/wosh1.mp3');
     this.load.audio('wosh2',  'modules/buddy_profile_wizard/assets/sounds/focus_game/wosh2.mp3');
     this.load.audio('cupImpact',  'modules/buddy_profile_wizard/assets/sounds/focus_game/cupImpact.mp3');
+
+    this.load.audio('yes', 'modules/buddy_profile_wizard/assets/sounds/yes.wav');
+    this.load.audio('no', 'modules/buddy_profile_wizard/assets/sounds/no.wav');
 
   }
 
@@ -45,8 +50,8 @@ class FocusGame extends GameScene {
     this.wosh1 = this.sound.add('wosh1');
     this.wosh2 = this.sound.add('wosh1');
     this.cupImpact = this.sound.add('cupImpact');
-    this.createTitle(stringFactory.getString("memory_game_short_term_title"));
-    let memoryGameShortTerm = this;
+    this.yes = this.sound.add('yes');
+    this.no = this.sound.add('no');
 
     this.graphics = this.add.graphics();
     this.mummyAnimation = this.anims.create({
@@ -59,10 +64,32 @@ class FocusGame extends GameScene {
 
 
 
-    this.startGame();
+    this.showIntroScreen();
 
 
 
+
+
+  }
+
+  showIntroScreen(){
+    this.createTitle(stringFactory.getString("reading_game_text_intro"));
+    let focusGame = this;
+
+    this.avatarButton = new AvatarAudioButton(this,"focus_game_intro",this.cameras.main.centerX, 180,function (){
+
+    });
+    this.avatarButton.init();
+    this.add.existing(this.avatarButton);
+
+    this.startButton = new IconButton(this, stringFactory.getString("math_game_start"), this.cameras.main.centerX, 300, "playIcon", function () {
+      focusGame.titleText.destroy();
+      focusGame.startButton.destroy();
+      focusGame.avatarButton.destroy();
+      focusGame.startGame();
+    });
+    this.startButton.init();
+    this.add.existing(this.startButton);
 
   }
 
@@ -245,14 +272,41 @@ class FocusGame extends GameScene {
 
           if(currentCup === winningCup){
             console.log("You win");
+            console.log(focusGame.numberOfCups);
+            if(focusGame.numberOfCups < 6){
+              focusGame.numberOfCups++;
+
+            }
+
+            if(focusGame.maxNumbersOfDistractions < 14){
+              focusGame.maxNumbersOfDistractions++;
+            }
+
+            if(focusGame.shuffleDuration > 400){
+              focusGame.shuffleDuration = focusGame.shuffleDuration-100;
+            }
+            focusGame.yes.play();
           }else{
+
+            if(focusGame.numberOfCups > 2){
+              focusGame.numberOfCups--;
+            }
+            if(focusGame.maxNumbersOfDistractions > 4){
+              focusGame.maxNumbersOfDistractions--;
+            }
+
+            if(focusGame.shuffleDuration < 1000){
+              focusGame.shuffleDuration = focusGame.shuffleDuration+100;
+            }
             focusGame.tweens.add({
               targets: currentCup,
               props: {
                 y: {value: currentCup.y-200, duration: 1000, ease: 'Bounce.easeOut'}
               }
             });
-            console.log("You lose");
+
+
+            focusGame.no.play();
           }
 
           focusGame.tweens.add({
@@ -261,7 +315,15 @@ class FocusGame extends GameScene {
               y: {value: winningCup.y-200, duration: 1000, ease: 'Bounce.easeOut'}
             },
             onComplete: function (tween, targets) {
-             focusGame.startGame();
+
+              focusGame.time.addEvent({
+                delay: 2000,                // ms
+                callback: function (){
+                  focusGame.startGame();
+                },
+                callbackScope: this,
+              });
+
             }
           });
 

@@ -146,7 +146,9 @@ var stringFactory = {
     this.addString("memory_game_short_term_remove_item","Entfernen!","de");
 
 
-
+    //Focus game text
+    this.addString("reading_game_text_intro", "Find the coin after the cup\n stopped moving!","en");
+    this.addString("reading_game_text_intro","Finde die Münze nachdem sich die\n Becher nicht mehr bewegen!","de");
 
 
   },
