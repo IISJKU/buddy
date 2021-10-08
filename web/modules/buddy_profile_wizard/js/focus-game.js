@@ -4,7 +4,8 @@ class FocusGame extends GameScene {
     super('FocusGame');
     this.text = null;
 
-    this.numberOfCups = 3;
+    this.numberOfCups = 4;
+    this.secondShufflePercentage = 30;
     this.numberOfShuffles = 10;
     this.shuffleDuration = 1000;
     this.rowHeight = 150;
@@ -15,6 +16,7 @@ class FocusGame extends GameScene {
     this.maxNumbersOfDistractions = 4;
     this.maxDistractionAnimationTime = 5000;
     this.coin = null;
+    this.animatedCups = [];
     this.animatedCup1 = null;
     this.animatedCup2 = null;
     this.cupFallHeight = 800;
@@ -139,19 +141,59 @@ class FocusGame extends GameScene {
 
     for(let i=0; i< this.numberOfShuffles; i++){
 
+
+
+
       let cup1 = Math.floor(Math.random() * this.numberOfCups);
 
+      let chosenCups = [cup1];
       let cup2 = cup1;
 
-      while(cup1 === cup2){
+      while(chosenCups.includes(cup2)  ){
         cup2 = Math.floor(Math.random() * this.numberOfCups);
       }
 
+      chosenCups.push(cup2);
 
-      this.shuffleSteps.push([cup1,cup2]);
+      let currentShuffle = [];
+      currentShuffle.push([cup1,cup2]);
+
+      if(this.numberOfCups > 3){
+
+        let chance = Math.floor(Math.random() * 100);
+        if(chance < this.secondShufflePercentage){
+
+          let cup3 = cup1;
+
+          while(chosenCups.includes(cup3)  ){
+            cup3 = Math.floor(Math.random() * this.numberOfCups);
+          }
+          chosenCups.push(cup3);
+
+          let cup4 = cup1;
+
+          while(chosenCups.includes(cup4)  ){
+            cup4 = Math.floor(Math.random() * this.numberOfCups);
+          }
+
+
+          currentShuffle.push([cup3,cup4]);
+
+
+
+        }
+
+
+      }
+
+      this.shuffleSteps.push(currentShuffle);
+
+
+
 
     }
 
+    console.log(this.shuffleSteps);
     this.totalTime = this.numberOfShuffles *this.shuffleDuration;
 
   }
@@ -256,9 +298,20 @@ class FocusGame extends GameScene {
 
   nextMove(){
 
+    this.animatedCups =  [];
     let nextMove = this.shuffleSteps.pop();
     if(nextMove){
-      this.shuffleCups(nextMove[0],nextMove[1]);
+
+      console.log("NEXT MOVE");
+      for(let i=0; i < nextMove.length; i++){
+
+        if(i !== 0){
+          this.shuffleCups(nextMove[i][0],nextMove[i][1],false);
+        }else{
+          this.shuffleCups(nextMove[i][0],nextMove[i][1]);
+        }
+      }
+
     }else{
       this.coin.visible = true;
       this.coin.setPosition(this.winningCup.x, this.winningCup.y);
@@ -335,8 +388,9 @@ class FocusGame extends GameScene {
 
   }
 
-  shuffleCups(cup1,cup2){
+  shuffleCups(cup1,cup2,callback=true){
 
+    console.log("shuffle:",cup1,cup2, callback);
     this.wosh1.play();
 
 
@@ -345,42 +399,54 @@ class FocusGame extends GameScene {
     angle = Phaser.Math.RadToDeg(angle);
 
     let distance =  Phaser.Math.Distance.BetweenPoints(this.cups[cup1], this.cups[cup2])/2;
-    console.log(distance);
-
-    this.path1 = new Phaser.Curves.Path(this.cups[cup1].x, this.cups[cup1].y);
-    this.path1.ellipseTo(distance, 100, 180, 360, true,angle);
+    let path1 = new Phaser.Curves.Path(this.cups[cup1].x, this.cups[cup1].y);
+    path1.ellipseTo(distance, 100, 180, 360, true,angle);
 
     this.moveEnabled = true;
 
     this.cups[cup1].setData('vector', new Phaser.Math.Vector2());
+    this.cups[cup1].setData('path', path1);
     this.animatedCup1 = this.cups[cup1];
 
+    this.animatedCups.push(this.cups[cup1]);
     let focusGame = this;
-    this.tweens.add({
-      targets: focusGame.cups[cup1],
-      z: 1,
-      ease: 'Sine.easeInOut',
-      duration: focusGame.shuffleDuration,
-      repeat: 0,
-      onComplete: function (tween, targets) {
+    if(callback){
+      this.tweens.add({
+        targets: focusGame.cups[cup1],
+        z: 1,
+        ease: 'Sine.easeInOut',
+        duration: focusGame.shuffleDuration,
+        repeat: 0,
+        onComplete: function (tween, targets) {
 
-        //Waiting timer is needed. Otherwise last update would not be called with final position
-        //This would lead to a missplacement of cups
-        focusGame.waitingTimer = focusGame.time.addEvent({
-          callback: focusGame.waitingTimerComplete,
-          callbackScope: focusGame,
-          delay: 10,
-          loop: false
-        });
+          //Waiting timer is needed. Otherwise last update would not be called with final position
+          //This would lead to a missplacement of cups
+          focusGame.waitingTimer = focusGame.time.addEvent({
+            callback: focusGame.waitingTimerComplete,
+            callbackScope: focusGame,
+            delay: 10,
+            loop: false
+          });
 
-      }
-    });
+        }
+      });
+    }else{
+      this.tweens.add({
+        targets: focusGame.cups[cup1],
+        z: 1,
+        ease: 'Sine.easeInOut',
+        duration: focusGame.shuffleDuration,
+        repeat: 0,
+      });
+    }
 
-    this.path2 = new Phaser.Curves.Path(this.cups[cup2].x, this.cups[cup2].y);
-    this.path2.ellipseTo(distance, 100, 180, 360, true,angle+180);
 
+    let path2 = new Phaser.Curves.Path(this.cups[cup2].x, this.cups[cup2].y);
+    path2.ellipseTo(distance, 100, 180, 360, true,angle+180);
+    this.cups[cup2].setData('path', path2);
     this.cups[cup2].setData('vector', new Phaser.Math.Vector2());
     this.animatedCup2 = this.cups[cup2];
+    this.animatedCups.push(this.cups[cup2]);
     this.tweens.add({
       targets: focusGame.cups[cup2],
       z: 1,
@@ -473,10 +539,24 @@ class FocusGame extends GameScene {
 
       this.totalTime-=delta;
       this.distractionDelayTimer-=delta;
+
+      for(let i=0; i < this.animatedCups.length; i++){
+        let t = this.animatedCups[i].z;
+        let vec = this.animatedCups[i].getData('vector');
+        let path = this.animatedCups[i].getData('path');
+        path.getPoint(t, vec);
+
+        this.animatedCups[i].setPosition(vec.x, vec.y);
+
+        this.animatedCups[i].setDepth(this.animatedCup1.y);
+
+      }
+      /*
       if(this.animatedCup1){
         let t = this.animatedCup1.z;
         let vec = this.animatedCup1.getData('vector');
-        this.path1.getPoint(t, vec);
+        let path = this.animatedCup1.getData('path');
+        path.getPoint(t, vec);
 
         this.animatedCup1.setPosition(vec.x, vec.y);
 
@@ -486,13 +566,15 @@ class FocusGame extends GameScene {
       if(this.animatedCup2){
         let t = this.animatedCup2.z;
         let vec = this.animatedCup2.getData('vector');
-        this.path2.getPoint(t, vec);
+        let path = this.animatedCup2.getData('path');
+        path.getPoint(t, vec);
 
         this.animatedCup2.setPosition(vec.x, vec.y);
 
         this.animatedCup2.setDepth(this.animatedCup2.y);
       }
 
+       */
 
 
 
