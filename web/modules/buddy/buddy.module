@@ -120,3 +120,4 @@ function buddy_local_tasks_alter(&$local_tasks) {
   unset($local_tasks['user.register']);
   unset($local_tasks['user.pass']);
 }
+

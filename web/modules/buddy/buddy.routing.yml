@@ -16,6 +16,33 @@ buddy.user_entry_point:
     _role: 'anonymous'
   options:
     no_cache: 'TRUE'
+buddy.user_login:
+  path: '/user-login'
+  defaults:
+    _form: '\Drupal\buddy\Form\BuddyUserLoginForm'
+    _title: 'Log in'
+  requirements:
+    _role: 'anonymous'
+  options:
+    no_cache: 'TRUE'
+buddy.user_register:
+  path: '/user-register'
+  defaults:
+    _form: '\Drupal\buddy\Form\BuddyUserRegisterForm'
+    _title: 'Register'
+  requirements:
+    _role: 'anonymous'
+  options:
+    no_cache: 'TRUE'
+buddy.user_password_form:
+  path: '/user-password'
+  defaults:
+    _form: '\Drupal\buddy\Form\BuddyUserPasswordForm'
+    _title: 'Reset your password'
+  requirements:
+    _role: 'anonymous'
+  options:
+    no_cache: 'TRUE'
 buddy.login:
   path: '/user/login'
   defaults:
