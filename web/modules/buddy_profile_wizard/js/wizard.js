@@ -2,9 +2,13 @@ var config = {
   type: Phaser.AUTO,
   scale: {
     mode: Phaser.Scale.WIDTH_CONTROLS_HEIGHT,
-    parent: 'phaser-container',
+  //  parent: 'phaser-container',
     width: 800,
     height: 600
+  },
+  parent: 'phaser-container',
+  dom: {
+    createContainer: true
   },
   physics: {
     default: 'matter',
@@ -14,11 +18,11 @@ var config = {
       },
       debug: false,
       debugBodyColor: 0xffffff
-    }
+    },
   },
 
   backgroundColor: '#2d2d2d',
-  scene: [FocusGame,Intro,ReadingGameTTSWord, MathGame, MemoryGame,ReadingGameText,ReadingGameTTSSentence,MemoryGameShortTerm ]
+  scene: [WritingGame,Intro, ReadingGameTTSWord, MathGame, MemoryGame, ReadingGameText, ReadingGameTTSSentence, MemoryGameShortTerm, FocusGame]
 
   /*scene: {
     preload: preload,
