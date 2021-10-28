@@ -43,22 +43,24 @@ buddy.user_password_form:
     _role: 'anonymous'
   options:
     no_cache: 'TRUE'
-buddy.login:
-  path: '/user/login'
+buddy.atprovider_register:
+  path: '/atprovider-register'
   defaults:
-    _form: '\Drupal\user\Form\UserLoginForm'
-    _title: 'Log in'
+    _form: '\Drupal\buddy\Form\BuddyATProviderRegisterForm'
+    _title: 'Register'
   requirements:
-    _user_is_logged_in: 'FALSE'
+    _role: 'anonymous'
   options:
-    _maintenance_access: TRUE
-buddy.register:
-  path: '/user/register'
+    no_cache: 'TRUE'
+buddy.test:
+  path: '/atprovider-test'
   defaults:
-    _entity_form: 'user.register'
-    _title: 'Create new account'
+    _form: '\Drupal\buddy\Form\TestForm'
+    _title: 'Register'
   requirements:
-    _access_user_register: 'TRUE'
+    _role: 'anonymous'
+  options:
+    no_cache: 'TRUE'
 buddy.user_profile:
   path: '/user-profile'
   defaults:
