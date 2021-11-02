@@ -151,6 +151,20 @@ var stringFactory = {
     this.addString("reading_game_text_intro","Finde die Münze nachdem sich die\n Becher nicht mehr bewegen!","de");
 
 
+    //Writing game text
+    this.addString("writing_game_text_intro","Type the text\n I am going to say!","en");
+    this.addString("writing_game_text_intro","Schreibe den Text\n den ich sagen werde!","de");
+
+    this.addString("writing_game_sentence_1","Today is a nice day","en");
+    this.addString("writing_game_sentence_1","Heute ist ein schöner Tag","de");
+
+    this.addString("writing_game_sentence_2","Last night I did not sleep well","en");
+    this.addString("writing_game_sentence_2","Gestern habe ich nicht gut geschlafen","de");
+
+    this.addString("writing_game_sentence_3","Somtimes it is necessary to be silent","en");
+    this.addString("writing_game_sentence_3","Manchmal ist es nötig zu schweigen","de");
+
+
   },
 
   addString(key,text, lang){

@@ -4,6 +4,8 @@ buddy_profile_wizard:
     js/translation/string-factory.js: {}
     js/translation/sound-factory.js: {}
     js/phaser.js: {}
+    js/util/string-punctuation-tokenizer.js: {}
+    js/util/tools.js: {}
     js/util/gameUtil.js: {}
     js/util/data-structures.js: {}
     js/util/elements.js: {}
