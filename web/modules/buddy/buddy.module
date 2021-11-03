@@ -48,7 +48,9 @@ function buddy_node_view(array &$build, EntityInterface $entity, EntityViewDispl
  * Implements hook_user_login().
  */
 function buddy_user_login($account) {
+  $referer = \Drupal::request()->headers->get('referer');
 
+  //social_auth_google_login_destination in session->data->_sf2_attributs
   $current_route = Drupal::routeMatch()->getRouteName();
   $request = Drupal::request();
   if ($request->getRequestFormat() !== 'html') {
@@ -71,7 +73,11 @@ function buddy_user_login($account) {
 
   }
 
+  $tempstore = \Drupal::service('tempstore.private')->get('buddy_module');
+  $some_data = $tempstore->get('login');
 
+  $tempstore1 = \Drupal::service('tempstore.private')->get('mymodule');
+  $var = $tempstore1->get('var_name');
   if (!in_array($current_route, ['user.reset', 'user.reset.login'])) {
 
     if( !in_array("at_moderator", $account->getRoles()) && !in_array("at_provider", $account->getRoles()) &&  !in_array("administrator", $account->getRoles())){
@@ -120,3 +126,4 @@ function buddy_local_tasks_alter(&$local_tasks) {
   unset($local_tasks['user.register']);
   unset($local_tasks['user.pass']);
 }
+
