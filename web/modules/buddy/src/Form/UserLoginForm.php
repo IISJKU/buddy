@@ -8,6 +8,7 @@ use Drupal\buddy\Util\Util;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\user\AccountForm;
 use Drupal\user\RegisterForm;
 use Drupal\Component\Datetime\TimeInterface;
@@ -17,7 +18,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\user\Entity\User;
 use Psr\Container\ContainerInterface;
 
-class UserRegisterExternalForm extends FormBase
+class UserLoginForm extends FormBase
 {
 
 
@@ -27,15 +28,15 @@ class UserRegisterExternalForm extends FormBase
 
   public function getFormId()
   {
-    return "user_register_external_form";
+    return "user_login_form";
   }
 
   public function buildForm(array $form, FormStateInterface $form_state)
   {
 
-    $form['steps'] = [
+    $form['intro'] = [
       '#type' => 'markup',
-      '#markup' => "<div class='steps'>".$this->t("Step 2 out of 2")."</div>",
+      '#markup' => "<div class='steps'>".$this->t("How do you want to log in?")."</div>",
       '#allowed_tags' => ['div'],
 
     ];
@@ -49,13 +50,20 @@ class UserRegisterExternalForm extends FormBase
     $html .= '<div class="auth-option">';
     $html .= '<a class="buddy_link_button_social_auth" href="user/login/facebook">';
     $html .= '<img class="social-auth auth-icon" src="' . $social_path . 'facebook-logo-480.png" alt="">';
-    $html .= $this->t('Register with Facebook');
+    $html .= $this->t('Log in with Facebook');
     $html .= '</a></div>';
     // Google button
     $html .= '<div class="auth-option">';
     $html .= '<a class="buddy_link_button_social_auth" href="user/login/google">';
-      $html .= '<img class="social-auth auth-icon" src="' . $social_path . 'google-logo-480.png" alt=">';
-    $html .= $this->t('Register with Google');
+      $html .= '<img class="social-auth auth-icon" src="' . $social_path . 'google-logo-480.png" alt="">';
+    $html .= $this->t('Log in with Google');
+    $html .= '</a></div>';
+
+    // Email button
+    $html .= '<div class="auth-option">';
+    $html .= '<a class="buddy_link_button_social_auth" href="user-login-local">';
+    $html .= '<img class="social-auth auth-icon" src="' . $social_path . 'email-logo-480.png" alt="">';
+    $html .= $this->t('Log in with Email');
     $html .= '</a></div>';
 
     $html .= '</div>';
@@ -68,9 +76,21 @@ class UserRegisterExternalForm extends FormBase
 
     ];
 
+    $markup = "<div>".$this->t("New to Buddy? ");
+    $markup.= Link::createFromRoute($this->t('Create account'),'buddy.user_register')->toString()->getGeneratedLink();
+    $markup.= "</div>";
+
+    $form['create_account'] = [
+      '#type' => 'markup',
+      '#markup' => $markup,
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
+
+    ];
+
+
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Cancel'),
+      '#value' => $this->t('Back'),
     ];
     $form['actions']['submit']['#attributes']['class'][] = 'buddy_small_link_button back_button';
     $form['#attached']['library'][] = 'buddy/user_profile_forms';
@@ -80,6 +100,6 @@ class UserRegisterExternalForm extends FormBase
 
   public function submitForm(array &$form, FormStateInterface $form_state)
   {
-    $form_state->setRedirect('buddy.user_entry_point',["back"=>"true"]);
+    $form_state->setRedirect('<front>',["back"=>"true"]);
   }
 }

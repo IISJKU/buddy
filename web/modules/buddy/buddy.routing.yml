@@ -1,3 +1,11 @@
+buddy.user_frontpage:
+  path: '/user-frontpage'
+  defaults:
+    _controller: '\Drupal\buddy\Controller\UserFrontPageController::content'
+  requirements:
+    _custom_access: '\Drupal\buddy\Controller\UserFrontPageController::access'
+  options:
+    no_cache: 'TRUE'
 buddy.at_backend_overview:
   path: '/at-entries/overview'
   defaults:
@@ -7,7 +15,7 @@ buddy.at_backend_overview:
     _role: 'administrator+at_provider'
   options:
     no_cache: 'TRUE'
-buddy.user_entry_point:
+buddy.user_register:
   path: '/user-register'
   defaults:
     _form: '\Drupal\buddy\Form\UserRegisterForm'
@@ -29,6 +37,24 @@ buddy.user_register_external:
   path: '/user-register-external'
   defaults:
     _form: '\Drupal\buddy\Form\UserRegisterExternalForm'
+    _title: 'Welcome'
+  requirements:
+    _role: 'anonymous'
+  options:
+    no_cache: 'TRUE'
+buddy.user_login:
+  path: '/user-login'
+  defaults:
+    _form: '\Drupal\buddy\Form\UserLoginForm'
+    _title: 'Welcome'
+  requirements:
+    _role: 'anonymous'
+  options:
+    no_cache: 'TRUE'
+buddy.user_login_local:
+  path: '/user-login-local'
+  defaults:
+    _form: '\Drupal\buddy\Form\UserLoginLocalForm'
     _title: 'Welcome'
   requirements:
     _role: 'anonymous'
