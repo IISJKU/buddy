@@ -64,6 +64,6 @@ class UserRegisterLocalForm extends RegisterForm
   }
 
   public function userCreateAccountCancelSubmit(array &$form, FormStateInterface $form_state) {
-    $form_state->setRedirect('buddy.user_entry_point',["back"=>"true"]);
+    $form_state->setRedirect('buddy.user_register',["back"=>"true"]);
   }
 }

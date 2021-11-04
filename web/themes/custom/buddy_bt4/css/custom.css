@@ -85,8 +85,24 @@ header {
 
   font-size: 1.39rem;
 }
+@media (max-width: 991px) {
+  header {
+
+    font-size: 1.8rem;
+  }
+}
 
 /* NAV */
+
+.navbar-brand img {
+  height: 74px;
+}
+@media (max-width: 991px) {
+  a[href$='search']{
+
+    display: none;
+  }
+}
 
 @media (min-width: 992px) {
 
@@ -250,6 +266,10 @@ Langauge Switcher
 
 
 /*Main Content */
+
+h1{
+  font-weight: 700 !important;
+}
 
 main {
   font-size: 1.5rem;

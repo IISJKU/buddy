@@ -33,6 +33,13 @@ class UserRegisterExternalForm extends FormBase
   public function buildForm(array $form, FormStateInterface $form_state)
   {
 
+    $form['intro'] = [
+      '#type' => 'markup',
+      '#markup' => "<div class='steps'><strong>".$this->t("How do you want to register?")."</strong></div>",
+      '#allowed_tags' => ['div','strong'],
+
+    ];
+
     $form['steps'] = [
       '#type' => 'markup',
       '#markup' => "<div class='steps'>".$this->t("Step 2 out of 2")."</div>",
@@ -80,6 +87,6 @@ class UserRegisterExternalForm extends FormBase
 
   public function submitForm(array &$form, FormStateInterface $form_state)
   {
-    $form_state->setRedirect('buddy.user_entry_point',["back"=>"true"]);
+    $form_state->setRedirect('buddy.user_register',["back"=>"true"]);
   }
 }
