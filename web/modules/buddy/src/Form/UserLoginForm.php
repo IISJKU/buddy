@@ -21,11 +21,6 @@ use Psr\Container\ContainerInterface;
 class UserLoginForm extends FormBase
 {
 
-
-  public function userCreateAccountCancelSubmit(array &$form, FormStateInterface $form_state) {
-    $form_state->setRedirect('buddy.user_entry_point',["back"=>"true"]);
-  }
-
   public function getFormId()
   {
     return "user_login_form";

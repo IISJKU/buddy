@@ -16,6 +16,9 @@ class RouteSubscriber extends RouteSubscriberBase {
    */
   protected function alterRoutes(RouteCollection $collection) {
     // Change user login routes to login wizard
+    //TODO
+
+    return;
     $route = $collection->get('user.login');
     if (!$route) {
       $route = $collection->get('user.register');

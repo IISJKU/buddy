@@ -20,11 +20,6 @@ use Psr\Container\ContainerInterface;
 class UserRegisterExternalForm extends FormBase
 {
 
-
-  public function userCreateAccountCancelSubmit(array &$form, FormStateInterface $form_state) {
-    $form_state->setRedirect('buddy.user_entry_point',["back"=>"true"]);
-  }
-
   public function getFormId()
   {
     return "user_register_external_form";

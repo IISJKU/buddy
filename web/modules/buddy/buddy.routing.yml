@@ -78,15 +78,6 @@ buddy.atprovider_register:
     _role: 'anonymous'
   options:
     no_cache: 'TRUE'
-buddy.test:
-  path: '/atprovider-test'
-  defaults:
-    _form: '\Drupal\buddy\Form\TestForm'
-    _title: 'Register'
-  requirements:
-    _role: 'anonymous'
-  options:
-    no_cache: 'TRUE'
 buddy.user_profile:
   path: '/user-profile'
   defaults:
