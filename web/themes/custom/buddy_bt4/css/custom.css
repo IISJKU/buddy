@@ -1,7 +1,78 @@
+.buddy_login_menu>li{
+  list-style: none;
+  display: inline;
+}
+
+.buddy_link_button{
+  width: 270px;
+  border-radius: 120px;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  padding: 15px;
+  margin: 20px 0;
+  font-weight: 700;
+
+}
+
+.buddy_link_button_social_auth{
+  width: 400px;
+  border-radius: 120px;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  padding: 10px;
+  margin: 20px 0;
+  font-weight: 700;
+  background: white;
+  color: black;
+  border: 3px solid black;
+
+}
+
+#user-entry-social-auth {
+  width: 100%;
+  display: block;
+}
+
+.auth-option img {
+  max-width: 40px;
+  max-height: 40px;
+  margin-right: 15px;
+}
+.buddy_small_link_button{
+  width: 150px;
+  border-radius: 120px;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  padding: 15px;
+  margin: 20px 0;
+  font-weight: 700;
+}
+.create_account_button {
+  background: #080866;
+  color: white;
+
+}
+
+.login_button {
+  background: #624dbe;
+  color: white;
+
+}
+.back_button {
+  background: white;
+  color: black;
+  border: 3px solid black;
+}
+
+
 /* General */
 
+
 body {
-  font-family: 'Noto Sans',serif;
+  font-family: 'Noto Sans',sans-serif;
   font-size: 22px;
   font-weight: 400;
 
@@ -14,6 +85,13 @@ header {
 }
 
 /* NAV */
+
+@media (min-width: 992px) {
+
+  .navbar-brand img {
+    height: 85px;
+  }
+}
 .navbar {
   background-color: white;
   color: black;
@@ -236,20 +314,7 @@ th.views-field{
   margin-bottom: 20px;
 }
 
-#user-entry-social-auth {
-  width: 100%;
-  display: block;
-}
 
-.auth-option {
-  float: left;
-  margin: 10px;
-}
-
-.auth-option img {
-  max-width: 120px;
-  max-height: 120px;
-}
 
 
 

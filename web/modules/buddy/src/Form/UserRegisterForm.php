@@ -6,6 +6,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Url;
 
@@ -13,10 +14,10 @@ use Drupal\Core\Url;
  * Implements the UserEntryPoint form controller.
  * Wizard for user log-in and registration
  */
-class UserEntryPoint extends FormBase {
+class UserRegisterForm extends FormBase {
 
   public function getFormId() {
-    return 'user_entry_point';
+    return 'user_register_form';
   }
 
   /**
@@ -33,10 +34,9 @@ class UserEntryPoint extends FormBase {
     $form['steps'] = [
       '#type' => 'markup',
       '#markup' => "<div class='steps'>".$this->t("Step 1 out of 2")."</div>",
-      '#allowed_tags' => ['button', 'a', 'div', 'img', 'h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
+      '#allowed_tags' => ['div'],
 
     ];
-
     $form['login_op'] = array(
       '#type' => 'radios',
       '#title' => $this
@@ -55,15 +55,26 @@ class UserEntryPoint extends FormBase {
       '#type' => 'actions',
     ];
 
+    $backLink = Link::createFromRoute($this->t('Back'),'<front>',[],['attributes' => ['class' => 'btn btn-primary buddy_small_link_button back_button']])->toString()->getGeneratedLink();
+
+    $form['back_link'] = [
+      '#type' => 'markup',
+      '#markup' => $backLink,
+      '#allowed_tags' => ['button', 'a', 'div', 'img', 'h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
+
+    ];
+
+
     // Add a submit button that handles the submission of the form.
-    $form['actions']['submit'] = [
+    $form['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Next'),
     ];
 
-    $form['actions']['submit']['#attributes']['class'][] = 'buddy-icon-button';
-    $form['actions']['submit']['#attributes']['icon'] = "fa-arrow-right";
+    $form['submit']['#attributes']['class'][] = 'buddy_small_link_button';
     $form['#attached']['library'][] = 'buddy/user_profile_forms';
+
+
     return $form;
 
   }
@@ -73,11 +84,11 @@ class UserEntryPoint extends FormBase {
 
     switch ($login_op) {
       case 0:{
-        $form_state->setRedirect('buddy.user_entry_email');
+        $form_state->setRedirect('buddy.user_register_local');
         break;
       }
       case 1:{
-        $form_state->setRedirect('buddy.user_register');
+        $form_state->setRedirect('buddy.user_register_external');
         break;
       }
       /*
