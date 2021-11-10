@@ -57,12 +57,22 @@
   color: white;
 
 }
+.create_account_button:hover, .create_account_button:focus{
+  background: #624dbe;
+  color: white;
+}
 
 .login_button {
   background: #624dbe;
   color: white;
 
 }
+
+.login_button:hover, .login_button:focus{
+  background: #A2CBB7;
+  color: black;
+}
+
 .back_button {
   background: white;
   color: black;

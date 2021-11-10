@@ -15,18 +15,23 @@ class RouteSubscriber extends RouteSubscriberBase {
    * {@inheritdoc}
    */
   protected function alterRoutes(RouteCollection $collection) {
-    // Change user login routes to login wizard
-    //TODO
+    // Change user login routes to buddy user login and user register
 
-    return;
     $route = $collection->get('user.login');
-    if (!$route) {
-      $route = $collection->get('user.register');
-    }
     if ($route) {
-      $wizard_path = Url::fromRoute('buddy.user_entry_point');
-      $route->setPath($wizard_path->toString());
+      $buddyLoginRoute = Url::fromRoute('buddy.user_login');
+      $route->setPath($buddyLoginRoute->toString());
+
+    }else{
+      $route = $collection->get('user.register');
+      if ($route) {
+        $buddyRegisterRoute = Url::fromRoute('buddy.user_register');
+        $route->setPath($buddyRegisterRoute->toString());
+      }
     }
+
+
+
   }
 
 }
