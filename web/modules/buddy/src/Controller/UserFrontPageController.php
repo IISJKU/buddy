@@ -18,23 +18,49 @@ class UserFrontPageController extends ControllerBase
 
 
     $user = \Drupal::currentUser();
+    $logged_in = \Drupal::currentUser()->isAuthenticated();
 
-    $createUserLink = Link::createFromRoute($this->t('Create account'),'buddy.user_register',[],['attributes' => ['class' => 'buddy_link_button create_account_button']])->toString()->getGeneratedLink();
-    $loginLink = Link::createFromRoute($this->t('Log in'),'buddy.user_login',[],['attributes' => ['class' => 'buddy_link_button login_button']])->toString()->getGeneratedLink();
 
-    $html = '<p>'.$this->t('The assistive technology platform - that finds tools that work for you.').'</p>
+    if(!$logged_in){
+      $createUserLink = Link::createFromRoute($this->t('Create account'),'buddy.user_register',[],['attributes' => ['class' => 'buddy_link_button create_account_button']])->toString()->getGeneratedLink();
+      $loginLink = Link::createFromRoute($this->t('Log in'),'buddy.user_login',[],['attributes' => ['class' => 'buddy_link_button login_button']])->toString()->getGeneratedLink();
+
+      $html = '<p>'.$this->t('The assistive technology platform - that finds tools that work for you.').'</p>
                <ul class="buddy_login_menu">
 	                  <li>'.$createUserLink.'</li>
 	                  <li>'.$loginLink.'</li>
                </ul>';
 
-    $build = array(
-      '#type' => 'markup',
-      '#markup' => $html,
-      '#title' => $this->t("Welcome to Buddy!"),
-    );
+      $build = array(
+        '#type' => 'markup',
+        '#markup' => $html,
+        '#title' => $this->t("Welcome to Buddy!"),
+      );
 
-    return $build;
+      return $build;
+    }else{
+
+      $createUserLink = Link::createFromRoute($this->t('Create account'),'buddy.user_register',[],['attributes' => ['class' => 'buddy_link_button create_account_button']])->toString()->getGeneratedLink();
+      $loginLink = Link::createFromRoute($this->t('Log in'),'buddy.user_login',[],['attributes' => ['class' => 'buddy_link_button login_button']])->toString()->getGeneratedLink();
+
+
+      $html = '<p>'.$this->t('The assistive technology platform - that finds tools that work for you.').'</p>
+               <ul class="buddy_login_menu">
+	                  <li>'.$createUserLink.'</li>
+	                  <li>'.$loginLink.'</li>
+               </ul>';
+
+      $build = array(
+        '#type' => 'markup',
+        '#markup' => $html,
+        '#title' => $this->t("Welcome ".$user->getAccountName()),
+      );
+
+      return $build;
+    }
+
+
+
 
   }
 

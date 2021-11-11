@@ -18,6 +18,10 @@ class UserSearchForm extends FormBase
   public function buildForm(array $form, FormStateInterface $form_state)
   {
 
+    //INDEX WHOLE Fields:
+    //http://localhost/buddy/web/admin/config/search/search-api/index/default_index/processors
+    //Go bottom and enable html filter, ignore case , stopwords, etc on all supported fields(fist checkbox in each tab)
+
     $index = \Drupal\search_api\Entity\Index::load('default_index');
     $query = $index->query();
 
@@ -29,7 +33,7 @@ class UserSearchForm extends FormBase
     $query->setParseMode($parse_mode);
 
 // Set fulltext search keywords and fields.
-    $query->keys('Beschreibung');
+    $query->keys('Änderungen');
     $query->setFulltextFields(['title', 'name', 'field_at_description']);
     $query->addCondition('field_at_description_language', "de","=");
 // Set additional conditions.

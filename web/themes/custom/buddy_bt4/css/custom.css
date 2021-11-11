@@ -276,15 +276,39 @@ Langauge Switcher
 
 
 /*Main Content */
+main{
+ /* background-size: cover !important; */
+  /* background: url(../assets/svg/buddy_mobile_bg.svg) no-repeat; */
+  background-image: url(../assets/svg/buddy_bg.svg);
+  font-size: 1.5rem;
+  background-repeat:no-repeat;
+  background-size:100%;
+  background-position: center bottom;
+  width:100%;
+  margin:0 auto;
+  min-height:700px;
 
-h1{
-  font-weight: 700 !important;
+
 }
 
-main {
-  font-size: 1.5rem;
-  margin-bottom: 50px;
-  min-height: 500px;
+@media (max-width: 991px) {
+
+  main{
+    background-image: url(../assets/svg/buddy_mobile_bg.svg);
+  }
+}
+
+main a{
+  text-decoration: underline;
+}
+/*
+main>.container{
+  background-size: cover !important;
+  background: url(../assets/svg/buddy_bg.svg) no-repeat;
+}
+*/
+h1{
+  font-weight: 700 !important;
 }
 
 hr {
@@ -352,17 +376,12 @@ th.views-field{
 
 /*FOOTER */
 footer.mt-auto{
-  margin-top: -150px !important;
+  border-top: 20px solid #080866;
+  /* margin-top: -150px !important; */
 }
-footer{
-  background-size: cover !important;
-  background: url(../assets/svg/buddy_mobile_bg.svg) no-repeat;
-  min-height: 450px;
 
-
-}
 .buddy_footer_menu{
-  padding-top: 250px;
+/*  padding-top: 250px; */
   list-style: none;
   text-align: center;
   font-weight: 700;
