@@ -16,8 +16,7 @@ class RouteSubscriber extends RouteSubscriberBase {
    */
   protected function alterRoutes(RouteCollection $collection) {
     // Change user login routes to buddy user login and user register
-
-    /*
+/*
     $route = $collection->get('user.login');
     if ($route) {
       $buddyLoginRoute = Url::fromRoute('buddy.user_login');
@@ -30,10 +29,9 @@ class RouteSubscriber extends RouteSubscriberBase {
         $route->setPath($buddyRegisterRoute->toString());
       }
     }
-    */
 
 
-
+*/
   }
 
 }

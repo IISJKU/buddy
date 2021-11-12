@@ -44,11 +44,7 @@ class UserFrontPageController extends ControllerBase
       $loginLink = Link::createFromRoute($this->t('Log in'),'buddy.user_login',[],['attributes' => ['class' => 'buddy_link_button login_button']])->toString()->getGeneratedLink();
 
 
-      $html = '<p>'.$this->t('The assistive technology platform - that finds tools that work for you.').'</p>
-               <ul class="buddy_login_menu">
-	                  <li>'.$createUserLink.'</li>
-	                  <li>'.$loginLink.'</li>
-               </ul>';
+      $html = $this->t("Todo: Add information about what users can do here..");
 
       $build = array(
         '#type' => 'markup',
