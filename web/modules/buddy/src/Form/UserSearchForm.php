@@ -17,6 +17,43 @@ class UserSearchForm extends FormBase
 
   public function buildForm(array $form, FormStateInterface $form_state)
   {
+    $form['search'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Search'),
+      '#description' => $this->t('Search for asssistive technology.'),
+      '#required' => TRUE,
+    ];
+    $form['advanced'] = array(
+      '#type' => 'details',
+      '#title' => t('Advanced settings'),
+   //   '#description' => t('Lorem ipsum.'),
+      '#open' => FALSE, // Controls the HTML5 'open' attribute. Defaults to FALSE.
+    );
+    $form['advanced']['language'] = array(
+      '#type' => 'radios',
+      '#title' => t('Supported languages'),
+      '#options' => array(
+        'own_language' => t('Search only for my langauge'),
+        'all_languages' => t('Search in all languages'),
+      ),
+      '#default_value' => 'own_language',
+    );
+
+    $form['actions']['search'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Search'),
+    ];
+    return $form;
+
+  }
+
+  public function submitForm(array &$form, FormStateInterface $form_state)
+  {
+
+    $values = $form_state->getValues();
+
+
+
 
     //INDEX WHOLE Fields:
     //http://localhost/buddy/web/admin/config/search/search-api/index/default_index/processors
@@ -33,9 +70,13 @@ class UserSearchForm extends FormBase
     $query->setParseMode($parse_mode);
 
 // Set fulltext search keywords and fields.
-    $query->keys('Änderungen');
+    $query->keys($values['search']);
     $query->setFulltextFields(['title', 'name', 'field_at_description']);
-    $query->addCondition('field_at_description_language', "de","=");
+
+    if($values['language'] == "own_language"){
+      $query->addCondition('field_at_description_language', "de","=");
+    }
+    $query->addCondition('field_at_categories',89);
 // Set additional conditions.
     /*
     $query->addCondition('status', 1)
@@ -50,11 +91,11 @@ class UserSearchForm extends FormBase
     $query->addConditionGroup($conditions);
 */
 // Restrict the search to specific languages.
-  //  $query->setLanguages(['de', 'it']);
+    //  $query->setLanguages(['de', 'it']);
 
 // Do paging.
 
- // $query->range(0, 10);
+    // $query->range(0, 10);
 
 // Add sorting.
     $query->sort('search_api_relevance', 'DESC');
@@ -83,12 +124,16 @@ class UserSearchForm extends FormBase
 
 // Execute the search.
     $results = $query->execute();
+    $items = $results->getResultItems();
+    foreach ($items as $item){
+      $idString = $item->getId();
+      $id = explode(":", explode("/", $idString)[1])[0];
+      $aa = 123;
+    }
     $ids = implode(', ', array_keys($results->getResultItems()));
-    $a = 1;
-  }
 
-  public function submitForm(array &$form, FormStateInterface $form_state)
-  {
+
+    $a = 1;
     // TODO: Implement submitForm() method.
   }
 }
