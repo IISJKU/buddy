@@ -23,6 +23,7 @@ class ATCatalogueForm extends FormBase
 
   public function buildForm(array $form, FormStateInterface $form_state)
   {
+    \Drupal::service("router.builder")->rebuild();
     if (!$form_state->has('page_num')) {
       $form_state->set('page_num', 0);
     }
