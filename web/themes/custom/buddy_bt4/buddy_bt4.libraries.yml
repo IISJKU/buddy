@@ -5,3 +5,5 @@ global-styling:
     theme:
       css/style.css: {}
       css/custom.css: {}
+  js:
+    js/buddy.js: { }
