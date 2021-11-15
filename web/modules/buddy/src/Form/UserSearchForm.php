@@ -4,6 +4,7 @@
 namespace Drupal\buddy\Form;
 
 
+use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -17,6 +18,14 @@ class UserSearchForm extends FormBase
 
   public function buildForm(array $form, FormStateInterface $form_state)
   {
+
+
+    $storage = \Drupal::service('entity_type.manager')->getStorage('node');
+
+
+
+
+
     $form['search'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Search'),
@@ -33,7 +42,7 @@ class UserSearchForm extends FormBase
       '#type' => 'radios',
       '#title' => t('Supported languages'),
       '#options' => array(
-        'own_language' => t('Search only for my langauge'),
+        'own_language' => t('Search only for my language'),
         'all_languages' => t('Search in all languages'),
       ),
       '#default_value' => 'own_language',
@@ -43,6 +52,62 @@ class UserSearchForm extends FormBase
       '#type' => 'submit',
       '#value' => $this->t('Search'),
     ];
+
+
+
+    $categoryIDs = $storage->getQuery()
+      ->condition('type', 'at_category')
+      ->condition('status', 1)
+      ->sort('field_at_category_user_title', 'ASC')
+      ->execute();
+
+    $atCategories = $storage->loadMultiple($categoryIDs);
+
+    $categoryOptions = [];
+    foreach ($atCategories as $categoryContainerId => $atCategory){
+      $userTitle = $atCategory->get("field_at_category_user_title")->getValue()[0]['value'];
+      $categoryOptions[$categoryContainerId] = $this->t($userTitle) ;
+
+    }
+
+    $form['advanced']['categories'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Supported languages'),
+      '#options' => $categoryOptions,
+    );
+
+    $searchResults = $form_state->get('search_results');
+    if(is_array($searchResults)){
+
+      if(!count($searchResults)){
+        $form['search_results'] = [
+          '#type' => 'markup',
+          '#prefix' => "<div class='at_container'>",
+          '#markup' => t('Your search yielded no results.'),
+          '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
+          '#suffix' => "</div>",
+        ];
+
+      }else{
+        $form['search_results'] = [
+          '#type' => 'markup',
+          '#prefix' => "<div class='at_container'>",
+          '#markup' => "<h1>".t('Search results')."</h1>",
+          '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
+          '#suffix' => "</div>",
+        ];
+        foreach ($searchResults as $searchResult){
+
+          $textForm = $this->renderATEntry($searchResult);
+          $form['search_results'][] = $textForm;
+        }
+
+
+      }
+
+
+
+    }
     return $form;
 
   }
@@ -51,8 +116,6 @@ class UserSearchForm extends FormBase
   {
 
     $values = $form_state->getValues();
-
-
 
 
     //INDEX WHOLE Fields:
@@ -76,7 +139,24 @@ class UserSearchForm extends FormBase
     if($values['language'] == "own_language"){
       $query->addCondition('field_at_description_language', "de","=");
     }
-    $query->addCondition('field_at_categories',89);
+
+    $categoryFilter = false;
+    $conditions = $query->createConditionGroup('OR');
+    foreach ($values['categories'] as $category){
+      if($category){
+        $conditions->addCondition('field_at_categories',$category);
+        $categoryFilter = true;
+      }
+    }
+
+    if($categoryFilter){
+      $query->addConditionGroup($conditions);
+    }
+
+
+
+
+   //$query->addCondition('field_at_categories',89);
 // Set additional conditions.
     /*
     $query->addCondition('status', 1)
@@ -125,15 +205,73 @@ class UserSearchForm extends FormBase
 // Execute the search.
     $results = $query->execute();
     $items = $results->getResultItems();
+    $resultIDs = [];
     foreach ($items as $item){
       $idString = $item->getId();
-      $id = explode(":", explode("/", $idString)[1])[0];
-      $aa = 123;
+      $resultIDs[] = explode(":", explode("/", $idString)[1])[0];
+
     }
+
+    $form_state->set('search_results', $resultIDs);
     $ids = implode(', ', array_keys($results->getResultItems()));
 
-
-    $a = 1;
-    // TODO: Implement submitForm() method.
+    $form_state->setRebuild(TRUE);
   }
+
+
+
+  private function renderATEntry($atEntryID)
+  {
+
+    $descriptions = Util::getDescriptionsOfATEntry($atEntryID);
+    $user = \Drupal::currentUser();
+    $content = Util::renderDescriptionsForUser($descriptions,$user);
+
+
+    $form = [];
+
+
+    $form['content'] = [
+      '#type' => 'markup',
+      '#prefix' => "<div class='at_container'",
+      '#markup' => $content,
+      '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
+    ];
+
+
+    if( \Drupal::currentUser()->isAuthenticated()){
+
+      $form['detail'] = [
+        '#name' => $atEntryID,
+        '#type' => 'submit',
+        '#button_type' => 'primary',
+        '#value' => $this->t('More Information'),
+        '#submit' => ['::moreInformationSubmitHandler'],
+      ];
+
+      $form['submit'] = [
+        '#name' => $atEntryID . "_" . 12,
+        '#type' => 'submit',
+        '#button_type' => 'primary',
+        '#value' => $this->t('Install this AT'),
+        // Custom submission handler for page 1.
+        '#submit' => ['::tryoutATSubmitHandler'],
+        '#suffix' => '</div>'
+      ];
+    }else{
+      $form['submit'] = [
+        '#type' => 'markup',
+        '#markup' => '</div>',
+        '#allowed_tags' => ['button', 'a', 'div', 'img', 'h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
+      ];
+    }
+
+
+
+
+
+    return $form;
+
+  }
+
 }

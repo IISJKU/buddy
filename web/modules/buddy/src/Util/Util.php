@@ -186,6 +186,83 @@ class Util
     }
 
   }
+  public static function getDescriptionsOfATEntry($atEntryId){
+    $storage = \Drupal::service('entity_type.manager')->getStorage('node');
+
+    $query = \Drupal::entityQuery('node')
+      ->condition('type', 'at_description')
+      ->condition('field_at_entry', $atEntryId)
+      ->condition('status', 1);
+    $results = $query->execute();
+
+    return $atEntries = $storage->loadMultiple($results);
+
+  }
+
+  public static function getLanguagesOfDescriptions($descriptions){
+
+    $languages = array();
+    foreach ($descriptions as $nid =>$description){
+
+      $languages[$nid] = $description->field_at_description_language->getValue()[0]['value'];
+    }
+
+    return $languages;
+  }
+
+  public static function renderDescriptionsForUser($descriptions, $user){
+
+    $languages = Util::getLanguagesOfDescriptions($descriptions);
+    $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
+
+
+    $index = array_search($user_lang, $languages);
+
+    if(!$index){
+
+      $account = $user->getAccount();
+
+      $user_lang = $account->getPreferredLangcode();
+      $index = array_search($user_lang, $languages);
+
+      if(!$index){
+
+
+        $user_lang = "en";
+        $index = array_search($user_lang, $languages);
+
+        if(!$index){
+
+          $index = array_keys($languages)[0];
+        }
+      }
+    }
+    unset($languages[$index]);
+    return  Util::renderDescriptionTiles($descriptions[$index],$user, $languages);
+  }
+
+  public static function renderDescriptionTiles($description,$user,$otherLanguages){
+
+    $content = $description->get("field_at_description_short")->getValue()[0]['value'];
+    $image = $description->field_at_description_at_image->getValue();
+    $altText = $image[0]['alt'];
+    $styled_image_url = ImageStyle::load('medium')->buildUrl($description->field_at_description_at_image->entity->getFileUri());
+
+    return '
+       <div class="container">
+            <div class="row"><h3>
+            '.$description->getTitle().'</h3>
+            </div>
+            <div class="row">
+                <div class="col-2">
+                    <img src="'.$styled_image_url.'" alt="'.$altText.'" class="img-fluid w-100 at_description_image">
+                </div>
+                 <div class="col-10">
+                   '.$content.'
+                </div>
+            </div>
+       </div>';
+  }
 
   public static function getDescriptionOfATEntry($atID) {
 
