@@ -52,12 +52,11 @@
   margin: 20px 0;
   font-weight: 700;
 }
-.create_account_button {
+.create_account_button,.buddy_button {
   background: #080866;
   color: white;
-
 }
-.create_account_button:hover, .create_account_button:focus{
+.create_account_button:hover, .create_account_button:focus, .buddy_button:hover, .buddy_button:focus{
   background: #624dbe;
   color: white;
 }
@@ -371,7 +370,18 @@ th.views-field{
 }
 
 
+/*SPECIFIC *(
 
+
+ */
+.platform_overview, .language_overview{
+  margin-top: 10px;
+}
+.platform_overview img, .language_overview img{
+  max-height: 35px;
+  margin-left: 25px;
+
+}
 
 
 /*FOOTER */

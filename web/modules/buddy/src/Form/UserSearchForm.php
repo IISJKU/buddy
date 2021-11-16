@@ -7,6 +7,8 @@ namespace Drupal\buddy\Form;
 use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\node\Entity\Node;
 
 class UserSearchForm extends FormBase
 {
@@ -52,8 +54,7 @@ class UserSearchForm extends FormBase
       '#type' => 'submit',
       '#value' => $this->t('Search'),
     ];
-
-
+    $form['actions']['search']['#attributes']['class'][] = 'buddy_link_button buddy_button';
 
     $categoryIDs = $storage->getQuery()
       ->condition('type', 'at_category')
@@ -82,8 +83,8 @@ class UserSearchForm extends FormBase
       if(!count($searchResults)){
         $form['search_results'] = [
           '#type' => 'markup',
-          '#prefix' => "<div class='at_container'>",
-          '#markup' => t('Your search yielded no results.'),
+          '#prefix' => "<hr><div class='at_search_results'>",
+          '#markup' => "<h1>".t('Search results')."</h1>".t('Your search yielded no results.'),
           '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
           '#suffix' => "</div>",
         ];
@@ -91,7 +92,7 @@ class UserSearchForm extends FormBase
       }else{
         $form['search_results'] = [
           '#type' => 'markup',
-          '#prefix' => "<div class='at_container'>",
+          '#prefix' => "<hr><div class='at_search_results'>",
           '#markup' => "<h1>".t('Search results')."</h1>",
           '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
           '#suffix' => "</div>",
@@ -222,11 +223,15 @@ class UserSearchForm extends FormBase
 
   private function renderATEntry($atEntryID)
   {
+    $atEntry = Node::load($atEntryID);
 
     $descriptions = Util::getDescriptionsOfATEntry($atEntryID);
     $user = \Drupal::currentUser();
-    $content = Util::renderDescriptionsForUser($descriptions,$user);
 
+    $description = Util::getDescriptionForUser($descriptions,$user);
+    $languages = Util::getLanguagesOfDescriptions($descriptions);
+    $platforms = Util::getPlatformsOfATEntry($atEntry);
+    $content = Util::renderDescriptionTiles($description,$user,$languages,$platforms);
 
     $form = [];
 
@@ -241,6 +246,7 @@ class UserSearchForm extends FormBase
 
     if( \Drupal::currentUser()->isAuthenticated()){
 
+      /*
       $form['detail'] = [
         '#name' => $atEntryID,
         '#type' => 'submit',
@@ -248,18 +254,19 @@ class UserSearchForm extends FormBase
         '#value' => $this->t('More Information'),
         '#submit' => ['::moreInformationSubmitHandler'],
       ];
+      */
 
-      $form['submit'] = [
-        '#name' => $atEntryID . "_" . 12,
+      $form['at_install'] = [
+        '#name' => $atEntryID . "_" . $description->id(),
         '#type' => 'submit',
         '#button_type' => 'primary',
-        '#value' => $this->t('Install this AT'),
-        // Custom submission handler for page 1.
-        '#submit' => ['::tryoutATSubmitHandler'],
+        '#value' => $this->t('Try this tool'),
+        '#submit' => ['::installATSubmitHandler'],
         '#suffix' => '</div>'
       ];
+      $form['at_install']['#attributes']['class'][] = 'buddy_link_button buddy_button';
     }else{
-      $form['submit'] = [
+      $form['at_install'] = [
         '#type' => 'markup',
         '#markup' => '</div>',
         '#allowed_tags' => ['button', 'a', 'div', 'img', 'h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
@@ -272,6 +279,20 @@ class UserSearchForm extends FormBase
 
     return $form;
 
+  }
+
+
+  public function moreInformationSubmitHandler(array &$form, FormStateInterface $form_state)
+  {
+
+    $url = Url::fromUserInput("/user-at-detail/" . $form_state->getTriggeringElement()['#name']);
+    $form_state->setRedirectUrl($url);
+
+  }
+
+  public function installATSubmitHandler(array &$form, FormStateInterface $form_state)
+  {
+    Util::installATSubmitHandler($form,$form_state);
   }
 
 }
