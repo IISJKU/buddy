@@ -36,23 +36,6 @@ class UserATEntryInstallInstructionsForm extends FormBase
     $this->platform = $browser->getPlatform();
     $this->isMobile = $browser->isMobile();
 
-    $markup = Util::renderDescriptionTabs($description,true);
-
-    $form['description'] = [
-      '#type' => 'markup',
-      '#markup' => $markup,
-      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
-
-    ];
-
-
-    $form['introduction_install'] = [
-      '#type' => 'markup',
-      '#markup' => '<hr><h2>'.$this->t("How do you get this AT?").'</h2><div><strong>'.$this->t("This AT is available as:").'</strong></div>',
-      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','strong','hr'],
-
-    ];
-
 
 
     //Get AT Entry of description
@@ -65,6 +48,27 @@ class UserATEntryInstallInstructionsForm extends FormBase
       ->loadMultiple($atEntriesID);
 
     $atEntry = array_shift($atEntries);
+
+
+    $descriptions = Util::getDescriptionsOfATEntry($atEntriesID);
+    $languages = Util::getLanguagesOfDescriptions($descriptions);
+
+    $content = Util::renderDescriptionDetail($description,$languages);
+
+    $form['description'] = [
+      '#type' => 'markup',
+      '#markup' => $content,
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
+
+    ];
+
+
+    $form['introduction_install'] = [
+      '#type' => 'markup',
+      '#markup' => '<hr><h2>'.$this->t("How do you get this AT?").'</h2><div><strong>'.$this->t("This AT is available as:").'</strong></div>',
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','strong','hr'],
+
+    ];
 
 
     //Get all types (extensions, software and apps)
@@ -100,7 +104,7 @@ class UserATEntryInstallInstructionsForm extends FormBase
     }
 
 
-    Util::setTitle($this->t("Install instructions for:")." ".$description->getTitle());
+    Util::setTitle($description->getTitle());
 
     $formElements = [];
     $activeTab = true;

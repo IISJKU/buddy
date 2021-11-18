@@ -411,6 +411,39 @@ class Util
 
     return $html;
   }
+  public static function renderDescriptionDetail($description, $languages){
+    $content = $description->get("field_at_description")->getValue()[0]['value'];
+    $image = $description->field_at_description_at_image->getValue();
+    $altText = $image[0]['alt'];
+    $styled_image_url = ImageStyle::load('medium')->buildUrl($description->field_at_description_at_image->entity->getFileUri());
+
+
+    $html = '
+       <div class="at_container">
+            <div class="row">
+                 <div class="col-12">
+                   ' . $content . '
+                </div>
+            </div>';
+
+    $currentLanguage = $description->field_at_description_language->getValue()[0]['value'];
+    $languageHtml = Util::renderLanguageOverview($languages, $currentLanguage);
+
+    $html .= ' <div class="row language_overview">
+                <div class="col-4">
+                   ' . t("Supported languages:") . '
+                </div>
+                 <div class="col-8">
+                   ' . $languageHtml . '
+                </div>
+            </div>';
+
+    $html .= '
+
+       </div>';
+
+    return $html;
+  }
 
   public static function getDescriptionOfATEntry($atID)
   {
