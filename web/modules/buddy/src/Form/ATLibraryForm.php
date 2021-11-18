@@ -51,7 +51,7 @@ class ATLibraryForm  extends FormBase
       return [
         '#type' => 'markup',
         '#markup' => '<div>'.$this->t("Your library is currently empty.").' </div><div>'
-                            .$this->t("Use the AT Catalogue or the recommender to add AT to your library."). '</div>',
+                            .$this->t("Use the search function or catalogue to add tools to your library."). '</div>',
         '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
 
       ];
@@ -59,7 +59,7 @@ class ATLibraryForm  extends FormBase
 
     $form['library_description'] = [
       '#type' => 'markup',
-      '#markup' => '<div>'.$this->t("Here is your current library of assistive technologies").'</div>',
+      '#markup' => '<div>'.$this->t("Here is your current library of tools.").'</div>',
       '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
 
     ];
@@ -72,21 +72,21 @@ class ATLibraryForm  extends FormBase
       $atEntryID = $atRecord->get("field_user_at_record_at_entry")->getValue()[0]['target_id'];
 
 
-      $description = Util::getDescriptionOfATEntry($atEntryID);
+      $atEntry = Node::load($atEntryID);
 
-      $nid = $description->id();
-      $form['description_header'.$key] = [
+      $descriptions = Util::getDescriptionsOfATEntry($atEntryID);
+      $user = \Drupal::currentUser();
+
+      $description = Util::getDescriptionForUser($descriptions,$user);
+      $languages = Util::getLanguagesOfDescriptions($descriptions);
+      $platforms = Util::getPlatformsOfATEntry($atEntry);
+      $content = Util::renderDescriptionTiles($description,$user,$languages,$platforms,false,false);
+
+      $form['content_'.$key] = [
         '#type' => 'markup',
-        '#markup' => '<h2>'.$description->getTitle().'</h2>',
-        '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
-
-      ];
-
-      $form['description_'.$key] = [
-        '#type' => 'markup',
-        '#markup' => Util::renderDescriptionTabs($description,true),
-        '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
-
+        '#prefix' => "<div class='at_library_container'",
+        '#markup' => $content,
+        '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
       ];
 
       $form['description_actions_'.$key] = array(
@@ -98,21 +98,22 @@ class ATLibraryForm  extends FormBase
         '#type' => 'submit',
         '#name' => $atEntryID,
         '#value' => $this->t('Installation instructions'),
-
+        '#attributes' => ['class' => ['buddy_link_button buddy_button']],
       ];
 
       $form['description_actions_'.$key]['rate'] = [
         '#type' => 'submit',
         '#name' => $atEntryID,
-        '#value' => $this->t('Rate this assistive technology'),
-
+        '#value' => $this->t('Rate the tool'),
+        '#attributes' => ['class' => ['buddy_link_button buddy_button']],
       ];
-
+      $form['at_install']['#attributes']['class'][] = 'buddy_link_button buddy_button';
       $form['description_actions_'.$key]['remove'] = [
         '#type' => 'submit',
         '#name' => $atRecord->id(),
-        '#value' => $this->t('Remove the assistive technology from my library'),
-
+        '#value' => $this->t('Remove the tool'),
+        '#suffix' => "</div>",
+        '#attributes' => ['class' => ['buddy_link_button buddy_button']],
       ];
 
 

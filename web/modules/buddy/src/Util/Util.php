@@ -356,7 +356,7 @@ class Util
 
   }
 
-  public static function renderDescriptionTiles($description, $user, $languages, $platforms)
+  public static function renderDescriptionTiles($description, $user, $languages, $platforms,$renderPlatform=true,$renderLanguage=true)
   {
 
     $content = $description->get("field_at_description_short")->getValue()[0]['value'];
@@ -380,9 +380,10 @@ class Util
                 </div>
             </div>';
 
-    $platformsHTML = Util::renderPlatformOverview($platforms);
-    if ($platformsHTML) {
-      $html .= ' <div class="row platform_overview">
+    if($renderPlatform){
+      $platformsHTML = Util::renderPlatformOverview($platforms);
+      if ($platformsHTML) {
+        $html .= ' <div class="row platform_overview">
                 <div class="col-4">
                    ' . t("Available for:") . '
                 </div>
@@ -390,13 +391,15 @@ class Util
                    ' . $platformsHTML . '
                 </div>
             </div>';
-
+      }
     }
 
-    $currentLanguage = $description->field_at_description_language->getValue()[0]['value'];
-    $languageHtml = Util::renderLanguageOverview($languages, $currentLanguage);
 
-    $html .= ' <div class="row language_overview">
+    if($renderLanguage){
+      $currentLanguage = $description->field_at_description_language->getValue()[0]['value'];
+      $languageHtml = Util::renderLanguageOverview($languages, $currentLanguage);
+
+      $html .= ' <div class="row language_overview">
                 <div class="col-4">
                    ' . t("Supported languages:") . '
                 </div>
@@ -404,6 +407,8 @@ class Util
                    ' . $languageHtml . '
                 </div>
             </div>';
+    }
+
 
     $html .= '
 

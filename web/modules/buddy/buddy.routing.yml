@@ -115,7 +115,7 @@ buddy.user_at_library:
   path: '/user-at-library'
   defaults:
     _form: '\Drupal\buddy\Form\ATLibraryForm'
-    _title: 'My AT Library'
+    _title: 'My Tool Library'
   requirements:
     _user_is_logged_in: 'TRUE'
 buddy.user_at_catalogue:

@@ -342,13 +342,12 @@ table th:last-child, table td:last-child {
 }
 
 
-.at_container{
-  margin-bottom: 50px;
-}
+/*
 .button:first-child, .image-button:first-child {
   margin-right: 1em;
   margin-left: 1em;
 }
+*/
 
 th.views-field{
   background-color: black;
@@ -414,6 +413,15 @@ AT INSTall
   align-items: center;
 }
 
+/* AT LIBRARY */
+
+.at_library_container{
+  border: 10px solid #E5E3F0;
+  margin-bottom: 10px;
+  border-radius: 30px;
+  background: #E5E3F0;
+  padding: 20px 20px 0px 20px;
+}
 
 /*FOOTER */
 footer.mt-auto{

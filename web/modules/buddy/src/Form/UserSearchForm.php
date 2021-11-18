@@ -238,7 +238,7 @@ class UserSearchForm extends FormBase
 
     $form['content'] = [
       '#type' => 'markup',
-      '#prefix' => "<div class='at_container'",
+      '#prefix' => "<div class='at_library_container'",
       '#markup' => $content,
       '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
     ];
