@@ -362,8 +362,9 @@ class UserATEntryInstallInstructionsForm extends FormBase
       $currentMessage = '('.$currentMessage.')';
     }
 
+    $descriptionID = "buddy_description_id_".$id;
     $description.= "
-            <h3><img src='".$styled_image_url."' alt='' class='buddy-type-icon'>".$type->getTitle().$currentMessage."</h3>";
+            <h3 id='".$descriptionID."'><img src='".$styled_image_url."' alt='' class='buddy-type-icon'>".$type->getTitle().$currentMessage."</h3>";
 
 
     $button =  [
@@ -377,6 +378,7 @@ class UserATEntryInstallInstructionsForm extends FormBase
     ];
 
     $button['#attributes']['class'][] = 'buddy_link_button buddy_button';
+    $button['#attributes']['aria-describedby'][] = $descriptionID;
 
     return $button;
 
