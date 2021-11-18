@@ -49,6 +49,10 @@ class UserATEntryInstallInstructionsForm extends FormBase
 
     $atEntry = array_shift($atEntries);
 
+    $descriptions = Util::getDescriptionsOfATEntry($atEntry->id());
+    $user = \Drupal::currentUser();
+
+    $description = Util::getDescriptionForUser($descriptions,$user);
 
     $descriptions = Util::getDescriptionsOfATEntry($atEntriesID);
     $languages = Util::getLanguagesOfDescriptions($descriptions);
