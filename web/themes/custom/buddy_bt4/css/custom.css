@@ -383,6 +383,37 @@ th.views-field{
 
 }
 
+/*
+AT INSTall
+ */
+.buddy_install_tab{
+  border: 2px solid black;
+  border-top: none;
+  border-bottom-left-radius: 1.25rem;
+  border-bottom-right-radius: 1.25rem;
+  margin-bottom: 20px;
+  background: white;
+}
+
+.buddy_install_tab ul{
+  padding-left: 25px;
+
+}
+.er_type_install_item{
+  list-style: none;
+  padding-top: 10px;
+}
+.buddy_install_tab_link.active{
+  border-bottom: none;
+}
+.buddy-type-icon{
+  margin-right: 10px;
+}
+.buddy_install_description{
+  display: flex;
+  align-items: center;
+}
+
 
 /*FOOTER */
 footer.mt-auto{
