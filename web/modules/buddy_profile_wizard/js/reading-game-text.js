@@ -1,6 +1,7 @@
 class ReadingGameText extends QuizScene{
   constructor() {
     super("ReadingGameText");
+    this.points = 0;
   }
 
   preload() {
@@ -53,7 +54,9 @@ class ReadingGameText extends QuizScene{
 
   questionFinishedHook(id,answer){
     console.log("Q finished",id,answer);
-
+    if(answer.result){
+      this.points++;
+    }
     return super.questionFinishedHook(id,answer);
 
   }
@@ -65,8 +68,11 @@ class ReadingGameText extends QuizScene{
 
   quizFinishedHook(){
 
-    console.log("starting bla");
-    Director.changeScene("ReadingGameText");
+    let result = this.points/this.quizQuestions.length;
+    Director.changeScene("ReadingGameText",{
+      "id": "ReadingGameText",
+      "result": result,
+    });
   }
 
 }

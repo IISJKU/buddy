@@ -1,7 +1,9 @@
 let Director = {
 
+  results: [],
   changeScene:function (currentScene,result){
 
+    this.results.push(result);
     game.scene.stop(currentScene);
 
     console.log(result);
@@ -10,7 +12,7 @@ let Director = {
 
       case "Intro": {
 
-        game.scene.start("ReadingGameTTSWord");
+        game.scene.start("FocusGame");
         break;
       }
       case "FocusGame": {
@@ -19,16 +21,27 @@ let Director = {
         break;
       }
 
+
+      case "ReadingGameTTSSentence": {
+        if(result.result > 0.25) {
+          game.scene.start("ReadingGameTTSWord");
+        }else{
+          game.scene.start("MemoryGameShortTerm");
+        }
+        break;
+      }
+
       case "ReadingGameTTSWord": {
 
-        game.scene.start("ReadingGameTTSSentence");
-        break;
-      }
-      case "ReadingGameTTSSentence": {
+        if(result.result > 0.25){
+          game.scene.start("ReadingGameText");
+        }else{
+          game.scene.start("MemoryGameShortTerm");
+        }
 
-        game.scene.start("ReadingGameText");
         break;
       }
+
       case "ReadingGameText": {
 
         game.scene.start("WritingGame");

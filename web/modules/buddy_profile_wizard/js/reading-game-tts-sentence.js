@@ -1,6 +1,7 @@
 class ReadingGameTTSSentence extends QuizScene{
   constructor() {
     super("ReadingGameTTSSentence");
+    this.points = 0;
   }
 
   preload() {
@@ -99,14 +100,19 @@ class ReadingGameTTSSentence extends QuizScene{
 
   questionFinishedHook(id,answer){
     console.log("Q finished",id,answer);
-
+    if(answer.result){
+      this.points++;
+    }
     return super.questionFinishedHook(id,answer);
 
   }
   quizFinishedHook(){
 
-    console.log("starting bla");
-    Director.changeScene("ReadingGameTTSSentence");
+    let result = this.points/this.quizQuestions.length;
+    Director.changeScene("ReadingGameTTSSentence",{
+      "id": "ReadingGameTTSSentence",
+      "result": result,
+    });
   }
 
 
