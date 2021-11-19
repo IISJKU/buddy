@@ -36,23 +36,6 @@ class UserATEntryInstallInstructionsForm extends FormBase
     $this->platform = $browser->getPlatform();
     $this->isMobile = $browser->isMobile();
 
-    $markup = Util::renderDescriptionTabs($description,true);
-
-    $form['description'] = [
-      '#type' => 'markup',
-      '#markup' => $markup,
-      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
-
-    ];
-
-
-    $form['introduction_install'] = [
-      '#type' => 'markup',
-      '#markup' => '<hr><h2>'.$this->t("How do you get this AT?").'</h2><div><strong>'.$this->t("This AT is available as:").'</strong></div>',
-      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','strong','hr'],
-
-    ];
-
 
 
     //Get AT Entry of description
@@ -65,6 +48,31 @@ class UserATEntryInstallInstructionsForm extends FormBase
       ->loadMultiple($atEntriesID);
 
     $atEntry = array_shift($atEntries);
+
+    $descriptions = Util::getDescriptionsOfATEntry($atEntry->id());
+    $user = \Drupal::currentUser();
+
+    $description = Util::getDescriptionForUser($descriptions,$user);
+
+    $descriptions = Util::getDescriptionsOfATEntry($atEntriesID);
+    $languages = Util::getLanguagesOfDescriptions($descriptions);
+
+    $content = Util::renderDescriptionDetail($description,$languages);
+
+    $form['description'] = [
+      '#type' => 'markup',
+      '#markup' => $content,
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
+
+    ];
+
+
+    $form['introduction_install'] = [
+      '#type' => 'markup',
+      '#markup' => '<hr><h2>'.$this->t("How do you get this AT?").'</h2><div><strong>'.$this->t("This AT is available as:").'</strong></div>',
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','strong','hr'],
+
+    ];
 
 
     //Get all types (extensions, software and apps)
@@ -100,7 +108,7 @@ class UserATEntryInstallInstructionsForm extends FormBase
     }
 
 
-    Util::setTitle($this->t("Install instructions for:")." ".$description->getTitle());
+    Util::setTitle($description->getTitle());
 
     $formElements = [];
     $activeTab = true;
@@ -133,7 +141,7 @@ class UserATEntryInstallInstructionsForm extends FormBase
                         '.$tabHeader.'
                     </div>
                 </nav>
-                <div class="tab-content" id="nav-tabContent">';
+                <div class="tab-content buddy_install_tab" id="nav-tabContent">';
 
 
     $form['tab_list_start'] = [
@@ -157,6 +165,7 @@ class UserATEntryInstallInstructionsForm extends FormBase
 
     ];
 
+    /*
     $markup = Link::createFromRoute($this->t('Back to my AT library'),'buddy.user_at_library',[],  ['attributes' => ['class' => 'btn btn-primary overview-button']])->toString()->getGeneratedLink();
 
     $form['links'] = [
@@ -165,6 +174,7 @@ class UserATEntryInstallInstructionsForm extends FormBase
       '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
 
     ];
+    */
 
 
 
@@ -198,8 +208,8 @@ class UserATEntryInstallInstructionsForm extends FormBase
     $tabPanelHeader = $this->renderTabPanelHeader("extension_tab","extension_tab_panel",$activeTab);
     $form['intro'] = [
       '#type' => 'markup',
-      '#markup' =>  $tabPanelHeader."<h3>".$this->t("This browser extension is available for:")."</h3>",
-      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
+      '#markup' =>  $tabPanelHeader."<ul>",
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr','ul'],
 
     ];
 
@@ -218,8 +228,8 @@ class UserATEntryInstallInstructionsForm extends FormBase
 
     $form['outro'] = [
       '#type' => 'markup',
-      '#markup' =>  '</div>',
-      '#allowed_tags' => ['div'],
+      '#markup' =>  '</ul></div>',
+      '#allowed_tags' => ['div','ul'],
 
     ];
 
@@ -259,8 +269,8 @@ class UserATEntryInstallInstructionsForm extends FormBase
 
     $form['intro'] = [
       '#type' => 'markup',
-      '#markup' =>  $tabPanelHeader."<h3>".$this->t("This software is available for the following  desktop operating system(s):")."</h3>",
-      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
+      '#markup' =>  $tabPanelHeader."<ul>",
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr','ul'],
 
     ];
 
@@ -279,8 +289,8 @@ class UserATEntryInstallInstructionsForm extends FormBase
 
     $form['outro'] = [
       '#type' => 'markup',
-      '#markup' =>  '</div>',
-      '#allowed_tags' => ['div'],
+      '#markup' =>  '</ul></div>',
+      '#allowed_tags' => ['div','ul'],
 
     ];
 
@@ -312,8 +322,8 @@ class UserATEntryInstallInstructionsForm extends FormBase
     $tabPanelHeader = $this->renderTabPanelHeader("app_tab","app_tab_panel",$activeTab);
     $form['intro'] = [
       '#type' => 'markup',
-      '#markup' =>  $tabPanelHeader."<h3>".$this->t("This apps are available for the following system(s):")."</h3>",
-      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
+      '#markup' =>  $tabPanelHeader."<ul>",
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr','ul'],
 
     ];
 
@@ -337,8 +347,8 @@ class UserATEntryInstallInstructionsForm extends FormBase
 
     $form['outro'] = [
       '#type' => 'markup',
-      '#markup' =>  '</div>',
-      '#allowed_tags' => ['div'],
+      '#markup' =>  '</ul></div>',
+      '#allowed_tags' => ['div','ul'],
 
     ];
 
@@ -353,31 +363,28 @@ class UserATEntryInstallInstructionsForm extends FormBase
     $description = "";
     if($currentMessage != ""){
 
-      $currentMessage = "<div><strong>".$currentMessage."</strong></div>";
+      $currentMessage = '('.$currentMessage.')';
     }
 
+    $descriptionID = "buddy_description_id_".$id;
     $description.= "
-            <h3>".$type->getTitle()."</h3>
-            ".$currentMessage."
-            <div>
-                <p>
-                   <img src='".$styled_image_url."' alt='".$altText."' class='buddy-type-icon'>
-                   ".$type->field_description->getValue()[0]['value']."
-
-                </p>
-            </div>";
+            <h3 id='".$descriptionID."'><img src='".$styled_image_url."' alt='' class='buddy-type-icon'>".$type->getTitle().$currentMessage."</h3>";
 
 
-    return [
+    $button =  [
       '#type' => 'submit',
       '#name' => $id,
       '#button_type' => 'primary',
-      '#value' => $this->t('Get it!'),
-      '#prefix' => $description,
-      '#suffix' => '<hr>',
+      '#value' => $this->t('Install'),
+      '#prefix' =>'<li class="er_type_install_item"> <div class="row"> <div class="col-8 buddy_install_description">'.$description.'</div><div class="col-4">',
+      '#suffix' => '</div></div></li>',
 
     ];
 
+    $button['#attributes']['class'][] = 'buddy_link_button buddy_button';
+    $button['#attributes']['aria-describedby'][] = $descriptionID;
+
+    return $button;
 
   }
 
@@ -410,7 +417,7 @@ class UserATEntryInstallInstructionsForm extends FormBase
       $ariaSelected = "true";
     }
 
-    return '<a class="nav-link '.$active.'" id="'.$tabID.'" data-toggle="tab" href="#'.$tabPanelID.'" role="tab" aria-controls="'.$tabPanelID.'" aria-selected="'.$ariaSelected.'"><img src="'.$icon.'" width="50" height="50" alt="" title="">'.$name.'</a>';
+    return '<a class="nav-link buddy_install_tab_link '.$active.'" id="'.$tabID.'" data-toggle="tab" href="#'.$tabPanelID.'" role="tab" aria-controls="'.$tabPanelID.'" aria-selected="'.$ariaSelected.'"><img src="'.$icon.'" width="50" height="50" alt="" title="">'.$name.'</a>';
 
   }
 

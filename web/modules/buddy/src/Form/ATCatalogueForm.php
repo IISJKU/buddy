@@ -109,54 +109,52 @@ class ATCatalogueForm extends FormBase
       ->execute();
 
     $atEntryID = intval(array_shift($atEntriesID));
-    $title = $atDescription->getTitle();
+    $descriptions = Util::getDescriptionsOfATEntry($atEntryID);
+    $user = \Drupal::currentUser();
+    $description = Util::getDescriptionForUser($descriptions,$user);
+    $languages = Util::getLanguagesOfDescriptions($descriptions);
+    $platforms = Util::getPlatformsOfATEntry(Node::load($atEntryID));
+    $content = Util::renderDescriptionTiles($description,$user,$languages,$platforms);
 
     $form = [];
 
-    $form['title'] = [
-      '#type' => 'markup',
-      '#markup' => "<div class='at_container'><h2>" . $title . "</h2>",
-      '#allowed_tags' => ['button', 'a', 'div', 'img', 'h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
 
-    ];
-
-    $form['text'] = [
+    $form['content'] = [
       '#type' => 'markup',
-      '#markup' => Util::renderDescriptionTabs($atDescription, true),
-      '#allowed_tags' => ['button', 'a', 'div', 'img', 'h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
+      '#prefix' => "<div class='at_library_container'",
+      '#markup' => $content,
+      '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
     ];
 
 
     if( \Drupal::currentUser()->isAuthenticated()){
 
+      /*
       $form['detail'] = [
-        '#name' => $id,
+        '#name' => $atEntryID,
         '#type' => 'submit',
         '#button_type' => 'primary',
         '#value' => $this->t('More Information'),
         '#submit' => ['::moreInformationSubmitHandler'],
       ];
+      */
 
-      $form['submit'] = [
-        '#name' => $atEntryID . "_" . $id,
+      $form['at_install'] = [
+        '#name' => $atEntryID . "_" . $description->id(),
         '#type' => 'submit',
         '#button_type' => 'primary',
-        '#value' => $this->t('Install this AT'),
-        // Custom submission handler for page 1.
+        '#value' => $this->t('Try this tool'),
         '#submit' => ['::tryoutATSubmitHandler'],
         '#suffix' => '</div>'
       ];
+      $form['at_install']['#attributes']['class'][] = 'buddy_link_button buddy_button';
     }else{
-      $form['submit'] = [
+      $form['at_install'] = [
         '#type' => 'markup',
         '#markup' => '</div>',
         '#allowed_tags' => ['button', 'a', 'div', 'img', 'h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
       ];
     }
-
-
-
-
 
     return $form;
 

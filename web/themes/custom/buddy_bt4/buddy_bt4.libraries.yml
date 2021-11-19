@@ -1,5 +1,9 @@
 global-styling:
   css:
+    base:
+      '//fonts.googleapis.com/css?family=Noto+Sans:regular,bold': { external: true }
     theme:
       css/style.css: {}
       css/custom.css: {}
+  js:
+    js/buddy.js: { }

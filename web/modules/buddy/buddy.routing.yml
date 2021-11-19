@@ -1,3 +1,20 @@
+buddy.user_frontpage:
+  path: '/user-frontpage'
+  defaults:
+    _controller: '\Drupal\buddy\Controller\UserFrontPageController::content'
+  requirements:
+    _custom_access: '\Drupal\buddy\Controller\UserFrontPageController::access'
+  options:
+    no_cache: 'TRUE'
+buddy.user_search:
+  path: '/user-search'
+  defaults:
+    _form: '\Drupal\buddy\Form\UserSearchForm'
+    _title: 'Search'
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 buddy.at_backend_overview:
   path: '/at-entries/overview'
   defaults:
@@ -7,31 +24,69 @@ buddy.at_backend_overview:
     _role: 'administrator+at_provider'
   options:
     no_cache: 'TRUE'
-buddy.user_entry_point:
-  path: '/user-entry'
+buddy.user_register:
+  path: '/user-register'
   defaults:
-    _form: '\Drupal\buddy\Form\UserEntryPoint'
-    _title: 'Log in or register'
+    _form: '\Drupal\buddy\Form\UserRegisterForm'
+    _title: 'Welcome'
   requirements:
     _role: 'anonymous'
   options:
     no_cache: 'TRUE'
-buddy.login:
-  path: '/user/login'
+buddy.user_register_local:
+  path: '/user-register-local'
   defaults:
-    _form: '\Drupal\user\Form\UserLoginForm'
-    _title: 'Log in'
+    _form: '\Drupal\buddy\Form\UserRegisterLocalForm'
+    _title: 'Welcome'
   requirements:
-    _user_is_logged_in: 'FALSE'
+    _role: 'anonymous'
   options:
-    _maintenance_access: TRUE
-buddy.register:
-  path: '/user/register'
+    no_cache: 'TRUE'
+buddy.user_register_external:
+  path: '/user-register-external'
   defaults:
-    _entity_form: 'user.register'
-    _title: 'Create new account'
+    _form: '\Drupal\buddy\Form\UserRegisterExternalForm'
+    _title: 'Welcome'
   requirements:
-    _access_user_register: 'TRUE'
+    _role: 'anonymous'
+  options:
+    no_cache: 'TRUE'
+buddy.user_login:
+  path: '/user-login'
+  defaults:
+    _form: '\Drupal\buddy\Form\UserLoginForm'
+    _title: 'Welcome'
+  requirements:
+    _role: 'anonymous'
+  options:
+    no_cache: 'TRUE'
+buddy.user_login_local:
+  path: '/user-login-local'
+  defaults:
+    _form: '\Drupal\buddy\Form\UserLoginLocalForm'
+    _title: 'Welcome'
+  requirements:
+    _role: 'anonymous'
+  options:
+    no_cache: 'TRUE'
+buddy.user_password_form:
+  path: '/user-password'
+  defaults:
+    _form: '\Drupal\buddy\Form\BuddyUserPasswordForm'
+    _title: 'Reset your password'
+  requirements:
+    _role: 'anonymous'
+  options:
+    no_cache: 'TRUE'
+buddy.atprovider_register:
+  path: '/atprovider-register'
+  defaults:
+    _form: '\Drupal\buddy\Form\BuddyATProviderRegisterForm'
+    _title: 'Register'
+  requirements:
+    _role: 'anonymous'
+  options:
+    no_cache: 'TRUE'
 buddy.user_profile:
   path: '/user-profile'
   defaults:
@@ -60,7 +115,7 @@ buddy.user_at_library:
   path: '/user-at-library'
   defaults:
     _form: '\Drupal\buddy\Form\ATLibraryForm'
-    _title: 'My AT Library'
+    _title: 'My Tool Library'
   requirements:
     _user_is_logged_in: 'TRUE'
 buddy.user_at_catalogue:
