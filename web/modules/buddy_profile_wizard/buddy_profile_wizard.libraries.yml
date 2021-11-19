@@ -1,5 +1,8 @@
 buddy_profile_wizard:
   version: 1.x
+  css:
+    theme:
+      css/form.css: {}
   js:
     js/translation/string-factory.js: {}
     js/translation/sound-factory.js: {}
@@ -20,6 +23,7 @@ buddy_profile_wizard:
     js/memory-game-short-term.js: {}
     js/focus-game.js: {}
     js/writing-game.js: {}
+    js/time-decision-understanding-quiz.js: {}
     js/director.js: {}
     js/wizard.js: {}
   dependencies:
