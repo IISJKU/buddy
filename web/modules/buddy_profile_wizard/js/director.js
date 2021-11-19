@@ -1,15 +1,21 @@
 let Director = {
 
-  changeScene:function (currentScene){
+  changeScene:function (currentScene,result){
 
     game.scene.stop(currentScene);
 
+    console.log(result);
     console.log(currentScene);
     switch (currentScene) {
 
       case "Intro": {
 
         game.scene.start("ReadingGameTTSWord");
+        break;
+      }
+      case "FocusGame": {
+
+        game.scene.start("ReadingGameTTSSentence");
         break;
       }
 
@@ -24,6 +30,12 @@ let Director = {
         break;
       }
       case "ReadingGameText": {
+
+        game.scene.start("WritingGame");
+        break;
+      }
+
+      case "WritingGame": {
 
         game.scene.start("MathGame");
         break;

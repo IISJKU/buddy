@@ -80,17 +80,22 @@ class WritingGame extends GameScene {
 
 
       let writingGame = this;
-      this.answerButton = new IconButton(this, stringFactory.getString("math_game_start"), this.cameras.main.centerX, 500, "playIcon", function () {
+      this.answerButton = new IconButton(this, stringFactory.getString("writing_game_enter_text"), this.cameras.main.centerX, 500, "playIcon", function () {
         let input = document.getElementById("er_wizzard_text_input").value;
 
 
-        writingGame.evaluateInput(input);
+        let score = writingGame.evaluateInput(input);
+        writingGame.cleanUpStep();
+        writingGame.currentStep++;
+        writingGame.nextStep();
 
 
 
       });
       this.answerButton.init();
       this.add.existing(this.answerButton);
+    }else {
+      Director.changeScene("WritingGame");
     }
 
 
@@ -98,7 +103,9 @@ class WritingGame extends GameScene {
   }
 
   cleanUpStep(){
-
+    this.answerButton.destroy();
+    this.avatarButton.destroy();
+    this.element.destroy();
   }
 
   evaluateInput(text){

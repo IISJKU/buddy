@@ -152,8 +152,13 @@ var stringFactory = {
 
 
     //Writing game text
+
+
     this.addString("writing_game_text_intro","Type the text\n I am going to say!","en");
     this.addString("writing_game_text_intro","Schreibe den Text\n den ich sagen werde!","de");
+
+    this.addString("writing_game_enter_text","Submit!","en");
+    this.addString("writing_game_enter_text","Abschicken!","de");
 
     this.addString("writing_game_sentence_1","Today is a nice day","en");
     this.addString("writing_game_sentence_1","Heute ist ein schöner Tag","de");

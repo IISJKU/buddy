@@ -3,7 +3,10 @@ class FocusGame extends GameScene {
   constructor() {
     super('FocusGame');
     this.text = null;
-
+    this.gamesWon = 0;
+    this.gamesLost = 0;
+    this.gamesPlayed = 0;
+    this.gamesToPlay = 3;
     this.numberOfCups = 4;
     this.secondShufflePercentage = 30;
     this.numberOfShuffles = 10;
@@ -97,11 +100,21 @@ class FocusGame extends GameScene {
 
   startGame(){
 
+    if(this.gamesPlayed < this.gamesToPlay){
+      this.clear();
+      this.setupCupsAndCoin();
+      this.createShuffles();
+      this.dropCups();
+    }else{
 
-    this.clear();
-    this.setupCupsAndCoin();
-    this.createShuffles();
-    this.dropCups();
+      Director.changeScene("FocusGame",{
+        "id": "FocusGame",
+        "gamesWon": this.gamesWon,
+        "gamesLost" : this.gamesLost
+      });
+    }
+
+
   }
 
   clear(){
@@ -324,6 +337,7 @@ class FocusGame extends GameScene {
         this.cups[i].on('pointerdown', function (pointer) {
 
           if(currentCup === winningCup){
+            this.gamesWon++;
             console.log("You win");
             console.log(focusGame.numberOfCups);
             if(focusGame.numberOfCups < 6){
@@ -340,7 +354,7 @@ class FocusGame extends GameScene {
             }
             focusGame.yes.play();
           }else{
-
+            this.gamesLost++;
             if(focusGame.numberOfCups > 2){
               focusGame.numberOfCups--;
             }
@@ -362,6 +376,7 @@ class FocusGame extends GameScene {
             focusGame.no.play();
           }
 
+          focusGame.gamesPlayed++;
           focusGame.tweens.add({
             targets: winningCup,
             props: {
