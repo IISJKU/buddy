@@ -23,7 +23,9 @@ buddy_profile_wizard:
     js/memory-game-short-term.js: {}
     js/focus-game.js: {}
     js/writing-game.js: {}
-    js/time-decision-understanding-quiz.js: {}
+    js/time-management-quiz.js: {}
+    js/understanding-quiz.js: {}
+    js/decision-making-quiz.js: {}
     js/director.js: {}
     js/wizard.js: {}
   dependencies:

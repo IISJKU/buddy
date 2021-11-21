@@ -1,4 +1,4 @@
-class TimeDecisionUnderstandingQuiz extends QuizScene{
+class TimeManagementQuiz extends QuizScene{
   constructor() {
     super("TimeDecisionUnderstandingQuiz");
     this.points = 0;
@@ -12,13 +12,15 @@ class TimeDecisionUnderstandingQuiz extends QuizScene{
     this.load.audio('football', soundFactory.getSound("reading_game_tts_sentence","football.mp3"));
     this.load.audio('spiders', soundFactory.getSound("reading_game_tts_sentence","spiders.mp3"));
 
+    this.load.image('noIcon', 'modules/buddy_profile_wizard/assets/img/util/NoIcon.png');
+
   }
 
   create(){
 
     let soundtest = new QuizQuestion("day","", new Stimuli(null,"day"));
     soundtest.columnLayout = 2;
-    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question1_a1"),true));
+    soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question1_a1"),true,"noIcon"));
     soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question1_a2"),false));
     soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question1_a3"),false));
     soundtest.addAnswer(new Answer(stringFactory.getString("reading_game_tts_sentence_question1_a4"),false));
@@ -86,8 +88,9 @@ class TimeDecisionUnderstandingQuiz extends QuizScene{
 
   startGame(){
 
-    console.log("AAAA");
+    /*
     document.getElementById("edit-submit").click();
+    */
     this.titleText.destroy();
     this.avatarButton.destroy();
     this.startButton.destroy();
