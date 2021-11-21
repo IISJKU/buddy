@@ -170,6 +170,39 @@ var stringFactory = {
     this.addString("writing_game_sentence_3","Manchmal ist es nötig zu schweigen","de");
 
 
+    //Understanding
+    this.addString("understanding_intro","May I ask you some questions?","en");
+    this.addString("understanding_intro","Darf ich dir ein\n paar Fragen stellen?!","de");
+
+    this.addString("understanding_question1","Do you find web-pages sometimes difficult to understand?","en");
+    this.addString("understanding_question1","Findest du Webseiten manchmal schwierig zu verstehen?","de");
+
+    this.addString("understanding_question2","Do you sometimes have Problems to\n understand difficult Words?","en");
+    this.addString("understanding_question2","Hast du manchmal Probleme schwierigen\n Wörter zu versehen?","de");
+
+    this.addString("understanding_question3","Do you sometimes need help to understand internet pages written in a foreign language?","en");
+    this.addString("understanding_question3","Brauchst du manchmal Hilfe bei Internetseiten die in einer anderen Sprache geschrieben sind?","de");
+
+
+    //Time management
+    // Questions : Assessment of time management skills:
+    // psychometric properties of the Swedish version
+    this.addString("time_management_intro","May I ask you some questions?","en");
+    this.addString("time_management_intro","Darf ich dir ein\n paar Fragen stellen?!","de");
+
+    this.addString("time_management_question1","Do you manage your time well?","en");
+    this.addString("time_management_question1","Glaubst du, dass du dir deine Zeit gut einteilen kannst?","de");
+
+    this.addString("time_management_question2","Are you sometimes overwhelmed by your daily routine?","en");
+    this.addString("time_management_question2","Bist du machnmal überfordert bei deinen täglichen Aktivitäten?","de");
+
+    this.addString("time_management_question3","Are you often late even if you want to be on time?","en");
+    this.addString("time_management_question3","Kommst du oft zu spät selbst wenn du pünktlich sein willst?","de");
+
+    this.addString("time_management_question4","Do you plan your daily activities?","en");
+    this.addString("time_management_question4","Planst du deine täglichen Aktivitäten?","de");
+
+
   },
 
   addString(key,text, lang){
