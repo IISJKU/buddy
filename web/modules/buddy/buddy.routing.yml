@@ -90,6 +90,15 @@ buddy.atprovider_register:
 buddy.user_profile:
   path: '/user-profile'
   defaults:
+    _form: '\Drupal\buddy\Form\UserProfileCreationSelectionForm'
+    _title: 'Create Profile'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+buddy.user_profile_classic:
+  path: '/user-profile-form'
+  defaults:
     _form: '\Drupal\buddy\Form\UserProfilePreferencesForm'
     _title: 'Create Profile'
   requirements:
