@@ -190,7 +190,7 @@ var stringFactory = {
     this.addString("time_management_intro","May I ask you some questions?","en");
     this.addString("time_management_intro","Darf ich dir ein\n paar Fragen stellen?!","de");
 
-    this.addString("time_management_question1","Do you manage your time well?","en");
+    this.addString("time_management_question1","Do you think you manage your time well?","en");
     this.addString("time_management_question1","Glaubst du, dass du dir deine Zeit gut einteilen kannst?","de");
 
     this.addString("time_management_question2","Are you sometimes overwhelmed by your daily routine?","en");

@@ -36,7 +36,7 @@ let Director = {
         if(result.result > 0.25){
           game.scene.start("ReadingGameText");
         }else{
-          game.scene.start("MemoryGameShortTerm");
+          game.scene.start("UnderstandingQuiz");
         }
 
         break;
@@ -56,9 +56,22 @@ let Director = {
 
       case "MathGame": {
 
+        game.scene.start("UnderstandingQuiz");
+        break;
+      }
+
+      case "UnderstandingQuiz": {
+
         game.scene.start("MemoryGameShortTerm");
         break;
       }
+
+      case "UnderstandingQuiz": {
+
+        game.scene.start("MemoryGameShortTerm");
+        break;
+      }
+
 
 
       default: {

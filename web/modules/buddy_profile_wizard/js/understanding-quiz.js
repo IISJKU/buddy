@@ -76,8 +76,8 @@ class UnderstandingQuiz extends QuizScene{
   quizFinishedHook(){
 
     let result = this.points/this.quizQuestions.length;
-    Director.changeScene("ReadingGameTTSSentence",{
-      "id": "ReadingGameTTSSentence",
+    Director.changeScene("UnderstandingQuiz",{
+      "id": "Understanding",
       "result": result,
     });
   }

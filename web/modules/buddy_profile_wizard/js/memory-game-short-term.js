@@ -202,11 +202,14 @@ class MemoryGameShortTerm extends GameScene {
       this.spawnObject(this.testItems[this.currentItemIndex]);
       this.currentItemIndex++;
     }else{
+
+
       console.log("test finished");
       let percent = ((this.testItems.length-this.errorsRemoved-this.errorsDuplicate)/this.testItems.length)*100;
       this.createTitle("Reached percent:"+percent);
       console.log("Errors:"+this.errors);
       console.log(this.errors+"/"+this.testItems.length);
+
     }
 
   }
