@@ -6,11 +6,11 @@ class TimeManagementQuiz extends QuizScene{
 
   preload() {
     super.preload();
-    this.load.audio('intro', soundFactory.getSound("time_management","time_management_intro.mp3"));
-    this.load.audio('q1', soundFactory.getSound("time_management","time_management_question1.mp3"));
-    this.load.audio('q2', soundFactory.getSound("time_management","time_management_question2.mp3"));
-    this.load.audio('q3', soundFactory.getSound("time_management","time_management_question3.mp3"));
-    this.load.audio('q4', soundFactory.getSound("time_management","time_management_question4.mp3"));
+    this.load.audio('time_management_intro', soundFactory.getSound("time_management","time_management_intro.mp3"));
+    this.load.audio('q1_time_management', soundFactory.getSound("time_management","time_management_question1.mp3"));
+    this.load.audio('q2_time_management', soundFactory.getSound("time_management","time_management_question2.mp3"));
+    this.load.audio('q3_time_management', soundFactory.getSound("time_management","time_management_question3.mp3"));
+    this.load.audio('q4_time_management', soundFactory.getSound("time_management","time_management_question4.mp3"));
 
     this.load.image('noIcon', 'modules/buddy_profile_wizard/assets/img/util/NoIcon.png');
     this.load.image('yesIcon', 'modules/buddy_profile_wizard/assets/img/util/YesIcon.png');
@@ -19,22 +19,22 @@ class TimeManagementQuiz extends QuizScene{
 
   create(){
 
-    let test = new QuizQuestion("q1","", new Stimuli(null,"q1"));
+    let test = new QuizQuestion("q1_time_management","", new Stimuli(null,"q1_time_management"));
     test.addAnswer(new Answer(stringFactory.getString("yes"),true,"yesIcon"),false);
     test.addAnswer(new Answer(stringFactory.getString("no"),false,"noIcon"),false);
     this.addQuestion(test);
 
-    test = new QuizQuestion("q2","", new Stimuli(null,"q2"));
+    test = new QuizQuestion("q2_time_management","", new Stimuli(null,"q2_time_management"));
     test.addAnswer(new Answer(stringFactory.getString("yes"),true,"yesIcon"),false);
     test.addAnswer(new Answer(stringFactory.getString("no"),false,"noIcon"),false);
     this.addQuestion(test);
 
-    test = new QuizQuestion("q3","", new Stimuli(null,"q3"));
+    test = new QuizQuestion("q3_time_management","", new Stimuli(null,"q3_time_management"));
     test.addAnswer(new Answer(stringFactory.getString("yes"),true,"yesIcon"),false);
     test.addAnswer(new Answer(stringFactory.getString("no"),false,"noIcon"),false);
     this.addQuestion(test);
 
-    test = new QuizQuestion("q4","", new Stimuli(null,"q4"));
+    test = new QuizQuestion("q4_time_management","", new Stimuli(null,"q4_time_management"));
     test.addAnswer(new Answer(stringFactory.getString("yes"),true,"yesIcon"),false);
     test.addAnswer(new Answer(stringFactory.getString("no"),false,"noIcon"),false);
     this.addQuestion(test);
@@ -48,7 +48,7 @@ class TimeManagementQuiz extends QuizScene{
     });
 
 
-    this.avatarButton = new AvatarAudioButton(this,"intro",this.cameras.main.centerX, 180,function (){
+    this.avatarButton = new AvatarAudioButton(this,"time_management_intro",this.cameras.main.centerX, 180,function (){
 
     });
     this.avatarButton.init();

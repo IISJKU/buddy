@@ -6,10 +6,10 @@ class UnderstandingQuiz extends QuizScene{
 
   preload() {
     super.preload();
-    this.load.audio('intro', soundFactory.getSound("understanding","understanding_intro.mp3"));
-    this.load.audio('q1', soundFactory.getSound("understanding","understanding_question1.mp3"));
-    this.load.audio('q2', soundFactory.getSound("understanding","understanding_question2.mp3"));
-    this.load.audio('q3', soundFactory.getSound("understanding","understanding_question3.mp3"));
+    this.load.audio('understanding_intro', soundFactory.getSound("understanding","understanding_intro.mp3"));
+    this.load.audio('q1_understanding', soundFactory.getSound("understanding","understanding_question1.mp3"));
+    this.load.audio('q2_understanding', soundFactory.getSound("understanding","understanding_question2.mp3"));
+    this.load.audio('q3_understanding', soundFactory.getSound("understanding","understanding_question3.mp3"));
 
 
     this.load.image('noIcon', 'modules/buddy_profile_wizard/assets/img/util/NoIcon.png');
@@ -18,17 +18,17 @@ class UnderstandingQuiz extends QuizScene{
 
   create(){
 
-    let test = new QuizQuestion("q1","", new Stimuli(null,"q1"));
+    let test = new QuizQuestion("q1","", new Stimuli(null,"q1_understanding"));
     test.addAnswer(new Answer(stringFactory.getString("yes"),true,"yesIcon"),false);
     test.addAnswer(new Answer(stringFactory.getString("no"),false,"noIcon"),false);
     this.addQuestion(test);
 
-    test = new QuizQuestion("q2","", new Stimuli(null,"q2"));
+    test = new QuizQuestion("q2","", new Stimuli(null,"q2_understanding"));
     test.addAnswer(new Answer(stringFactory.getString("yes"),true,"yesIcon"),false);
     test.addAnswer(new Answer(stringFactory.getString("no"),false,"noIcon"),false);
     this.addQuestion(test);
 
-    test = new QuizQuestion("q3","", new Stimuli(null,"q3"));
+    test = new QuizQuestion("q3","", new Stimuli(null,"q3_understanding"));
     test.addAnswer(new Answer(stringFactory.getString("yes"),true,"yesIcon"),false);
     test.addAnswer(new Answer(stringFactory.getString("no"),false,"noIcon"),false);
     this.addQuestion(test);
@@ -43,7 +43,7 @@ class UnderstandingQuiz extends QuizScene{
     });
 
 
-    this.avatarButton = new AvatarAudioButton(this,"intro",this.cameras.main.centerX, 180,function (){
+    this.avatarButton = new AvatarAudioButton(this,"understanding_intro",this.cameras.main.centerX, 180,function (){
 
     });
     this.avatarButton.init();

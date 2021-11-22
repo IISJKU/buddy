@@ -78,7 +78,7 @@ class FocusGame extends GameScene {
   }
 
   showIntroScreen(){
-    this.createTitle(stringFactory.getString("reading_game_text_intro"));
+    this.createTitle(stringFactory.getString("focus_game_text_intro"));
     let focusGame = this;
 
     this.avatarButton = new AvatarAudioButton(this,"focus_game_intro",this.cameras.main.centerX, 180,function (){

@@ -204,11 +204,18 @@ class MemoryGameShortTerm extends GameScene {
     }else{
 
 
-      console.log("test finished");
       let percent = ((this.testItems.length-this.errorsRemoved-this.errorsDuplicate)/this.testItems.length)*100;
+
+      Director.changeScene("MemoryGameShortTerm",{
+        "id": "Memory",
+        "result": percent,
+      });
+      /*
       this.createTitle("Reached percent:"+percent);
       console.log("Errors:"+this.errors);
       console.log(this.errors+"/"+this.testItems.length);
+
+       */
 
     }
 

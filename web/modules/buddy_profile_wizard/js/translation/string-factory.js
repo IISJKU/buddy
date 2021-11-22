@@ -147,8 +147,8 @@ var stringFactory = {
 
 
     //Focus game text
-    this.addString("reading_game_text_intro", "Find the coin after the cup\n stopped moving!","en");
-    this.addString("reading_game_text_intro","Finde die Münze nachdem sich die\n Becher nicht mehr bewegen!","de");
+    this.addString("focus_game_text_intro", "Find the coin after the cup\n stopped moving!","en");
+    this.addString("focus_game_text_intro","Finde die Münze nachdem sich die\n Becher nicht mehr bewegen!","de");
 
 
     //Writing game text

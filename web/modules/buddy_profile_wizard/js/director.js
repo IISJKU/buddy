@@ -66,12 +66,16 @@ let Director = {
         break;
       }
 
-      case "UnderstandingQuiz": {
+      case "MemoryGameShortTerm": {
 
-        game.scene.start("MemoryGameShortTerm");
+        game.scene.start("TimeManagementQuiz");
         break;
       }
+      case "TimeManagementQuiz": {
 
+        document.getElementById("edit-submit").click();
+        break;
+      }
 
 
       default: {
