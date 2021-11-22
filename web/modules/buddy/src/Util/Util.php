@@ -258,14 +258,14 @@ class Util
 
     $html = "";
     if ($app) {
-      $html .= '<img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/app-icon.png" alt="' . t("Mobile application") . '" name="' . t("Mobile application") . '">';
+      $html .= '<img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/app-icon.png" alt="' . t("Mobile application") . '" title="' . t("Mobile application") . '">';
     }
     if ($software) {
-      $html .= '<img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/desktop-icon.png" alt="' . t("Desktop software") . '" name="' . t("Desktop software") . '">';
+      $html .= '<img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/desktop-icon.png" alt="' . t("Desktop software") . '" title="' . t("Desktop software") . '">';
     }
 
     if ($browserExtension) {
-      $html .= '<img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/browser-icon.png" alt="' . t("Browser extension") . '" name="' . t("Browser extension") . '">';
+      $html .= '<img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/browser-icon.png" alt="' . t("Browser extension") . '" title="' . t("Browser extension") . '">';
     }
 
     return $html;
