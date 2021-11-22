@@ -2,6 +2,8 @@
 
 namespace Drupal\buddy_profile_wizard\Form;
 
+use Drupal\node\Entity\Node;
+
 class ProfileWizardForm extends \Drupal\Core\Form\FormBase
 {
 
@@ -47,10 +49,38 @@ class ProfileWizardForm extends \Drupal\Core\Form\FormBase
      */
     public function submitForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state)
     {
+      if( \Drupal::currentUser()->isAuthenticated()){
+        $values = $form_state->getValues();
 
-      $values = $form_state->getValues();
+        $user = \Drupal::currentUser();
+        $user_profileID = \Drupal::entityQuery('node')
+          ->condition('type', 'user_profile')
+          ->condition('uid', $user->id(), '=')
+          ->execute();
 
-      $a = 1;
 
+        if(count($user_profileID) == 0){
+          $node = Node::create([
+            'type'        => 'user_profile',
+            'title'       =>  'User Profile:'.$user->id(),
+
+          ]);
+          $node->save();
+
+          $user_profileID = $node->id();
+
+        }else {
+
+          $user_profileID =  reset($user_profileID);
+
+        }
+
+        $userProfile = Node::load($user_profileID);
+        $userProfile->field_user_profile_finished = ['value' => true];
+        $userProfile->save();
+
+      }
+
+      $form_state->setRedirect('<front>');
     }
 }
