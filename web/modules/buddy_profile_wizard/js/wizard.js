@@ -22,7 +22,7 @@ var config = {
   },
 
   backgroundColor: '#2d2d2d',
-  scene: [TimeManagementQuiz,Intro,UnderstandingQuiz,ReadingGameTTSSentence, FocusGame,WritingGame, ReadingGameTTSWord, MathGame, MemoryGame, ReadingGameText, MemoryGameShortTerm]
+  scene: [Intro,UnderstandingQuiz,ReadingGameTTSSentence, FocusGame,WritingGame,TimeManagementQuiz, ReadingGameTTSWord, MathGame, MemoryGame, ReadingGameText, MemoryGameShortTerm]
 
   /*scene: {
     preload: preload,
