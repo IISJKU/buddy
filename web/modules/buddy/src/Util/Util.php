@@ -258,14 +258,14 @@ class Util
 
     $html = "";
     if ($app) {
-      $html .= '<img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/app-icon.png" alt="' . t("Mobile application") . '">';
+      $html .= '<img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/app-icon.png" alt="' . t("Mobile application") . '" name="' . t("Mobile application") . '">';
     }
     if ($software) {
-      $html .= '<img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/desktop-icon.png" alt="' . t("Desktop software") . '">';
+      $html .= '<img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/desktop-icon.png" alt="' . t("Desktop software") . '" name="' . t("Desktop software") . '">';
     }
 
     if ($browserExtension) {
-      $html .= '<img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/browser-icon.png" alt="' . t("Browser extension") . '">';
+      $html .= '<img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/browser-icon.png" alt="' . t("Browser extension") . '" name="' . t("Browser extension") . '">';
     }
 
     return $html;
@@ -276,13 +276,13 @@ class Util
 
     $html = "";
     if ($currentLanguage) {
-      $html .= '<img class="language_icon current_language" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/flags/' . $currentLanguage . '.png" alt="' . Util::getNameForLanguageCode($currentLanguage) . '" name="' . Util::getNameForLanguageCode($currentLanguage) . '">';
+      $html .= '<img class="language_icon current_language" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/flags/' . $currentLanguage . '.png" alt="' . Util::getNameForLanguageCode($currentLanguage) . '" title="' . Util::getNameForLanguageCode($currentLanguage) . '">';
 
     }
 
     foreach ($languages as $language) {
       if ($language != $currentLanguage) {
-        $html .= '<img class="language_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/flags/' . $language . '.png" alt="' . Util::getNameForLanguageCode($language) . '" name="' . Util::getNameForLanguageCode($language) . '">';
+        $html .= '<img class="language_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/flags/' . $language . '.png" alt="' . Util::getNameForLanguageCode($language) . '" title="' . Util::getNameForLanguageCode($language) . '">';
 
       }
     }
