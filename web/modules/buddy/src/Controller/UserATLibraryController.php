@@ -95,15 +95,25 @@ class UserATLibraryController extends ControllerBase
 
       $html .= "<div class='rating-stars text-center'>";
       $html .= "<ul id='stars'>";
-      $html .= "<li class='star' title='Poor' data-value='1'>";
+      $html .= "<li class=\"star\" title=\"";
+      $html .= t("Terrible!");
+      $html .= "\" data-value='1'>";
       $html .= "<i class='fa fa-star fa-fw'></i></li>";
-      $html .= "<li class='star' title='Fair' data-value='2'>";
+      $html .= "<li class=\"star\" title=\"";
+      $html .= t("Not very good");
+      $html .= "\" data-value='2'>";
       $html .= "<i class='fa fa-star fa-fw'></i></li>";
-      $html .= "<li class='star' title='Good' data-value='3'>";
+      $html .= "<li class=\"star\" title=\"";
+      $html .= t("Just okay");
+      $html .= "\" data-value='3'>";
       $html .= "<i class='fa fa-star fa-fw'></i></li>";
-      $html .= "<li class='star' title='Very Good' data-value='4'>";
+      $html .= "<li class=\"star\" title=\"";
+      $html .= t("Good");
+      $html .= "\" data-value='4'>";
       $html .= "<i class='fa fa-star fa-fw'></i></li>";
-      $html .= "<li class='star' title='Excellent' data-value='5'>";
+      $html .= "<li class=\"star\" title=\"";
+      $html .= t("Excellent!");
+      $html .= "\" data-value='5'>";
       $html .= "<i class='fa fa-star fa-fw'></i></li>";
       $html .= "</ul></div>";
 
