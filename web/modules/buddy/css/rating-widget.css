@@ -67,18 +67,18 @@ pre {
 
 }
 
-/* Start states: */
+/* Star states: */
 
 /* idle */
-.rating-stars ul > li.star > i.fa {
-  font-size:2.5em;
-  color:#ccc;
+.rating-stars ul > li.star {
+  font-size: 2em;  /* increase star size */
+  color: #ccc;
 }
 /* hover */
-.rating-stars ul > li.star.hover > i.fa {
+.rating-stars ul > li.star.hover {
   color:#FFCC36;
 }
 /* selected */
-.rating-stars ul > li.star.selected > i.fa {
+.rating-stars ul > li.star.selected {
   color:#FF912C;
 }
