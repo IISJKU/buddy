@@ -123,10 +123,21 @@ buddy.user_at_recommendation:
 buddy.user_at_library:
   path: '/user-at-library'
   defaults:
-    _form: '\Drupal\buddy\Form\ATLibraryForm'
-    _title: 'My Tool Library'
+    _controller: '\Drupal\buddy\Controller\UserATLibraryController::content'
+    _title: 'View Description'
   requirements:
     _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+buddy.user_at_library_remove:
+  path: '/user-at-library/remove'
+  defaults:
+    _controller: '\Drupal\buddy\Controller\UserATLibraryController::removeATEntryFromLibrary'
+    _title: 'View Description'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 buddy.user_at_catalogue:
   path: '/user-at-catalogue'
   defaults:
