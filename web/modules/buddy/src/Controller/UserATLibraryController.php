@@ -66,21 +66,55 @@ class UserATLibraryController extends ControllerBase
       $html.=$content;
       $html.="<h4>".$this->t("Actions")."</h4><ul>";
       $html.= "<li>".Link::createFromRoute($this->t('Install Instructions'),'buddy.user_at_install_form',['description' => $description->id()],  ['attributes' => ['class' => 'btn btn-primary overview-button']])->toString()->getGeneratedLink()."</li>";
-      $html.= "<li>".Link::createFromRoute($this->t('Rate'),'buddy.user_at_library_remove', [], ['attributes' => ['class' => 'btn btn-primary overview-button']])->toString()->getGeneratedLink()."</li>";
       $html.= "<li>".Link::createFromRoute($this->t('Remove'),'buddy.user_at_library_remove',['record' =>$atRecord->id()],  ['attributes' => ['class' => 'btn btn-primary overview-button']])->toString()->getGeneratedLink()."</li>";
-      $html.="</ul></div>";
+      $html.="</ul>";
+
+      $html .= UserATLibraryController::rating_widget_html();
+
+      $html .= "</div>";
 
     }
-
 
     $build = array(
       '#type' => 'markup',
       '#markup' => $html,
       '#title' => $title,
+      '#attached' => [
+        'library' => [
+          'buddy/user_at_library',
+        ],
+      ],
     );
 
     return $build;
 
+    }
+
+    public static function rating_widget_html() {
+      $html = "<section class='rating-widget'>";
+
+      $html .= "<div class='rating-stars text-center'>";
+      $html .= "<ul id='stars'>";
+      $html .= "<li class='star' title='Poor' data-value='1'>";
+      $html .= "<i class='fa fa-star fa-fw'></i></li>";
+      $html .= "<li class='star' title='Fair' data-value='2'>";
+      $html .= "<i class='fa fa-star fa-fw'></i></li>";
+      $html .= "<li class='star' title='Good' data-value='3'>";
+      $html .= "<i class='fa fa-star fa-fw'></i></li>";
+      $html .= "<li class='star' title='Very Good' data-value='4'>";
+      $html .= "<i class='fa fa-star fa-fw'></i></li>";
+      $html .= "<li class='star' title='Excellent' data-value='5'>";
+      $html .= "<i class='fa fa-star fa-fw'></i></li>";
+      $html .= "</ul></div>";
+
+      $html .= "<div class='message-box'>";
+      $html .= "<div class='clearfix'></div>";
+      $html .= "<div class='text-message'></div>";
+      $html .= "<div class='clearfix'></div>";
+      $html .= "</div>";
+      $html .= "";
+
+      return $html;
     }
 
 

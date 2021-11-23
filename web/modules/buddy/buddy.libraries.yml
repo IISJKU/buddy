@@ -8,6 +8,16 @@ at_provider_forms:
     js/at-provider.js: {}
   dependencies:
     - core/jquery
+user_at_library:
+  version: 1.x
+  css:
+    theme:
+      css/rating-widget.css: {}
+      css/font-awesome.min.css: {}
+  js:
+    js/rating-widget.js: {}
+  dependencies:
+    - core/jquery
 user_profile_forms:
   version: 1.x
   css:
