@@ -453,12 +453,18 @@ AT INSTall
 
 /* AT LIBRARY */
 
-.at_library_container{
+.at_library_container {
+  display: block;
+  float: left;
   border: 10px solid #E5E3F0;
   margin-bottom: 10px;
   border-radius: 30px;
   background: #E5E3F0;
   padding: 20px 20px 0px 20px;
+}
+
+.at_library_action_list {
+  margin-bottom: 0;
 }
 
 /*FOOTER */

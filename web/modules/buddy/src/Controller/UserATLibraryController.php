@@ -64,12 +64,13 @@ class UserATLibraryController extends ControllerBase
 
       $html.="<div class='at_library_container'>";
       $html.=$content;
-      $html.="<h4>".$this->t("Actions")."</h4><ul>";
+      $html.="<h4>".$this->t("Actions")."</h4><ul class=\"at_library_action_list\">";
       $html.= "<li>".Link::createFromRoute($this->t('Install Instructions'),'buddy.user_at_install_form',['description' => $description->id()],  ['attributes' => ['class' => 'btn btn-primary overview-button']])->toString()->getGeneratedLink()."</li>";
       $html.= "<li>".Link::createFromRoute($this->t('Remove'),'buddy.user_at_library_remove',['record' =>$atRecord->id()],  ['attributes' => ['class' => 'btn btn-primary overview-button']])->toString()->getGeneratedLink()."</li>";
       $html.="</ul>";
 
-      $html .= $this->rating_widget_html();
+      $html.="<h4>".$this->t("Rate this tool:")."</h4>";
+      $html .= $this->rating_widget_html($user->id(), $atEntryID);
 
       $html .= "</div>";
 
@@ -92,15 +93,16 @@ class UserATLibraryController extends ControllerBase
 
     }
 
-    public function rating_widget_html($n_stars=5) {
+    public function rating_widget_html($uid, $at_id, $n_stars=5) {
 
       // Begin rating form
-      $html = "<form action=\"#\" class=\"star_rating\" id=\"star_rating\">";
+      $html = "<div class=\"rating-form-container\">";
+      $html .= "<form action=\"#\" class=\"star_rating\" id=\"star_rating_{$uid}_{$at_id}\">";
 
       // Delete rating
-      $html .= "<input value=\"0\" id=\"star0\" checked ";
-      $html .= "type=\"radio\" name=\"rating\" class=\"visuallyhidden\">";
-      $html .= "<label for=\"star0\">";
+      $html .= "<input value=\"0_{$uid}_{$at_id}\" id=\"star0_{$uid}_{$at_id}\" ";
+      $html .= " class=\"star_cancel visuallyhidden\" checked type=\"radio\" name=\"rating\">";
+      $html .= "<label for=\"star0_{$uid}_{$at_id}\">";
       $html .= "<span class=\"visuallyhidden\">";
       $html .= $this->t('Delete Rating');
       $html .= "</span><svg viewBox=\"0 0 512 512\">";
@@ -109,14 +111,22 @@ class UserATLibraryController extends ControllerBase
       $html .= "<path d=\"M90.9861965,124.986197 L409.184248,443.184248\"></path>";
       $html .= "</g></svg></label>";
 
+      $ratings = array(
+        1 => $this->t('Terrible!'),
+        2 => $this->t('Needs improvement'),
+        3 => $this->t('Okay'),
+        4 => $this->t('Very good'),
+        5 => $this->t('Excellent!')
+      );
+
       // Star ratings
       for ($i=1; $i<$n_stars+1; $i++) {
-        $html .= "<input value=\"{$i}\" id=\"star{$i}\" ";
+        $html .= "<input value=\"{$i}_{$uid}_{$at_id}\" id=\"star{$i}_{$uid}_{$at_id}\" ";
         $html .= "type=\"radio\" name=\"rating\" class=\"visuallyhidden\">";
-        $html .= "<label for=\"star{$i}\">";
+        $html .= "<label for=\"star{$i}_{$uid}_{$at_id}\">";
         $html .= "<span class=\"visuallyhidden\">";
-        if ($i==1) {
-          $html .= $this->t('1 Star');
+        if ($i <= 5) {
+          $html .= $ratings[$i];
         } else {
           $html .= $this->t('@n Stars', array('@n' => $i));
         }
@@ -131,11 +141,11 @@ class UserATLibraryController extends ControllerBase
       $html .= $this->t('Submit my rating');
       $html .= "</button>";
 
-      // Output area
-      $html .= "<output></output>";
-
       // End form
-      $html .= "</form>";
+      $html .= "</form></div>";
+
+      // Output area
+      $html .= "<output id=\"msg_{$uid}_{$at_id}\" class=\"rating-output\"></output>";
 
       return $html;
     }
