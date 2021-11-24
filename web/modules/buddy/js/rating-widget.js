@@ -1,50 +1,27 @@
 (function ($) {
 
-  let star_selector = $('#stars li');
+  let radios = document.querySelectorAll('#star_rating input[type=radio]');
+  let output = document.querySelector('#star_rating output');
 
-  star_selector.on('mouseover', function(){
-    let onStar = parseInt($(this).data('value'), 10);
+  let submit_rating = function(stars) {
+    // TODO: submit data
+    output.textContent = stars;
+  };
 
-    $(this).parent().children('li.star').each(function(e){
-      if (e < onStar) {
-        $(this).addClass('hover');
-      }
-      else {
-        $(this).removeClass('hover');
-      }
-    });
-
-  }).on('mouseout', function(){
-    $(this).parent().children('li.star').each(function(e){
-      $(this).removeClass('hover');
+  // Iterate through all radio buttons and add a click
+  // event listener to the labels
+  Array.prototype.forEach.call(radios, function(el, i){
+    let label = el.nextSibling.nextSibling;
+    label.addEventListener("click", function(event){
+      submit_rating(label.querySelector('span').textContent);
     });
   });
 
-  star_selector.on('click', function(){
-    let onStar = parseInt($(this).data('value'), 10);
-    let stars = $(this).parent().children('li.star');
-
-    for (i = 0; i < stars.length; i++) {
-      $(stars[i]).removeClass('selected');
-    }
-
-    for (i = 0; i < onStar; i++) {
-      $(stars[i]).addClass('selected');
-    }
-
-    let ratingValue = parseInt($('#stars li.selected').last().data('value'), 10);
-    let msg = "";
-
-    // TODO handle value
-
-    responseMessage(msg);
-
+  // Form submit
+  document.querySelector('#star_rating').addEventListener('submit', function(event){
+    submit_rating(document.querySelector('#star_rating :checked ~ label span').textContent);
+    event.preventDefault();
+    event.stopImmediatePropagation();
   });
 
 })(jQuery);
-
-
-function responseMessage(msg) {
-  jQuery('.success-box').fadeIn(200);
-  jQuery('.success-box div.text-message').html("<span>" + msg + "</span>");
-}

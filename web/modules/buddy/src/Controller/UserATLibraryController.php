@@ -69,7 +69,7 @@ class UserATLibraryController extends ControllerBase
       $html.= "<li>".Link::createFromRoute($this->t('Remove'),'buddy.user_at_library_remove',['record' =>$atRecord->id()],  ['attributes' => ['class' => 'btn btn-primary overview-button']])->toString()->getGeneratedLink()."</li>";
       $html.="</ul>";
 
-      $html .= UserATLibraryController::rating_widget_html();
+      $html .= $this->rating_widget_html();
 
       $html .= "</div>";
 
@@ -90,39 +90,50 @@ class UserATLibraryController extends ControllerBase
 
     }
 
-    public static function rating_widget_html() {
-      $html = "<section class='rating-widget'>";
+    public function rating_widget_html($n_stars=5) {
 
-      $html .= "<div class='rating-stars text-center'>";
-      $html .= "<ul id='stars'>";
-      $html .= "<li class=\"star\" title=\"";
-      $html .= t("Terrible!");
-      $html .= "\" data-value='1'>";
-      $html .= "<i class='fa fa-star fa-fw'></i></li>";
-      $html .= "<li class=\"star\" title=\"";
-      $html .= t("Not very good");
-      $html .= "\" data-value='2'>";
-      $html .= "<i class='fa fa-star fa-fw'></i></li>";
-      $html .= "<li class=\"star\" title=\"";
-      $html .= t("Just okay");
-      $html .= "\" data-value='3'>";
-      $html .= "<i class='fa fa-star fa-fw'></i></li>";
-      $html .= "<li class=\"star\" title=\"";
-      $html .= t("Good");
-      $html .= "\" data-value='4'>";
-      $html .= "<i class='fa fa-star fa-fw'></i></li>";
-      $html .= "<li class=\"star\" title=\"";
-      $html .= t("Excellent!");
-      $html .= "\" data-value='5'>";
-      $html .= "<i class='fa fa-star fa-fw'></i></li>";
-      $html .= "</ul></div>";
+      // Begin rating form
+      $html = "<form action=\"#\" id=\"star_rating\">";
 
-      $html .= "<div class='message-box'>";
-      $html .= "<div class='clearfix'></div>";
-      $html .= "<div class='text-message'></div>";
-      $html .= "<div class='clearfix'></div>";
-      $html .= "</div>";
-      $html .= "";
+      // Delete rating
+      $html .= "<input value=\"0\" id=\"star0\" checked ";
+      $html .= "type=\"radio\" name=\"rating\" class=\"visuallyhidden\">";
+      $html .= "<label for=\"star0\">";
+      $html .= "<span class=\"visuallyhidden\">";
+      $html .= $this->t('Delete Rating');
+      $html .= "</span><svg viewBox=\"0 0 512 512\">";
+      $html .= "<g stroke-width=\"70\" stroke-linecap=\"square\">";
+      $html .= "<path d=\"M91.5,442.5 L409.366489,124.633512\"></path>";
+      $html .= "<path d=\"M90.9861965,124.986197 L409.184248,443.184248\"></path>";
+      $html .= "</g></svg></label>";
+
+      // Star ratings
+      for ($i=1; $i<$n_stars+1; $i++) {
+        $html .= "<input value=\"{$i}\" id=\"star{$i}\" ";
+        $html .= "type=\"radio\" name=\"rating\" class=\"visuallyhidden\">";
+        $html .= "<label for=\"star{$i}\">";
+        $html .= "<span class=\"visuallyhidden\">";
+        if ($i==1) {
+          $html .= $this->t('1 Star');
+        } else {
+          $html .= $this->t('@n Stars', array('@n' => $i));
+        }
+        $html .= "</span><svg viewBox=\"0 0 512 512\">";
+        $html .= "<path d=\"M512 198.525l-176.89-25.704-79.11-160.291-79.108 160.291-176.892 25.704 128 ";
+        $html .= "124.769-30.216 176.176 158.216-83.179 158.216 83.179-30.217-176.176 128.001-124.769z\">";
+        $html .= "</path></svg></label>";
+      }
+
+      // Submit button
+      $html .= "<button type=\"submit\" class=\"btn-small visuallyhidden focusable\">";
+      $html .= $this->t('Submit my rating');
+      $html .= "</button>";
+
+      // Output area
+      $html .= "<output></output>";
+
+      // End form
+      $html .= "</form>";
 
       return $html;
     }

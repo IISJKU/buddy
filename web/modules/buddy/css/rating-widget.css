@@ -1,84 +1,50 @@
-* {
-  -webkit-box-sizing:border-box;
-  -moz-box-sizing:border-box;
-  box-sizing:border-box;
+#star_rating svg {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  stroke: currentColor;
 }
-
-*:before, *:after {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-.clearfix {
-  clear:both;
-}
-
-.text-center {
-  text-align:center;
-}
-
-
-
-
-pre {
+#star_rating label, #star_rating output {
   display: block;
-  padding: 9.5px;
-  margin: 0 0 10px;
-  font-size: 13px;
-  line-height: 1.42857143;
-  color: #333;
-  word-break: break-all;
-  word-wrap: break-word;
-  background-color: #F5F5F5;
-  border: 1px solid #CCC;
-  border-radius: 4px;
+  float: left;
+  font-size: 2em;
+  height: 1.2em;
+  color: #036;
+  cursor: pointer;
+  /* Transparent border-bottom avoids jumping
+     when a colored border is applied
+     on :hover/:focus */
+  border-bottom: 2px solid transparent;
 }
-
-.message-box {
-  margin:50px 0;
-  padding:10px 10px;
-  border:1px solid #eee;
-  background:#f9f9f9;
+#star_rating output {
+  font-size: 1.5em;
+  padding: 0 1em;
 }
-
-.message-box img {
-  margin-right:10px;
-  display:inline-block;
-  vertical-align:top;
+#star_rating input:checked ~ label {
+  color: #999;
 }
-
-.message-box> div {
-  vertical-align:top;
-  display:inline-block;
-  color:#888;
+#star_rating input:checked + label {
+  color: #036;
+  border-bottom-color: #036;
 }
-
-/* Rating Star Widgets Style */
-.rating-stars ul {
-  list-style-type:none;
-  padding:0;
-
-  -moz-user-select:none;
-  -webkit-user-select:none;
+#star_rating input:focus + label {
+  border-bottom-style: dotted;
 }
-.rating-stars ul > li.star {
-  display:inline-block;
-
+#star_rating:hover input + label {
+  color: #036;
 }
-
-/* Star states: */
-
-/* idle */
-.rating-stars ul > li.star {
-  font-size: 2em;  /* increase star size */
-  color: #ccc;
+#star_rating input:hover ~ label,
+#star_rating input:focus ~ label,
+#star_rating input[id="star0"] + label {
+  color: #999;
 }
-/* hover */
-.rating-stars ul > li.star.hover {
-  color:#FFCC36;
+#star_rating input:hover + label,
+#star_rating input:focus + label {
+  color: #036;
 }
-/* selected */
-.rating-stars ul > li.star.selected {
-  color:#FF912C;
+#star_rating input[id="star0"]:checked + label {
+  color: #ff2d21;
+}
+#star_rating [type="submit"] {
+  float: none;
 }
