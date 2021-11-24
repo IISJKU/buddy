@@ -84,6 +84,8 @@ class UserATLibraryController extends ControllerBase
           'buddy/user_at_library',
         ],
       ],
+      '#allowed_tags' => ['form', 'button', 'path', 'svg', 'input', 'label', 'a', 'div','img','h2','h1','p', 'b', 'g',
+        'strong','hr','ul', 'span', 'output'],
     );
 
     return $build;
@@ -93,7 +95,7 @@ class UserATLibraryController extends ControllerBase
     public function rating_widget_html($n_stars=5) {
 
       // Begin rating form
-      $html = "<form action=\"#\" id=\"star_rating\">";
+      $html = "<form action=\"#\" class=\"star_rating\" id=\"star_rating\">";
 
       // Delete rating
       $html .= "<input value=\"0\" id=\"star0\" checked ";
