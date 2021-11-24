@@ -30,8 +30,7 @@ class UserSearchForm extends FormBase
 
     $form['search'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Search'),
-      '#description' => $this->t('Search for asssistive technology.'),
+      '#title' => $this->t('Search for assistive technology'),
       '#required' => TRUE,
     ];
     $form['advanced'] = array(
