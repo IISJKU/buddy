@@ -161,22 +161,28 @@ function buddy_schema(){
       'uid',
       'at_nid',
     ],
-    'indexes' => array(
-      'uid' => array('uid'),
-      'at_nid' => array('at_nid'),
-      'rating' => array('rating'),
-    ),
+    'indexes' => [
+      'uid' => [
+        'uid'
+      ],
+      'at_nid' => [
+        'at_nid'
+      ],
+      'rating' => [
+        'rating'
+      ],
+    ],
     'foreign keys' => [
       'data_user' => [
         'table' => 'users',
         'columns' => [
           'uid' => 'uid',
         ],
-        'data_at_entry' => [
-          'table' => 'node',
-          'columns' => [
-            'at_nid' => 'nid',
-          ],
+      ],
+      'data_at_entry' => [
+        'table' => 'node',
+        'columns' => [
+          'at_nid' => 'nid',
         ],
       ],
     ],
