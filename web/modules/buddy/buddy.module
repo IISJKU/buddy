@@ -127,3 +127,59 @@ function buddy_local_tasks_alter(&$local_tasks) {
   unset($local_tasks['user.pass']);
 }
 
+/**
+ * Create custom DB schema for Buddy
+ * @return array
+ */
+function buddy_schema(){
+  $schema['rating'] = array(
+    'description' => 'User-AT entries ratings table',
+    'fields' => [
+      'uid' => [
+        'description' => 'The {users}.uid of the user doing the rating.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'at_nid' => [
+        'description' => 'The nid of the AT entry being rated.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'rating' => [
+        'description' => 'Numeric rating.',
+        'type' => 'int',
+        'size' => 'medium',
+        'unsigned' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => [
+      'uid',
+      'at_nid',
+    ],
+    'indexes' => array(
+      'uid' => array('uid'),
+      'at_nid' => array('at_nid'),
+      'rating' => array('rating'),
+    ),
+    'foreign keys' => [
+      'data_user' => [
+        'table' => 'users',
+        'columns' => [
+          'uid' => 'uid',
+        ],
+        'data_at_entry' => [
+          'table' => 'node',
+          'columns' => [
+            'at_nid' => 'nid',
+          ],
+        ],
+      ],
+    ],
+  );
+  return $schema;
+}
