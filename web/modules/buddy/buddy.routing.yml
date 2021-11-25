@@ -304,3 +304,20 @@ buddy.description_view:
     parameters:
       description:
         type: entity:node
+buddy.update_rating:
+  path: '/update-rating/{user}/{$atEntry}/{rating}'
+  defaults:
+    _controller: '\Drupal\buddy\Controller\UpdateRatingController::UpdateRating'
+    _title: 'Update Rating'
+  requirements:
+    _permission: 'access content'
+    _user_is_logged_in: 'TRUE'
+    _custom_access: '\Drupal\buddy\Controller\UpdateRatingController::access'
+    rating: '[0-5]'
+  options:
+    no_cache: 'TRUE'
+    parameters:
+      user:
+        type: entity:user
+      at_entry:
+        type: entity:node
