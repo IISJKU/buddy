@@ -42,19 +42,10 @@ class UpdateRatingController extends ControllerBase
 
   public function UpdateRating(AccountInterface $user, NodeInterface $atEntry, int $rating)
   {
-
-    $db_entry = [
-      'uid' => $user->id(),
-      'at_nid' => $atEntry->id(),
-      'rating' => $rating,
-    ];
     $connection = \Drupal::database();
-    $connection->insert('rating')->fields($db_entry)->execute();
-
-    $connection->merge('example')
+    $connection->merge('rating')
       ->keys(['uid' => $user->id(), 'at_nid' => $atEntry->id()])
       ->fields(['rating' => $rating])
       ->execute();
   }
-
 }
