@@ -5,6 +5,7 @@ namespace Drupal\buddy\Controller;
 use Drupal\buddy\Util\Util;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Display\Annotation\PageDisplayVariant;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\Entity\Node;
@@ -119,9 +120,23 @@ class UserATLibraryController extends ControllerBase
         5 => $this->t('Excellent!')
       );
 
+      $user_rating = false;
+      try {
+        $database = \Drupal::database();
+        $user_rating = $database->query("SELECT rating FROM {rating} WHERE uid = :uid AND at_nid = :at_nid", [
+          ':uid' => $uid,
+          ':at_nid' => $at_id,
+        ])->fetchField();
+      } catch (\Exception $e) {
+        watchdog_exception('buddy', $e, "Error fetching user-item rating {$uid}/{$at_id}.");
+      }
+
       // Star ratings
       for ($i=1; $i<$n_stars+1; $i++) {
         $html .= "<input value=\"{$i}_{$uid}_{$at_id}\" id=\"star{$i}_{$uid}_{$at_id}\" ";
+        if ($user_rating > 0 && $i==$user_rating) {
+          $html .= "checked ";
+        }
         $html .= "type=\"radio\" name=\"rating\" class=\"visuallyhidden\">";
         $html .= "<label for=\"star{$i}_{$uid}_{$at_id}\">";
         $html .= "<span class=\"visuallyhidden\">";
