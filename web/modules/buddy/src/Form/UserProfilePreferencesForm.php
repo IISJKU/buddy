@@ -372,12 +372,24 @@ class UserProfilePreferencesForm extends FormBase
     }
 
     $userProfile = Node::load($form_state->get('user_profile_id'));
+    $profileFinished = $userProfile->get("field_user_profile_finished")->getValue();
+    $profileUpdated = false;
+    if($profileFinished[0]['value']){
+      $profileUpdated = true;
+    }
     $userProfile->field_user_profile_user_needs  = $userNeeds;
     $userProfile->field_user_profile_finished = ['value' => true];
     $userProfile->save();
 
+    if($profileUpdated){
+      \Drupal::messenger()->addMessage($this->t("Your preferences were updated!"));
+      $form_state->setRedirect('buddy.user_profile_overview');
+    }else{
+      \Drupal::messenger()->addMessage($this->t("Setup complete! Welcome to Buddy!"));
+      $form_state->setRedirect('<front>');
+    }
 
-    $form_state->setRedirect('user.page');
+
 
 
   }

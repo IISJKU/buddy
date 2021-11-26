@@ -23,10 +23,14 @@ class UserProfileOverviewController extends ControllerBase
 
     $html = "<div>".$this->t("You can update your preferences or your account information here.")."</div>";
     $html.="<h3>".$this->t("Updating your preferences allows you to:")."</h3>";
-    $html.= "<ul><li>".$this->t("Tell Buddy where you need help")."</li>";
-    $html.= "<li>".$this->t("Updating your preferences allows you too:")."</li></ul>";
+    $html.= "<ul><li>".$this->t("Tell Buddy where you need help.")."</li>";
+    $html.= "<li>".$this->t("Tell Buddy which help you need.")."</li></ul>";
     $html.= Link::createFromRoute($this->t('Update preferences'),'buddy.user_profile',[],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
     $html.= "<br>";
+    $html.="<h3>".$this->t("Updating your account information allows you to:")."</h3>";
+    $html.= "<ul><li>".$this->t("Update your password")."</li>";
+    $html.= "<li>".$this->t("Change email address")."</li>";
+    $html.= "<li>".$this->t("Change language")."</li></ul>";
     $html.= Link::createFromRoute($this->t('Update account information'),'buddy.user_account_form',[],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
 
 
