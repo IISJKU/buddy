@@ -16,7 +16,7 @@
   }
 }
 
-.buddy_link_button{
+.buddy_link_button,.buddy-icon-button{
   width: 380px;
   border-radius: 120px;
   display: inline-block;
@@ -70,7 +70,7 @@
   background: #080866;
   color: white;
 }
-.create_account_button:hover, .create_account_button:focus, .buddy_button:hover, .buddy_button:focus{
+.create_account_button:hover, .create_account_button:focus, .buddy_button:hover, .buddy_button:focus,.buddy-icon-button:hover,.buddy-icon-button:focus{
   background: #BA0096;
   color: white;
 }
@@ -550,7 +550,7 @@ AT INSTall
 
 /* AT LIBRARY */
 
-.at_library_container{
+.at_library_container,#user-entry-form-wrapper{
   border: 10px solid #E5E3F0;
   margin-bottom: 10px;
   border-radius: 30px;
