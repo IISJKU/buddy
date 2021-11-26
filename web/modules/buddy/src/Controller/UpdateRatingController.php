@@ -9,6 +9,8 @@ use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
+use Drupal\Core\Database\Query\Merge;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class UpdateRatingController extends ControllerBase
 {
@@ -42,10 +44,33 @@ class UpdateRatingController extends ControllerBase
 
   public function UpdateRating(AccountInterface $user, NodeInterface $atEntry, int $rating)
   {
-    $connection = \Drupal::database();
-    $connection->merge('rating')
-      ->keys(['uid' => $user->id(), 'at_nid' => $atEntry->id()])
-      ->fields(['rating' => $rating])
-      ->execute();
+    try {
+      $connection = \Drupal::database();
+      $result = $connection->merge('rating')
+        ->keys(['uid' => $user->id(), 'at_nid' => $atEntry->id()])
+        ->fields(['rating' => $rating])
+        ->execute();
+      $status = 'success';
+      if ($result == Merge::STATUS_INSERT) {
+        $msg = "Rating for user {$user->id()} and item {$atEntry->id()} added.";
+        $code = 201;
+      } else if ($result == Merge::STATUS_UPDATE) {
+        $msg = "Rating for user {$user->id()} and item {$atEntry->id()} updated.";
+        $code = 204;
+      } else {
+        $msg = "Unknown response.";
+        $code = 202;
+      }
+    } catch (\Exception $e) {
+      $status = 'fail';
+      $msg = "An error happened and the rating could not be stored.";
+      $code = 500;
+      watchdog_exception('buddy', $e);
+    } finally {
+      return new JsonResponse(
+        ['status' => $status,
+          'message' => $msg],
+        $code);
+    }
   }
 }

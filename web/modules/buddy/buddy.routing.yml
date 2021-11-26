@@ -305,7 +305,7 @@ buddy.description_view:
       description:
         type: entity:node
 buddy.update_rating:
-  path: '/update-rating/{user}/{$atEntry}/{rating}'
+  path: '/update-rating/{user}/{atEntry}/{rating}'
   defaults:
     _controller: '\Drupal\buddy\Controller\UpdateRatingController::UpdateRating'
     _title: 'Update Rating'
@@ -319,5 +319,5 @@ buddy.update_rating:
     parameters:
       user:
         type: entity:user
-      at_entry:
+      atEntry:
         type: entity:node
