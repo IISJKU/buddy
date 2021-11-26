@@ -31,7 +31,7 @@ class UserLoginForm extends FormBase
 
     $form['intro'] = [
       '#type' => 'markup',
-      '#markup' => "<div class='steps'>".$this->t("How do you want to log in?")."</div>",
+      '#markup' => "<div class='login_intro'>".$this->t("How do you want to log in?")."</div>",
       '#allowed_tags' => ['div'],
 
     ];
@@ -66,12 +66,11 @@ class UserLoginForm extends FormBase
 
     $form['federalized_buttons'] = [
       '#type' => 'markup',
-      '#title' => t('Choose a Login provider:'),
-      '#markup' => $html,
+       '#markup' => $html,
 
     ];
 
-    $markup = "<div>".$this->t("New to Buddy? ");
+    $markup = "<div class='login_info_registration'>".$this->t("New to Buddy? ");
     $markup.= Link::createFromRoute($this->t('Create account'),'buddy.user_register')->toString()->getGeneratedLink();
     $markup.= "</div>";
 
@@ -85,9 +84,11 @@ class UserLoginForm extends FormBase
 
     $form['actions']['submit'] = [
       '#type' => 'submit',
+      '#prefix' =>'<div class="auth-option>',
       '#value' => $this->t('Back'),
+      '#suffix' => '</div>',
     ];
-    $form['actions']['submit']['#attributes']['class'][] = 'buddy_small_link_button back_button';
+    $form['actions']['submit']['#attributes']['class'][] = 'buddy_link_button_social_auth back_button';
     $form['#attached']['library'][] = 'buddy/user_profile_forms';
 
     return $form;

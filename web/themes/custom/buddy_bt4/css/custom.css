@@ -1,10 +1,23 @@
+.buddy_login_menu{
+  padding: 0;
+}
+
 .buddy_login_menu>li{
   list-style: none;
   display: inline;
+
+
 }
 
-.buddy_link_button{
-  width: 270px;
+@media (min-width: 992px) {
+
+  .buddy_login_menu>li{
+    margin-right: 40px;
+  }
+}
+
+.buddy_link_button,.buddy-icon-button{
+  width: 380px;
   border-radius: 120px;
   display: inline-block;
   text-decoration: none;
@@ -22,7 +35,7 @@
   text-decoration: none;
   text-align: left;
   padding: 10px;
-  margin: 20px 0;
+  margin: 6px 0;
   font-weight: 700;
   background: white;
   color: black;
@@ -51,16 +64,19 @@
   padding: 15px;
   margin: 20px 0;
   font-weight: 700;
+  font-size: 1.5rem;
 }
 .create_account_button,.buddy_button {
   background: #080866;
   color: white;
 }
-.create_account_button:hover, .create_account_button:focus, .buddy_button:hover, .buddy_button:focus{
-  background: #624dbe;
+.create_account_button:hover, .create_account_button:focus, .buddy_button:hover, .buddy_button:focus,.buddy-icon-button:hover,.buddy-icon-button:focus{
+  background: #BA0096;
   color: white;
 }
-
+.login_intro{
+  margin-bottom: 20px;
+}
 .login_button {
   background: #624dbe;
   color: white;
@@ -68,14 +84,17 @@
 }
 
 .login_button:hover, .login_button:focus{
-  background: #A2CBB7;
-  color: black;
+  background: #BA0096;
+  color: white;
+}
+
+.login_info_registration{
+  margin: 20px 0;
 }
 
 .back_button {
-  background: white;
-  color: black;
-  border: 3px solid black;
+  font-size: 1.5rem;
+  text-align: center;
 }
 
 
@@ -92,7 +111,7 @@ body {
 
 header {
 
-  font-size: 1.39rem;
+  font-size: 1.29rem;
 }
 @media (max-width: 991px) {
   header {
@@ -147,7 +166,7 @@ header {
 @media (min-width: 992px) {
 
   .navbar-brand img {
-    height: 85px;
+    height: 65px;
   }
 }
 .navbar {
@@ -321,15 +340,26 @@ main{
 
 }
 
+
 @media (max-width: 991px) {
 
   main{
     background-image: url(../assets/svg/buddy_mobile_bg.svg);
   }
-}
 
+  .buddy_bg{
+    margin-top: 150px;
+  }
+}
+@media (max-width: 691px) {
+  .buddy_bg{
+    margin-top: 50px;
+  }
+
+}
 main a{
   text-decoration: underline;
+  color: #0000CE;
 }
 /*
 main>.container{
@@ -339,6 +369,7 @@ main>.container{
 */
 h1{
   font-weight: 700 !important;
+
 }
 
 hr {
@@ -405,12 +436,78 @@ details, .form-control{
 
 .form-control{
   font-size: 1.5rem;
+
+}
+
+@media (min-width: 992px) {
+  .form-control{
+    width: 60%;
+  }
+
+  #edit-advanced{
+    width: 60%;
+  }
+}
+
+.confirm-parent, .password-parent {
+
+  max-width: 100%;
+
 }
 
 /*SPECIFIC *(
 
 
  */
+
+/*
+
+Main page
+ */
+
+.buddy_main_page_intro_line{
+  display: block;
+  line-height: 1.8;
+}
+.mobile_intro_text{
+  display: none;
+}
+
+@media (max-width: 991px) {
+  .mobile_intro_text{
+    display: block;
+    margin-bottom: 35px;
+  }
+
+  .desktop_intro_text{
+    display: none;
+  }
+
+  .buddy_link_button{
+    width: 100%;
+    margin: 5px 0;
+  }
+}
+@media (max-width: 575px) {
+  .buddy_footer_menu>li{
+    display: block;
+
+
+  }
+
+
+}
+/*
+User Login
+ */
+
+.user-login-local-form input{
+  max-width: 500px;
+}
+/*
+Platform
+ */
+
 .platform_overview, .language_overview{
   margin-top: 10px;
 }
@@ -453,23 +550,30 @@ AT INSTall
 
 /* AT LIBRARY */
 
-.at_library_container {
-  display: block;
-  float: left;
+.at_library_container, #user-entry-form-wrapper {
   border: 10px solid #E5E3F0;
   margin-bottom: 10px;
   border-radius: 30px;
-  background: #E5E3F0;
-  padding: 20px 20px 0px 20px;
+  background: white;
+  padding: 20px 20px 0 20px;
+}
+
+.at_library_container {
+  display: block;
+  float: left;
 }
 
 .at_library_action_list {
   margin-bottom: 0;
 }
 
+.at_library_container >ul{
+  list-style: none;
+}
+
 /*FOOTER */
 footer.mt-auto{
-  border-top: 20px solid #080866;
+  border-top: 10px solid #080866;
   /* margin-top: -150px !important; */
 }
 
@@ -478,13 +582,14 @@ footer.mt-auto{
   list-style: none;
   text-align: center;
   font-weight: 700;
+  font-size: 1.29rem;
 
 }
 
 
 .buddy_footer_menu>li{
   display: inline;
-  padding-right: 20px;
+  padding-right: 50px;
 }
 @media (max-width: 575px) {
   .buddy_footer_menu>li{

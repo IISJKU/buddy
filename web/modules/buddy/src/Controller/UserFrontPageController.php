@@ -25,7 +25,8 @@ class UserFrontPageController extends ControllerBase
       $createUserLink = Link::createFromRoute($this->t('Create account'),'buddy.user_register',[],['attributes' => ['class' => 'buddy_link_button create_account_button']])->toString()->getGeneratedLink();
       $loginLink = Link::createFromRoute($this->t('Log in'),'buddy.user_login',[],['attributes' => ['class' => 'buddy_link_button login_button']])->toString()->getGeneratedLink();
 
-      $html = '<p>'.$this->t('The assistive technology platform - that finds tools that work for you.').'</p>
+      $html = '<p class="mobile_intro_text">'.$this->t('<span class="buddy_main_page_intro_line">The assistive technology</span><span class="buddy_main_page_intro_line"> platform - that finds tools</span><span class="buddy_main_page_intro_line"> that work for you.</span>').'</p>
+               <p class="desktop_intro_text">'.$this->t('<span class="buddy_main_page_intro_line">The assistive technology platform</span><span class="buddy_main_page_intro_line">  - that finds tools that work for you.</span>').'</p>
                <ul class="buddy_login_menu">
 	                  <li>'.$createUserLink.'</li>
 	                  <li>'.$loginLink.'</li>
@@ -35,8 +36,8 @@ class UserFrontPageController extends ControllerBase
         '#type' => 'markup',
         '#markup' => $html,
         '#title' => $this->t("Welcome to Buddy!"),
+        '#attached' => ['library'=> ['buddy/main_page']] ,
       );
-
       return $build;
     }else{
 
@@ -50,6 +51,7 @@ class UserFrontPageController extends ControllerBase
         '#type' => 'markup',
         '#markup' => $html,
         '#title' => $this->t("Welcome ".$user->getAccountName()),
+        '#attached' => ['library'=> ['buddy/main_page']] ,
       );
 
       return $build;

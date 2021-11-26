@@ -36,3 +36,8 @@ user_at_detail:
     js/user-at-detail.js: {}
   dependencies:
     - core/jquery
+main_page:
+  version: 1.x
+  css:
+    theme:
+      css/main-page.css: {}

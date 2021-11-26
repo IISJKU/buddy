@@ -87,8 +87,17 @@ buddy.atprovider_register:
     _role: 'anonymous'
   options:
     no_cache: 'TRUE'
+buddy.user_account_form:
+  path: '/user-account'
+  defaults:
+    _form: '\Drupal\buddy\Form\UserAccountForm'
+    _title: 'Welcome'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 buddy.user_profile:
-  path: '/user-profile'
+  path: '/user-profile-create'
   defaults:
     _form: '\Drupal\buddy\Form\UserProfileCreationSelectionForm'
     _title: 'Create Profile'
@@ -105,10 +114,10 @@ buddy.user_profile_classic:
     _user_is_logged_in: 'TRUE'
   options:
     no_cache: 'TRUE'
-buddy.user_overview:
-  path: '/user-overview'
+buddy.user_profile_overview:
+  path: '/user-profile'
   defaults:
-    _controller: '\Drupal\buddy\Controller\UserOverviewController::content'
+    _controller: '\Drupal\buddy\Controller\UserProfileOverviewController::content'
   requirements:
     _user_is_logged_in: 'TRUE'
   options:
