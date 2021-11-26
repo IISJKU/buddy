@@ -37,11 +37,36 @@ class ATRecommendationForm extends FormBase
     if (!empty($recommendations)) {
       $maxResults = min(count($recommendations), BuddyRecommender::$maxNumberOfATEntries);
       for ($i = 0; $i < $maxResults; $i++) {
-        $at_entry = array_shift($recommendations);
-        $atDesc = Util::getDescriptionOfATEntry($at_entry);
-        $textForm = $this->renderATEntry($atDesc);
-        $form[] = $textForm;
-        $recommendations_all[] = $at_entry;
+        $atEntryID = array_shift($recommendations);
+
+        $descriptions = Util::getDescriptionsOfATEntry($atEntryID);
+        $user = \Drupal::currentUser();
+        $description = Util::getDescriptionForUser($descriptions,$user);
+        $languages = Util::getLanguagesOfDescriptions($descriptions);
+        $platforms = Util::getPlatformsOfATEntry(Node::load($atEntryID));
+        $content = Util::renderDescriptionTiles($description,$user,$languages,$platforms);
+
+
+        $entryForm = [];
+        $entryForm['content'] = [
+          '#type' => 'markup',
+          '#prefix' => "<div class='at_library_container'",
+          '#markup' => $content,
+          '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
+        ];
+        $entryForm['at_install'] = [
+          '#name' => $atEntryID . "_" . $description->id(),
+          '#type' => 'submit',
+          '#button_type' => 'primary',
+          '#value' => $this->t('Try this tool'),
+          '#submit' => ['::tryoutATSubmitHandler'],
+          '#suffix' => '</div>'
+        ];
+        $entryForm['at_install']['#attributes']['class'][] = 'buddy_link_button buddy_button';
+
+        $form[] = $entryForm;
+
+        $recommendations_all[] = $atEntryID;
       }
       $form['actions'] = [
         '#type' => 'actions',
@@ -51,6 +76,7 @@ class ATRecommendationForm extends FormBase
         '#type' => 'submit',
         '#value' => $this->t('Show me more assistive technology!'),
       ];
+      $form['actions']['submit']['#attributes']['class'][] = 'buddy_link_button buddy_button';
     } else {
       $form['title'] = [
         '#type' => 'markup',
@@ -69,48 +95,6 @@ class ATRecommendationForm extends FormBase
     $form_state->setStorage(array('recommendations' => $recommendations_all));
 
     return $form;
-  }
-
-  private function renderATEntry($atDescription)
-  {
-    $id = $atDescription->id();
-
-    //Get AT Entry of description
-    $atEntriesID = \Drupal::entityQuery('node')
-      ->condition('type', 'at_entry')
-      ->condition('field_at_descriptions', $atDescription->id(), '=')
-      ->execute();
-
-    $atEntryID = intval(array_shift($atEntriesID));
-    $title = $atDescription->getTitle();
-
-    $form = [];
-
-    $form['title'] = [
-      '#type' => 'markup',
-      '#markup' => "<div class='at_container'><h2>" . $title . "</h2>",
-      '#allowed_tags' => ['button', 'a', 'div', 'img', 'h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
-
-    ];
-
-    $form['text'] = [
-      '#type' => 'markup',
-      '#markup' => Util::renderDescriptionTabs($atDescription, false),
-      '#allowed_tags' => ['button', 'a', 'div', 'img', 'h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
-    ];
-
-    $form['submit'] = [
-      '#name' => $atEntryID . "_" . $id,
-      '#type' => 'submit',
-      '#button_type' => 'primary',
-      '#value' => $this->t('I want to try this!'),
-      // Custom submission handler for page 1.
-      '#submit' => ['::tryoutATSubmitHandler'],
-      '#suffix' => '</div>'
-    ];
-
-    return $form;
-
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state)
