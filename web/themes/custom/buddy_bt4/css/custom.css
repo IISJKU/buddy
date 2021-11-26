@@ -558,6 +558,9 @@ AT INSTall
   padding: 20px 20px 0px 20px;
 }
 
+.at_library_container >ul{
+  list-style: none;
+}
 /*FOOTER */
 footer.mt-auto{
   border-top: 10px solid #080866;

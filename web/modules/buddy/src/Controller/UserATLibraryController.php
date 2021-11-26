@@ -65,9 +65,9 @@ class UserATLibraryController extends ControllerBase
       $html.="<div class='at_library_container'>";
       $html.=$content;
       $html.="<h4>".$this->t("Actions")."</h4><ul>";
-      $html.= "<li>".Link::createFromRoute($this->t('Install Instructions'),'buddy.user_at_install_form',['description' => $description->id()],  ['attributes' => ['class' => 'btn btn-primary overview-button']])->toString()->getGeneratedLink()."</li>";
-      $html.= "<li>".Link::createFromRoute($this->t('Rate'),'buddy.user_at_library_remove', [], ['attributes' => ['class' => 'btn btn-primary overview-button']])->toString()->getGeneratedLink()."</li>";
-      $html.= "<li>".Link::createFromRoute($this->t('Remove'),'buddy.user_at_library_remove',['record' =>$atRecord->id()],  ['attributes' => ['class' => 'btn btn-primary overview-button']])->toString()->getGeneratedLink()."</li>";
+      $html.= "<li>".Link::createFromRoute($this->t('Install Instructions'),'buddy.user_at_install_form',['description' => $description->id()],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink()."</li>";
+      $html.= "<li>".Link::createFromRoute($this->t('Rate'),'buddy.user_at_library_remove', [], ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink()."</li>";
+      $html.= "<li>".Link::createFromRoute($this->t('Remove'),'buddy.user_at_library_remove',['record' =>$atRecord->id()],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink()."</li>";
       $html.="</ul></div>";
 
     }
