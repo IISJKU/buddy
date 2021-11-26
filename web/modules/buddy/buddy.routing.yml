@@ -126,7 +126,7 @@ buddy.user_at_recommendation:
   path: '/user-at-recommendation'
   defaults:
     _form: '\Drupal\buddy\Form\ATRecommendationForm'
-    _title: 'My AT Recommendations'
+    _title: 'My Tool Recommendations'
   requirements:
     _user_is_logged_in: 'TRUE'
 buddy.user_at_library:

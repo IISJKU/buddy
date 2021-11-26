@@ -74,7 +74,7 @@ class ATRecommendationForm extends FormBase
 
       $form['actions']['submit'] = [
         '#type' => 'submit',
-        '#value' => $this->t('Show me more assistive technology!'),
+        '#value' => $this->t('Show me more tools!'),
       ];
       $form['actions']['submit']['#attributes']['class'][] = 'buddy_link_button buddy_button';
     } else {
