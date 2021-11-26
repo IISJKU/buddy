@@ -3,9 +3,10 @@
 
     let star_radios = $('.star_rating input[type=radio]');
 
-    let submit_rating = function(stars) {
-      // TODO: submit data
-      output.textContent = stars;
+    let submit_rating = function(user, item, rating) {
+      let origin = window.location.origin;
+      let process_url = origin + '/update-rating/' + user + '/' + item + '/' +rating;
+      $.get(process_url);
     };
 
     let update_text = function (id_selector, text) {
@@ -23,6 +24,7 @@
       star_label.click(function() {
         let rating_text = $(this).children('span').first().text();
         let output_selector = "#msg_" + rating_uid + "_" + rating_item_id;
+        submit_rating(rating_uid, rating_item_id, rating_num);
         update_text(output_selector, rating_text);
       });
     });
