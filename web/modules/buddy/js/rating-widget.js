@@ -1,10 +1,8 @@
 (function($) {
   $(document).ready(function (){
 
-    let star_radios = $('.star_rating input[type=radio]');
-
-    let submit_rating = function(user, item, rating) {
-      let origin = window.location.origin;
+      let submit_rating = function(user, item, rating, path='') {
+      let origin = window.location.href.replace(path,'');
       let process_url = origin + '/update-rating/' + user + '/' + item + '/' +rating;
       $.get(process_url);
     };
@@ -15,6 +13,7 @@
 
     // Iterate through all radio buttons and add a click
     // event listener to the labels
+    let star_radios = $('.star_rating input[type=radio]');
     star_radios.each(function( index ) {
       let rating_and_ids = $(this).val().split('_');
       let rating_num = rating_and_ids[0];
@@ -24,7 +23,7 @@
       star_label.click(function() {
         let rating_text = $(this).children('span').first().text();
         let output_selector = "#msg_" + rating_uid + "_" + rating_item_id;
-        submit_rating(rating_uid, rating_item_id, rating_num);
+        submit_rating(rating_uid, rating_item_id, rating_num, '/user-at-library');
         update_text(output_selector, rating_text);
       });
     });
