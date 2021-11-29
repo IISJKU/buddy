@@ -5,6 +5,7 @@ namespace Drupal\buddy\Controller;
 use Drupal\buddy\Util\Util;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
@@ -39,6 +40,7 @@ class ATModeratorATEntryOverviewController extends ControllerBase
  </div>';
     $html .= $this->renderATEntry($atEntry, $atDescriptionsOfATEntries[$atEntry->id()], $atPlatformsOfATEntries[$atEntry->id()]);
 
+    $html.= Link::createFromRoute($this->t('Back'),'view.at_entries.page_1',[],['attributes' => ['class' => 'buddy_link_button create_account_button']])->toString()->getGeneratedLink();
     $build = array(
       '#type' => 'markup',
       '#markup' => $html,

@@ -6,6 +6,7 @@ use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 
 /**
@@ -27,11 +28,11 @@ class ATEntryCreateForm extends FormBase {
 
   protected function createForm($form){
 
-    Util::setTitle("Create new assistive technology entry");
+    Util::setTitle("Create new tool entry");
     $form['title'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Name'),
-      '#description' => $this->t('The name or your assistive technology. Must be at least 5 characters in length.'),
+      '#description' => $this->t('The name or your assistive technology. '),
       '#required' => TRUE,
     ];
 
@@ -133,11 +134,13 @@ class ATEntryCreateForm extends FormBase {
   }
 
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    /*
     $title = $form_state->getValue('title');
     if (strlen($title) < 5) {
       // Set an error for the form element with a key of "title".
       $form_state->setErrorByName('title', $this->t('The title must be at least 5 characters long.'));
     }
+    */
   }
 
 
@@ -151,7 +154,18 @@ class ATEntryCreateForm extends FormBase {
     ]);
     $node->setPublished(TRUE);
     $node->save();
-    $form_state->setRedirect('buddy.at_entry_overview');
+
+
+    $route_name = \Drupal::routeMatch()->getRouteName();
+    if($route_name == "buddy.at_moderator_at_entry_form") {
+      $path = Url::fromRoute('buddy.at_moderator_at_entry_overview',
+        ['atEntry' =>$node->id()])->toString();
+      $response = new \Symfony\Component\HttpFoundation\RedirectResponse($path);
+      $response->send();
+    }else{
+
+      $form_state->setRedirect('buddy.at_entry_overview');
+    }
   }
 
   protected function getSelectedCategories(array &$form, FormStateInterface $form_state){

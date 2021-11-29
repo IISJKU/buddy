@@ -27,9 +27,11 @@ class ATEntryDeleteForm extends ATEntryCreateForm {
 
     $this->atEntry = $atEntry;
 
+    Util::setTitle($this->t("Delete: ").$this->atEntry->getTitle());
+
     $form['description'] = [
       '#type' => 'item',
-      '#title' => $this->t('Do you really want to delete the following entry:').$this->atEntry->getTitle(),
+      '#title' => $this->t('Do you really want to delete this entry?'),
     ];
 
     // Group submit handlers in an actions element with a key of "actions" so
@@ -70,6 +72,7 @@ class ATEntryDeleteForm extends ATEntryCreateForm {
 
     $route_name = \Drupal::routeMatch()->getRouteName();
     if($route_name == "buddy.at_moderator_at_entry_delete_form"){
+
       $path = Url::fromRoute('buddy.at_moderator_at_entry_overview',
         ['atEntry' =>$this->atEntry->id()])->toString();
       $response = new \Symfony\Component\HttpFoundation\RedirectResponse($path);
@@ -77,6 +80,8 @@ class ATEntryDeleteForm extends ATEntryCreateForm {
     }else{
       $form_state->setRedirect('buddy.at_entry_overview');
     }
+
+
 
   }
 
@@ -90,7 +95,15 @@ class ATEntryDeleteForm extends ATEntryCreateForm {
     $types = $this->atEntry->get("field_at_types")->getValue();
     Util::deleteNodesByReferences($types);
     $this->atEntry->delete();
-    $form_state->setRedirect('buddy.at_entry_overview');
+
+    $route_name = \Drupal::routeMatch()->getRouteName();
+    if($route_name == "buddy.at_moderator_at_entry_delete_form"){
+
+      $form_state->setRedirect("view.at_entries.page_1");
+    }else{
+      $form_state->setRedirect('buddy.at_entry_overview');
+    }
+
   }
 
 
