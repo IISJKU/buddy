@@ -7,6 +7,7 @@ use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Lock\NullLockBackend;
+use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 
@@ -67,8 +68,15 @@ class ATEntryDeleteForm extends ATEntryCreateForm {
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
-    $this->atEntry->delete();
-    $form_state->setRedirect('buddy.at_entry_overview_new');
+    $route_name = \Drupal::routeMatch()->getRouteName();
+    if($route_name == "buddy.at_moderator_at_entry_delete_form"){
+      $path = Url::fromRoute('buddy.at_moderator_at_entry_overview',
+        ['atEntry' =>$this->atEntry->id()])->toString();
+      $response = new \Symfony\Component\HttpFoundation\RedirectResponse($path);
+      $response->send();
+    }else{
+      $form_state->setRedirect('buddy.at_entry_overview');
+    }
 
   }
 

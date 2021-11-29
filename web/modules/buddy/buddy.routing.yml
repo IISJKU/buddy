@@ -255,7 +255,7 @@ buddy.at_entry_delete_form:
     parameters:
       atEntry:
         type: entity:node
-buddy.at_moderator/at_entry_delete_form:
+buddy.at_moderator_at_entry_delete_form:
   path: '/at-moderator/at-entries/delete-at-entry/{atEntry}'
   defaults:
     _form: '\Drupal\buddy\Form\ATEntryDeleteForm'
@@ -281,6 +281,19 @@ buddy.type_create_form:
     parameters:
       atEntry:
         type: entity:node
+buddy.at_moderator_type_create_form:
+  path: '/at-moderator/at-entries/create-type/{atEntry}'
+  defaults:
+    _form: '\Drupal\buddy\Form\ATTypeCreateForm'
+    _title: 'Create type'
+  requirements:
+    _permission: 'access content'
+    _role: 'administrator+at_moderator'
+    _entity_bundles: 'atEntry:at_entry'
+  options:
+    parameters:
+      atEntry:
+        type: entity:node
 buddy.platform_edit_form:
   path: '/at-entries/edit-type/{type}'
   defaults:
@@ -294,6 +307,19 @@ buddy.platform_edit_form:
     parameters:
       type:
         type: entity:node
+buddy.at_moderator_type_edit_form:
+  path: '/at-moderator/at-entries/edit-type/{type}'
+  defaults:
+    _form: '\Drupal\buddy\Form\ATTypeEditForm'
+    _title: 'Edit Type'
+  requirements:
+    _permission: 'access content'
+    _role: 'administrator+at_moderator'
+    _entity_bundles: 'type:at_type_app|at_type_browser_extension|at_type_software'
+  options:
+    parameters:
+      type:
+        type: entity:node
 buddy.platform_delete_form:
   path: '/at-entries/delete-type/{type}'
   defaults:
@@ -302,6 +328,19 @@ buddy.platform_delete_form:
   requirements:
     _permission: 'access content'
     _custom_access: '\Drupal\buddy\Controller\ATProviderController::access'
+    _entity_bundles: 'type:at_type_app|at_type_browser_extension|at_type_software'
+  options:
+    parameters:
+      type:
+        type: entity:node
+buddy.at_moderator_type_delete_form:
+  path: '/at-moderator/at-entries/delete-type/{type}'
+  defaults:
+    _form: '\Drupal\buddy\Form\ATTypeDeleteForm'
+    _title: 'Delete Type'
+  requirements:
+    _permission: 'access content'
+    _role: 'administrator+at_moderator'
     _entity_bundles: 'type:at_type_app|at_type_browser_extension|at_type_software'
   options:
     parameters:

@@ -7,6 +7,7 @@ use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Lock\NullLockBackend;
+use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 
@@ -82,7 +83,18 @@ class ATEntryEditForm extends ATEntryCreateForm {
     $this->atEntry->field_at_categories = $this->getSelectedCategories($form,$form_state);
     $this->atEntry->title = $form_state->getValue('title');
     $this->atEntry->save();
-    $form_state->setRedirect('buddy.at_entry_overview');
+
+
+    $route_name = \Drupal::routeMatch()->getRouteName();
+    if($route_name == "buddy.at_moderator_at_entry_edit_form"){
+      $path = Url::fromRoute('buddy.at_moderator_at_entry_overview',
+        ['atEntry' =>$this->atEntry->id()])->toString();
+      $response = new \Symfony\Component\HttpFoundation\RedirectResponse($path);
+      $response->send();
+    }else{
+      $form_state->setRedirect('buddy.at_entry_overview');
+    }
+
 
   }
 

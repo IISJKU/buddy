@@ -7,6 +7,7 @@ namespace Drupal\buddy\Form;
 use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 
@@ -28,7 +29,6 @@ class ATTypeCreateForm extends FormBase
   public function buildForm(array $form, FormStateInterface $form_state,NodeInterface $atEntry=NULL) {
     $this->atEntry = $atEntry;
 
-    $test = $this->atEntry->get("field_at_types")->getValue();
 
     Util::setTitle($this->t("Create type for:").$this->atEntry->getTitle());
 
@@ -97,7 +97,18 @@ class ATTypeCreateForm extends FormBase
 
     $this->atEntry->field_at_types[] =  ['target_id' => $id];
     $this->atEntry->save();
-    $form_state->setRedirect('buddy.at_entry_overview');
+
+
+    $route_name = \Drupal::routeMatch()->getRouteName();
+    if($route_name == "buddy.at_moderator_type_create_form"){
+      $path = Url::fromRoute('buddy.at_moderator_at_entry_overview',
+        ['atEntry' =>$this->atEntry->id()])->toString();
+      $response = new \Symfony\Component\HttpFoundation\RedirectResponse($path);
+      $response->send();
+    }else{
+      $form_state->setRedirect('buddy.at_entry_overview');
+    }
+
 
 
   }
@@ -259,4 +270,6 @@ class ATTypeCreateForm extends FormBase
     return $node->id();
 
   }
+
+
 }
