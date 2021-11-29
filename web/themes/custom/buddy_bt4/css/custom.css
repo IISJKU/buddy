@@ -570,6 +570,16 @@ AT INSTall
 .at_library_container >ul{
   list-style: none;
 }
+/*
+AT ENTRIES AT MODERATOR
+ */
+.buddy_at_table{
+  border-radius: 10px 0 0 10px;
+  background-color: white;
+}
+.buddy_at_table img{
+  max-height: 30px;
+}
 
 /*FOOTER */
 footer.mt-auto{

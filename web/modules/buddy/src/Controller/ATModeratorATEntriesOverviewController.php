@@ -7,44 +7,97 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\user\Entity\User;
 
-class ATModeratorATEntryOverviewController extends ControllerBase
+class ATModeratorATEntriesOverviewController extends ControllerBase
 {
 
 
-  public function ATEntryOverview($atEntry = null)
+  public function ATEntryOverview()
   {
 
-    //throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
+    $atEntriesID = \Drupal::entityQuery('node')
+      ->condition('type', 'at_entry')
+      ->execute();
 
-    $user = \Drupal::currentUser();
+    $atEntries = \Drupal::entityTypeManager()->getStorage('node')
+      ->loadMultiple($atEntriesID);
+
 
     $atDescriptionsOfATEntries = [];
     $atPlatformsOfATEntries = [];
+    $authors = [];
+    foreach ($atEntries as $atEntry) {
+      $atDescriptionIDs = $atEntry->field_at_descriptions->getValue();
+      $atDescriptions = Util::loadNodesByReferences($atDescriptionIDs);
+      $atDescriptionsOfATEntries[$atEntry->id()] = $atDescriptions;
 
-    $atDescriptionIDs = $atEntry->field_at_descriptions->getValue();
-    $atDescriptions = Util::loadNodesByReferences($atDescriptionIDs);
-    $atDescriptionsOfATEntries[$atEntry->id()] = $atDescriptions;
+      $atPlatformIDs = $atEntry->field_at_types->getValue();
+      $atPlatforms = Util::loadNodesByReferences($atPlatformIDs);
+      $atPlatformsOfATEntries[$atEntry->id()] = $atPlatforms;
 
-    $atPlatformIDs = $atEntry->field_at_types->getValue();
-    $atPlatforms = Util::loadNodesByReferences($atPlatformIDs);
-    $atPlatformsOfATEntries[$atEntry->id()] = $atPlatforms;
+      $authors[$atEntry->id()]  = User::load($atEntry->getOwnerId());
 
+    }
+
+    $addToolURL = Url::fromRoute('buddy.at_moderator_at_entry_form')->toString();
     $html = '<div class="at_entry_header_menu">
+        <a href="'.$addToolURL.'">'.$this->t("Add new tool").'
+                    <i class="fa fa-plus" aria-hidden="true"></i> </a>
+             </div>';
+    $html.= '<table class="table buddy_at_table  table-striped"><tr>
+                <th scope="row">'.$this->t("Name").'</th>
+                <th scope="row">'.$this->t("Author").'</th>
+                <th scope="row">'.$this->t("Languages").'</th>
+                <th scope="row">'.$this->t("Platforms").'</th>
+                <th scope="row">'.$this->t("Edit").'</th>
+</tr>';
 
- <a href="delete-at-entry/' . $atEntry->id() . '" title="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i>Delete Entry</a>
- <a href="edit-at-entry/' . $atEntry->id() . '" title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i>Edit Entry</a>
+    foreach ($atEntries as $atEntry){
 
- </div>';
-    $html .= $this->renderATEntry($atEntry, $atDescriptionsOfATEntries[$atEntry->id()], $atPlatformsOfATEntries[$atEntry->id()]);
+      $html.= "<tr>";
 
-    $html.= Link::createFromRoute($this->t('Back'),'buddy.at_moderator_at_entry_all',[],['attributes' => ['class' => 'buddy_link_button create_account_button']])->toString()->getGeneratedLink();
-    $build = array(
+      $html.= "<td>".$atEntry->getTitle()."</td>";
+
+      $author = $authors[$atEntry->id()];
+      $name = $author->get('name')->value;
+      $html.= "<td>".$name."</td>";
+
+      $descriptions = $atDescriptionsOfATEntries[$atEntry->id()];
+      $descriptionHTML = "";
+      $firstTime = true;
+      foreach ($descriptions as $description){
+
+        if(!$firstTime){
+          $descriptionHTML.=", ";
+        }
+        $lang = $description->field_at_description_language->getValue();
+        $descriptionHTML.=$lang[0]['value'];
+        $firstTime = false;
+      }
+      $html.= "<td>".$descriptionHTML."</td>";
+
+      $platforms = $atPlatformsOfATEntries[$atEntry->id()];
+
+
+      $html.= "<td>".Util::renderPlatformOverview($platforms)."</td>";
+      $editURL = Link::createFromRoute($this->t('Edit'),'buddy.at_moderator_at_entry_overview',['atEntry' => $atEntry->id()])->toString()->getGeneratedLink();
+
+      $html.= "<td>".$editURL."</td>";
+
+      $html.="</tr>";
+
+    }
+
+    $html.="</table>";
+
+     $build = array(
       '#type' => 'markup',
       '#markup' => $html,
-      '#title' => $atEntry->getTitle(),
+      '#title' => $this->t("Manage Tools"),
       '#attached' => [
         'library' => [
           'buddy/at_provider_forms',

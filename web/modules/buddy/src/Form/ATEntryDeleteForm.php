@@ -99,7 +99,7 @@ class ATEntryDeleteForm extends ATEntryCreateForm {
     $route_name = \Drupal::routeMatch()->getRouteName();
     if($route_name == "buddy.at_moderator_at_entry_delete_form"){
 
-      $form_state->setRedirect("view.at_entries.page_1");
+      $form_state->setRedirect("buddy.at_moderator_at_entry_all");
     }else{
       $form_state->setRedirect('buddy.at_entry_overview');
     }

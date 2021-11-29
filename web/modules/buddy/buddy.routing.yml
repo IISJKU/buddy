@@ -187,6 +187,15 @@ buddy.at_entry_overview:
     _role: 'administrator+at_provider'
   options:
     no_cache: 'TRUE'
+buddy.at_moderator_at_entry_all:
+  path: '/at-moderator/at-entries/all'
+  defaults:
+    _controller: '\Drupal\buddy\Controller\ATModeratorATEntriesOverviewController::ATEntryOverview'
+  requirements:
+    _permission: 'access content'
+    _role: 'administrator+at_moderator'
+  options:
+    no_cache: 'TRUE'
 buddy.at_moderator_at_entry_overview:
   path: '/at-moderator/at-entries/{atEntry}'
   defaults:
