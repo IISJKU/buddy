@@ -143,7 +143,7 @@ class ATEntryCreateForm extends FormBase {
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
-
+    $route_name = \Drupal::routeMatch()->getRouteName();
     $node = Node::create([
       'type'        => 'at_entry',
       'title'       =>  $form_state->getValue('title'),

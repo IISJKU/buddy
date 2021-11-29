@@ -635,4 +635,17 @@ class Util
 
   }
 
+  public static function hasRole($roleName){
+
+    $current_user = \Drupal::currentUser();
+
+    if(in_array($roleName, $current_user->getRoles())){
+
+      return true;
+    }
+
+    return false;
+
+  }
+
 }

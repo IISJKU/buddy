@@ -5,8 +5,10 @@ namespace Drupal\buddy\Form;
 
 
 use Drupal\buddy\Controller\ATProviderController;
+use Drupal\buddy\Util\Util;
 use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 class ATDescriptionEditForm extends ATDescriptionCreateForm
 {
@@ -80,19 +82,36 @@ class ATDescriptionEditForm extends ATDescriptionCreateForm
     $this->atDescription->setRevisionCreationTime(REQUEST_TIME);
     $this->atDescription->setRevisionUserId($user->id());
 
-    $this->atDescription->set('moderation_state', 'draft');
+    if(Util::hasRole("at_moderator")){
+      $this->atDescription->set('moderation_state', 'published');
+      $this->atDescription->setPublished(true);
+    }else{
+      $this->atDescription->set('moderation_state', 'draft');
+      $this->messenger()->addMessage($this->t('The description has been updated and saved as draft! A moderator was informed to approve and publish the new revision!'));
+
+    }
     if ($this->atDescription instanceof RevisionLogInterface) {
       $this->atDescription->setRevisionLogMessage("new version");
       $this->atDescription->setRevisionUserId($this->currentUser()->id());
     }
 
+
+
     $this->atDescription->save();
 
+    $route_name = \Drupal::routeMatch()->getRouteName();
+    if($route_name == "buddy.at_moderator_description_edit_form"){
+      $atEntryID = $this->atDescription->get("field_at_entry")->getValue()[0]['target_id'];
+      $path = Url::fromRoute('buddy.at_moderator_at_entry_overview',
+        ['atEntry' =>$atEntryID])->toString();
+      $response = new \Symfony\Component\HttpFoundation\RedirectResponse($path);
+      $response->send();
+    }else{
+      $form_state->setRedirect('buddy.at_entry_overview');
+    }
 
-    $form_state->setRedirect('buddy.at_entry_overview');
 
-    $this->messenger()->addMessage($this->t('The description has been updated and saved as draft! A moderator was informed to approve and publish the new revision!'));
-  }
+   }
 
   public function deleteFormSubmit(array &$form, FormStateInterface $form_state)
   {

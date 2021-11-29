@@ -187,6 +187,19 @@ buddy.at_entry_overview:
     _role: 'administrator+at_provider'
   options:
     no_cache: 'TRUE'
+buddy.at_moderator_at_entry_overview:
+  path: '/at-moderator/at-entries/{atEntry}'
+  defaults:
+    _controller: '\Drupal\buddy\Controller\ATModeratorATEntryOverviewController::ATEntryOverview'
+  requirements:
+    _permission: 'access content'
+    _role: 'administrator+at_moderator'
+    _entity_bundles: 'atEntry:at_entry'
+  options:
+    no_cache: 'TRUE'
+    parameters:
+      atEntry:
+        type: entity:node
 buddy.at_entry_form:
   path: '/at-entries/create-at-entry'
   defaults:
@@ -195,6 +208,14 @@ buddy.at_entry_form:
   requirements:
     _permission: 'access content'
     _custom_access: '\Drupal\buddy\Controller\ATProviderController::access'
+buddy.at_moderator_at_entry_form:
+  path: '/at-moderator/at-entries/create-at-entry'
+  defaults:
+    _form: '\Drupal\buddy\Form\ATEntryCreateForm'
+    _title: 'AT Entry Form'
+  requirements:
+    _permission: 'access content'
+    _role: 'administrator+at_moderator'
 buddy.at_entry_edit_form:
   path: '/at-entries/edit-at-entry/{atEntry}'
   defaults:
@@ -208,6 +229,19 @@ buddy.at_entry_edit_form:
     parameters:
       atEntry:
         type: entity:node
+buddy.at_moderator_at_entry_edit_form:
+  path: '/at-moderator/at-entries/edit-at-entry/{atEntry}'
+  defaults:
+    _form: '\Drupal\buddy\Form\ATEntryEditForm'
+    _title: 'AT Entry Form'
+  requirements:
+    _permission: 'access content'
+    _role: 'administrator+at_moderator'
+    _entity_bundles: 'atEntry:at_entry'
+  options:
+    parameters:
+      atEntry:
+        type: entity:node
 buddy.at_entry_delete_form:
   path: '/at-entries/delete-at-entry/{atEntry}'
   defaults:
@@ -216,6 +250,19 @@ buddy.at_entry_delete_form:
   requirements:
     _permission: 'access content'
     _custom_access: '\Drupal\buddy\Controller\ATProviderController::access'
+    _entity_bundles: 'atEntry:at_entry'
+  options:
+    parameters:
+      atEntry:
+        type: entity:node
+buddy.at_moderator/at_entry_delete_form:
+  path: '/at-moderator/at-entries/delete-at-entry/{atEntry}'
+  defaults:
+    _form: '\Drupal\buddy\Form\ATEntryDeleteForm'
+    _title: 'AT Entry Form'
+  requirements:
+    _permission: 'access content'
+    _role: 'administrator+at_moderator'
     _entity_bundles: 'atEntry:at_entry'
   options:
     parameters:
@@ -273,6 +320,19 @@ buddy.description_create_form:
     parameters:
       atEntry:
         type: entity:node
+buddy.at_moderator_description_create_form:
+  path: '/at-moderator/at-entries/create-description/{atEntry}'
+  defaults:
+    _form: '\Drupal\buddy\Form\ATDescriptionCreateForm'
+    _title: 'Create Description'
+  requirements:
+    _permission: 'access content'
+    _role: 'administrator+at_moderator'
+    _entity_bundles: 'atEntry:at_entry'
+  options:
+    parameters:
+      atEntry:
+        type: entity:node
 buddy.description_edit_form:
   path: '/at-entries/edit-description/{description}'
   defaults:
@@ -286,6 +346,19 @@ buddy.description_edit_form:
     parameters:
       description:
         type: entity:node
+buddy.at_moderator_description_edit_form:
+  path: '/at-moderator/at-entries/edit-description/{description}'
+  defaults:
+    _form: '\Drupal\buddy\Form\ATDescriptionEditForm'
+    _title: 'Edit Description'
+  requirements:
+    _permission: 'access content'
+    _role: 'administrator+at_moderator'
+    _entity_bundles: 'description:at_description'
+  options:
+    parameters:
+      description:
+        type: entity:node
 buddy.description_delete_form:
   path: '/at-entries/delete-description/{description}'
   defaults:
@@ -294,6 +367,19 @@ buddy.description_delete_form:
   requirements:
     _permission: 'access content'
     _custom_access: '\Drupal\buddy\Controller\ATProviderController::access'
+    _entity_bundles: 'description:at_description'
+  options:
+    parameters:
+      description:
+        type: entity:node
+buddy.at_moderator_description_delete_form:
+  path: '/at-moderator/at-entries/delete-description/{description}'
+  defaults:
+    _form: '\Drupal\buddy\Form\ATDescriptionDeleteForm'
+    _title: 'Delete Description'
+  requirements:
+    _permission: 'access content'
+    _role: 'administrator+at_moderator'
     _entity_bundles: 'description:at_description'
   options:
     parameters:

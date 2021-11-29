@@ -8,7 +8,10 @@ use Drupal\buddy\Util\Util;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
+use Laminas\Diactoros\Response\RedirectResponse;
 
 class ATDescriptionCreateForm extends FormBase
 {
@@ -101,16 +104,33 @@ class ATDescriptionCreateForm extends FormBase
     $node = Node::create($nodeDef);
     try {
       $node->field_at_entry[] =  ['target_id' =>  $this->atEntry->id()];
+
+
+      if(Util::hasRole("at_moderator")){
+        $node->set('moderation_state', 'published');
+        $node->setPublished(true);
+      }else{
+        $this->messenger()->addMessage($this->t('The description has been saved as draft! A moderator was informed to approve and publish the description!'));
+
+      }
+
       $node->save();
       $this->atEntry->field_at_descriptions[] =  ['target_id' =>  $node->id()];
       $this->atEntry->save();
     } catch (EntityStorageException $e) {
 
     }
+    $route_name = \Drupal::routeMatch()->getRouteName();
+    if($route_name == "buddy.at_moderator_description_create_form"){
+      $path = Url::fromRoute('buddy.at_moderator_at_entry_overview',
+        ['atEntry' =>$this->atEntry->id()])->toString();
+      $response = new \Symfony\Component\HttpFoundation\RedirectResponse($path);
+      $response->send();
+    }else{
+      $form_state->setRedirect('buddy.at_entry_overview');
+    }
 
 
-    $form_state->setRedirect('buddy.at_entry_overview');
 
-    $this->messenger()->addMessage($this->t('The description has been saved as draft! A moderator was informed to approve and publish the description!'));
-  }
+   }
 }

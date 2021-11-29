@@ -6,6 +6,7 @@ namespace Drupal\buddy\Form;
 
 use Drupal\buddy\Controller\ATProviderController;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 class ATDescriptionDeleteForm extends ATDescriptionCreateForm
 {
@@ -51,14 +52,27 @@ class ATDescriptionDeleteForm extends ATDescriptionCreateForm
 
   public function submitForm(array &$form, FormStateInterface $form_state)
   {
+    $route_name = \Drupal::routeMatch()->getRouteName();
 
-    $form_state->setRedirect('buddy.at_entry_overview');
+    if($route_name == "buddy.at_moderator_description_delete_form"){
+      $atEntryID = $this->atDescription->get("field_at_entry")->getValue()[0]['target_id'];
+      $path = Url::fromRoute('buddy.at_moderator_at_entry_overview',
+        ['atEntry' =>$atEntryID])->toString();
+      $response = new \Symfony\Component\HttpFoundation\RedirectResponse($path);
+      $response->send();
+    }else{
+
+      $form_state->setRedirect('buddy.at_entry_overview');
+    }
   }
 
   public function deleteFormSubmit(array &$form, FormStateInterface $form_state)
   {
+
+
+    $this->submitForm($form,$form_state);
+
     $this->atDescription->delete();
-    $form_state->setRedirect('buddy.at_entry_overview');
   }
 
 }
