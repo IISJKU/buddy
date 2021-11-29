@@ -302,7 +302,7 @@ class Util
       {
         return t("German");
       }
-      case "se":
+      case "sv":
       {
         return t("Swedish");
       }

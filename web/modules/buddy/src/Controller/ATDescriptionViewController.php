@@ -16,6 +16,7 @@ class ATDescriptionViewController extends ControllerBase
 
   public function ATDescriptionView(NodeInterface $description=NULL) {
 
+    /*
     $title = $description->getTitle();
 
     $language = $description->field_at_description_language->getValue();
@@ -51,12 +52,31 @@ class ATDescriptionViewController extends ControllerBase
     }
 
     $html.=$revisionLink;
+    */
 
-    $build = array(
+    $atEntriesID = \Drupal::entityQuery('node')
+      ->condition('type', 'at_entry')
+      ->condition('field_at_descriptions', $description->id(), '=')
+      ->execute();
+
+    $atEntryID = intval(array_shift($atEntriesID));
+    $descriptions = Util::getDescriptionsOfATEntry($atEntryID);
+    $user = \Drupal::currentUser();
+    $description = Util::getDescriptionForUser($descriptions,$user);
+    $languages = Util::getLanguagesOfDescriptions($descriptions);
+    $platforms = Util::getPlatformsOfATEntry(Node::load($atEntryID));
+    $html= "<h2>Preview</h2>";
+    $html.= Util::renderDescriptionTiles($description,$user,$languages,$platforms);
+    $html.= "<hr><h2>Full view</h2>";
+    $html.= Util::renderDescriptionDetail($description,$languages);
+
+      $build = array(
       '#type' => 'markup',
       '#markup' => $html,
-      '#title' => $title,
+      '#title' => "muh",
     );
+
+    return $build;
 
     $display = EntityViewDisplay::create([
       'targetEntityType' => 'node',
