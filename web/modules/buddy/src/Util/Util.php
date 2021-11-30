@@ -528,7 +528,7 @@ class Util
         $query->condition('field_user_profile_finished', true);
       }
       $results = $query->execute();
-      if (!empty($results)) {
+      if (!count($results)) {
         $storage = \Drupal::service('entity_type.manager')->getStorage('node');
         $profile = $storage->load(array_shift($results));
         $user_needs = $profile->get('field_user_profile_user_needs')->getValue();
