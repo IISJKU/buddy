@@ -534,11 +534,14 @@ class Util
         $user_needs = $profile->get('field_user_profile_user_needs')->getValue();
         foreach ($user_needs as $user_need) {
           $need_entry = $storage->load($user_need['target_id']);
-          $category = $need_entry->get('field_user_need_ass_support_cat')->getString();
-          $percentage = $need_entry->get('field_user_need_ass_percentage')->getString();
-          if ($percentage > 0.009) {
-            $needs_weighted[$category] = $percentage;
+          if($need_entry){
+            $category = $need_entry->get('field_user_need_ass_support_cat')->getString();
+            $percentage = $need_entry->get('field_user_need_ass_percentage')->getString();
+            if ($percentage > 0.009) {
+              $needs_weighted[$category] = $percentage;
+            }
           }
+
         }
       }
     }
