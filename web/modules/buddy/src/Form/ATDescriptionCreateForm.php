@@ -39,8 +39,8 @@ class ATDescriptionCreateForm extends FormBase
 
     $form['title'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Localized name'),
-      '#description' => $this->t('The localized name of your assistive technology'),
+      '#title' => $this->t('Name'),
+      '#description' => $this->t('The localized name of the tool.'),
       '#required' => TRUE,
     ];
     if($atDescription){
