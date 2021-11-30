@@ -231,6 +231,9 @@ class Util
     $software = false;
     $app = false;
     foreach ($platforms as $platform) {
+      if(!$platform){
+        continue;
+      }
       switch ($platform->bundle()) {
         case "at_type_browser_extension":
         {
@@ -648,6 +651,21 @@ class Util
     }
 
     return false;
+
+  }
+
+  public static function getATEntryIDOfType($atType){
+
+    $query = \Drupal::entityQuery('node')
+      ->condition('type', 'at_entry')
+      ->condition('field_at_types', $atType->id());
+    $atEntry = $query->execute();
+
+    if(count($atEntry)){
+
+      return reset($atEntry);
+    }
+
 
   }
 

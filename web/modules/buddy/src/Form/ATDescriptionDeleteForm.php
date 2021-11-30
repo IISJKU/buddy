@@ -7,6 +7,7 @@ namespace Drupal\buddy\Form;
 use Drupal\buddy\Controller\ATProviderController;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\node\Entity\Node;
 
 class ATDescriptionDeleteForm extends ATDescriptionCreateForm
 {
@@ -72,6 +73,12 @@ class ATDescriptionDeleteForm extends ATDescriptionCreateForm
 
     $this->submitForm($form,$form_state);
 
+    $atEntryID = $this->atDescription->get("field_at_entry")->getValue()[0]['target_id'];
+    $atEntry = Node::load($atEntryID);
+    $allDescriptions = $atEntry->get('field_at_descriptions')->getValue();
+    $key = array_search($this->atDescription->id(), array_column($allDescriptions, 'target_id'));
+    $atEntry->get('field_at_descriptions')->removeItem($key);
+    $atEntry->save();
     $this->atDescription->delete();
   }
 

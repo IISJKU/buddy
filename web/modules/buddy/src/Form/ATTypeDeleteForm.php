@@ -3,6 +3,7 @@
 namespace Drupal\buddy\Form;
 
 use Drupal\buddy\Controller\ATProviderController;
+use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Lock\NullLockBackend;
@@ -75,21 +76,25 @@ class ATTypeDeleteForm extends ATTypeCreateForm {
 
   public function deleteFormSubmit(array &$form, FormStateInterface $form_state)
   {
-    $this->atType->delete();
     $this->redirectToOverview($form_state);
+
+    $atEntryID = Util::getATEntryIDOfType($this->atType);
+    $atEntry = Node::load($atEntryID);
+
+    $allTypes = $atEntry->get('field_at_types')->getValue();
+    $key = array_search($this->atType->id(), array_column($allTypes, 'target_id'));
+    $atEntry->get('field_at_types')->removeItem($key);
+    $atEntry->save();
+
+    $this->atType->delete();
+
   }
 
   private function redirectToOverview(FormStateInterface $form_state){
     $route_name = \Drupal::routeMatch()->getRouteName();
     if($route_name == "buddy.at_moderator_type_delete_form"){
 
-      $query = \Drupal::entityQuery('node')
-        ->condition('type', 'at_entry')
-        ->condition('field_at_types', $this->atType->id());
-      $atEntry = $query->execute();
-
-
-      $atEntryID = reset($atEntry);;
+      $atEntryID = Util::getATEntryIDOfType($this->atType);
       $path = Url::fromRoute('buddy.at_moderator_at_entry_overview',
         ['atEntry' =>$atEntryID])->toString();
       $response = new \Symfony\Component\HttpFoundation\RedirectResponse($path);
@@ -98,6 +103,8 @@ class ATTypeDeleteForm extends ATTypeCreateForm {
       $form_state->setRedirect('buddy.at_entry_overview');
     }
   }
+
+
 
 
 }
