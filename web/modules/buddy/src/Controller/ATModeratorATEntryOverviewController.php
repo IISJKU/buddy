@@ -34,8 +34,8 @@ class ATModeratorATEntryOverviewController extends ControllerBase
 
     $html = '<div class="at_entry_header_menu">
 
- <a href="delete-at-entry/' . $atEntry->id() . '" title="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i>Delete Entry</a>
- <a href="edit-at-entry/' . $atEntry->id() . '" title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i>Edit Entry</a>
+ <a href="edit-at-entry/' . $atEntry->id() . '" title="'.$this->t("Edit tool").'" class="buddy_menu_link"><i class="fa fa-pencil" aria-hidden="true"></i>'.$this->t("Edit tool").'</a>
+ <a href="delete-at-entry/' . $atEntry->id() . '" title="'.$this->t("Delete tool").'" class="buddy_menu_link"><i class="fa fa-trash-o" aria-hidden="true"></i>'.$this->t("Delete tool").'</a>
 
  </div>';
     $html .= $this->renderATEntry($atEntry, $atDescriptionsOfATEntries[$atEntry->id()], $atPlatformsOfATEntries[$atEntry->id()]);

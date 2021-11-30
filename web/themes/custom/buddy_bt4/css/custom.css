@@ -580,6 +580,9 @@ AT ENTRIES AT MODERATOR
 .buddy_at_table img{
   max-height: 30px;
 }
+.buddy_menu_link{
+  padding-left: 30px;
+}
 
 /*FOOTER */
 footer.mt-auto{
