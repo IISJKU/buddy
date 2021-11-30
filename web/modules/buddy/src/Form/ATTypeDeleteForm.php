@@ -26,9 +26,19 @@ class ATTypeDeleteForm extends ATTypeCreateForm {
 
     $this->atType = $type;
 
+    $type = $this->atType->bundle();
+    if ($type == "at_type_software") {
+      $title = $this->t("Software");
+
+    } else if ($type == "at_type_app") {
+      $title = $this->t("App");
+    }else{
+      $title = $this->t("Browser Extension");
+    }
+
     $form['description'] = [
       '#type' => 'item',
-      '#title' => $this->t('Do you really want to delete the following type:').$this->atType->getTitle(),
+      '#title' => $this->t('Do you really want to delete the following type:').$title,
     ];
 
     // Group submit handlers in an actions element with a key of "actions" so
@@ -44,12 +54,14 @@ class ATTypeDeleteForm extends ATTypeCreateForm {
       '#button_type' => 'primary',
       '#value' => $this->t('Yes'),
       '#submit' => ['::deleteFormSubmit'],
+      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
 
     ];
     // Add a submit button that handles the submission of the form.
     $form['actions']['no_submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('No'),
+      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
     ];
     return $form;
   }

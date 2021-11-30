@@ -76,8 +76,8 @@ class ATModeratorATEntryOverviewController extends ControllerBase
           <tr>
               <th scope="col">Title</th>
               <th scope="col">Language</th>
-               <th scope="col">Published</th>
-              <th scope="col">Draft</th>
+               <th scope="col">Preview</th>
+              <th scope="col">Revision</th>
               <th scope="col">Delete</th>
           </tr>';
 
@@ -97,7 +97,7 @@ class ATModeratorATEntryOverviewController extends ControllerBase
         $draftTitle= $this->t("Edit draft");
       }else{
 
-        $published = '<a href="view-description/'.$atDescription->id().'">'.$this->t("View published").'</a>';
+        $published = '<a href="view-description/'.$atDescription->id().'">'.$this->t("Preview").'</a>';
       }
       $lang = $atDescription->field_at_description_language->getValue();
       $html .= '<tr>

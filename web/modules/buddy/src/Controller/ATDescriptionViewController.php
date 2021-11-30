@@ -65,11 +65,22 @@ class ATDescriptionViewController extends ControllerBase
     $description = Util::getDescriptionForUser($descriptions,$user);
     $languages = Util::getLanguagesOfDescriptions($descriptions);
     $platforms = Util::getPlatformsOfATEntry(Node::load($atEntryID));
-    $html= "<h2>Preview</h2>";
+    $html= "<h2>".$this->t("Preview: Search view")."</h2>";
     $html.= Util::renderDescriptionTiles($description,$user,$languages,$platforms);
-    $html.= "<hr><h2>Full view</h2>";
+    $html.= "<hr><h2>".$this->t("Preview: Full view")."</h2>";
     $html.= Util::renderDescriptionDetail($description,$languages);
 
+    $backLink ="";
+    $route_name = \Drupal::routeMatch()->getRouteName();
+    if($route_name == "buddy.at_moderator_description_view"){
+      $backLink = Link::createFromRoute($this->t('Back'),'buddy.at_moderator_at_entry_overview',['atEntry' =>$atEntryID],['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+
+    }else{
+      $backLink = Link::createFromRoute($this->t('Back'),'buddy.at_entry_overview',[],['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+
+    }
+
+    $html.='<br>'.$backLink;
       $build = array(
       '#type' => 'markup',
       '#markup' => $html,

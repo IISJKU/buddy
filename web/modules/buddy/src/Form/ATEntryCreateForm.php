@@ -123,6 +123,16 @@ class ATEntryCreateForm extends FormBase {
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Submit'),
+      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
+    ];
+
+    $form['actions']['back'] = [
+      '#type' => 'submit',
+      '#button_type' => 'primary',
+      '#value' => $this->t('Cancel'),
+      '#submit' => ['::backFormSubmit'],
+      '#limit_validation_errors' => [],
+      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
     ];
 
     return $form;
@@ -166,7 +176,20 @@ class ATEntryCreateForm extends FormBase {
 
       $form_state->setRedirect('buddy.at_entry_overview');
     }
+
   }
+
+  public function backFormSubmit(array &$form, FormStateInterface $form_state)
+  {
+
+    $route_name = \Drupal::routeMatch()->getRouteName();
+    if($route_name == "buddy.at_moderator_at_entry_form"){
+      $form_state->setRedirect('buddy.at_moderator_at_entry_all');
+    }else{
+      $form_state->setRedirect('buddy.at_entry_overview');
+    }
+  }
+
 
   protected function getSelectedCategories(array &$form, FormStateInterface $form_state){
     $values = $form_state->getValues();

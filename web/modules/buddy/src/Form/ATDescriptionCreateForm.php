@@ -69,7 +69,17 @@ class ATDescriptionCreateForm extends FormBase
     // Add a submit button that handles the submission of the form.
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Submit'),
+      '#value' => $this->t('Save'),
+      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
+    ];
+
+    $form['actions']['back'] = [
+      '#type' => 'submit',
+      '#button_type' => 'primary',
+      '#value' => $this->t('Cancel'),
+      '#submit' => ['::backFormSubmit'],
+      '#limit_validation_errors' => [],
+      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
     ];
 
     return $form;
@@ -120,6 +130,15 @@ class ATDescriptionCreateForm extends FormBase
     } catch (EntityStorageException $e) {
 
     }
+
+
+    $this->backFormSubmit($form,$form_state);
+
+   }
+
+  public function backFormSubmit(array &$form, FormStateInterface $form_state)
+  {
+
     $route_name = \Drupal::routeMatch()->getRouteName();
     if($route_name == "buddy.at_moderator_description_create_form"){
       $path = Url::fromRoute('buddy.at_moderator_at_entry_overview',
@@ -129,8 +148,5 @@ class ATDescriptionCreateForm extends FormBase
     }else{
       $form_state->setRedirect('buddy.at_entry_overview');
     }
-
-
-
-   }
+  }
 }

@@ -3,6 +3,7 @@
   background: #f2f2f2;
   margin-bottom: 20px;
   box-shadow: 0px 2px 18px 0px rgba(0,0,0,0.5);
+  padding: 20px;
 }
 .at_entry_header{
   border-radius:10px 10px 0 0;
@@ -32,13 +33,15 @@
 .at_entry_descriptions,.at_entry_types{
   float: left;
   min-width:350px;
-  margin-left: 10px;
+
+  width: 100%;
 
 }
 
 
 .at_entry_descriptions{
   margin-right: 40px;
+  width: 100%;
 }
 
 
@@ -99,4 +102,25 @@
 .at_entry_menu>a:focus,.at_entry_menu>a:hover{
   color: #fff !important;
 
+}
+
+@media (max-width: 767px) {
+
+  .at_entry_descriptions table th,.at_entry_descriptions .table td{
+    padding: 0.2rem;
+  }
+
+  .at_entry_container{
+    font-size: 1.0rem;
+  }
+}
+
+@media (max-width: 575px) {
+  .at_entry_descriptions table th,.at_entry_descriptions .table td{
+    padding: 0.1rem;
+  }
+
+  .at_entry_container{
+    font-size: 0.8rem;
+  }
 }

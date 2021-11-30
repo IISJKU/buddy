@@ -52,12 +52,13 @@ class ATEntryEditForm extends ATEntryCreateForm {
       }
     }
 
-    $form['actions']['delete'] = [
+    $form['actions']['submit']['#attributes']['class'][] = 'buddy_link_button buddy_button';
+    $form['actions']['back'] = [
       '#type' => 'submit',
       '#button_type' => 'primary',
-      '#value' => $this->t('Delete'),
-      '#submit' => ['::deleteFormSubmit'],
-
+      '#value' => $this->t('Cancel'),
+      '#submit' => ['::backFormSubmit'],
+      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
     ];
     return $form;
   }
@@ -85,6 +86,14 @@ class ATEntryEditForm extends ATEntryCreateForm {
     $this->atEntry->save();
 
 
+
+    $this->backFormSubmit($form,$form_state);
+
+  }
+
+  public function backFormSubmit(array &$form, FormStateInterface $form_state)
+  {
+
     $route_name = \Drupal::routeMatch()->getRouteName();
     if($route_name == "buddy.at_moderator_at_entry_edit_form"){
       $path = Url::fromRoute('buddy.at_moderator_at_entry_overview',
@@ -94,19 +103,6 @@ class ATEntryEditForm extends ATEntryCreateForm {
     }else{
       $form_state->setRedirect('buddy.at_entry_overview');
     }
-
-
-  }
-
-  public function deleteFormSubmit(array &$form, FormStateInterface $form_state)
-  {
-    $descriptions = $this->atEntry->get("field_at_descriptions")->getValue();
-    Util::deleteNodesByReferences($descriptions);
-
-    $types = $this->atEntry->get("field_at_types")->getValue();
-    Util::deleteNodesByReferences($types);
-    $this->atEntry->delete();
-    $form_state->setRedirect('buddy.at_entry_overview');
   }
 
 

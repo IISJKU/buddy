@@ -65,6 +65,15 @@ class ATTypeCreateForm extends FormBase
       '#type' => 'actions',
     ];
 
+    $form['actions']['back'] = [
+      '#type' => 'submit',
+      '#button_type' => 'primary',
+      '#value' => $this->t('Back'),
+      '#submit' => ['::backFormSubmit'],
+      '#limit_validation_errors' => [],
+      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
+    ];
+
     $form['actions']['next'] = [
       '#type' => 'submit',
       '#button_type' => 'primary',
@@ -73,7 +82,11 @@ class ATTypeCreateForm extends FormBase
       '#submit' => ['::pageOneSubmit'],
       // Custom validation handler for page 1.
       '#validate' => ['::pageOneSubmitValidate'],
+      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
     ];
+
+
+
 
     return $form;
   }
@@ -112,7 +125,19 @@ class ATTypeCreateForm extends FormBase
 
 
   }
+  public function backFormSubmit(array &$form, FormStateInterface $form_state)
+  {
 
+    $route_name = \Drupal::routeMatch()->getRouteName();
+    if($route_name == "buddy.at_moderator_type_create_form"){
+      $path = Url::fromRoute('buddy.at_moderator_at_entry_overview',
+        ['atEntry' =>$this->atEntry->id()])->toString();
+      $response = new \Symfony\Component\HttpFoundation\RedirectResponse($path);
+      $response->send();
+    }else{
+      $form_state->setRedirect('buddy.at_entry_overview');
+    }
+  }
 
   public function pageOneSubmitValidate(array &$form, FormStateInterface $form_state) {
 
@@ -160,12 +185,14 @@ class ATTypeCreateForm extends FormBase
       // We won't bother validating the required 'color' field, since they
       // have to come back to this page to submit anyway.
       '#limit_validation_errors' => [],
+      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
     ];
     $form['submit'] = [
       '#type' => 'submit',
       '#button_type' => 'primary',
       '#weight' => 999999,
       '#value' => $this->t('Submit'),
+      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
     ];
 
     return $form;

@@ -37,13 +37,14 @@ class ATDescriptionEditForm extends ATDescriptionCreateForm
     $platformType = $this->atDescription->bundle();
     $form = $this->createForm($form,$form_state,$this->atDescription);
 
+    /*
     $form['actions']['delete'] = [
       '#type' => 'submit',
       '#button_type' => 'primary',
       '#value' => $this->t('Delete'),
       '#submit' => ['::deleteFormSubmit'],
 
-    ];
+    ];*/
 
     if($revision){
       $form['actions']['submit']['#value']= $this->t('Update revision');
@@ -99,6 +100,14 @@ class ATDescriptionEditForm extends ATDescriptionCreateForm
 
     $this->atDescription->save();
 
+
+    $this->backFormSubmit($form,$form_state);
+
+   }
+
+  public function backFormSubmit(array &$form, FormStateInterface $form_state)
+  {
+
     $route_name = \Drupal::routeMatch()->getRouteName();
     if($route_name == "buddy.at_moderator_description_edit_form"){
       $atEntryID = $this->atDescription->get("field_at_entry")->getValue()[0]['target_id'];
@@ -109,9 +118,7 @@ class ATDescriptionEditForm extends ATDescriptionCreateForm
     }else{
       $form_state->setRedirect('buddy.at_entry_overview');
     }
-
-
-   }
+  }
 
   public function deleteFormSubmit(array &$form, FormStateInterface $form_state)
   {
