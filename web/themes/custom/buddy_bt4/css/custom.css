@@ -1,17 +1,20 @@
-.buddy_login_menu{
+.buddy_login_menu,.buddy_user_main_menu{
   padding: 0;
 }
 
-.buddy_login_menu>li{
+.buddy_login_menu>li,.buddy_user_main_menu>li{
   list-style: none;
-  display: inline;
-
 
 }
-
+.buddy_login_menu>li{
+  display: inline;
+}
+.buddy_user_main_menu svg{
+  margin-right: 20px;
+}
 @media (min-width: 992px) {
 
-  .buddy_login_menu>li{
+  .buddy_login_menu>li,.buddy_user_main_menu>li{
     margin-right: 40px;
   }
 }
@@ -483,7 +486,7 @@ Main page
     display: none;
   }
 
-  .buddy_link_button{
+  .buddy_link_button, .buddy_link_button_social_auth{
     width: 100%;
     margin: 5px 0;
   }
@@ -496,6 +499,11 @@ Main page
   }
 
 
+}
+@media (max-width: 400px) {
+  .buddy_link_button_social_auth{
+    font-size: 0.9rem;
+  }
 }
 /*
 User Login

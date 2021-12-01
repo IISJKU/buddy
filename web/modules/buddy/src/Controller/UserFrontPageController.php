@@ -7,6 +7,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 
 class UserFrontPageController extends ControllerBase
@@ -41,11 +42,46 @@ class UserFrontPageController extends ControllerBase
       return $build;
     }else{
 
-      $createUserLink = Link::createFromRoute($this->t('Create account'),'buddy.user_register',[],['attributes' => ['class' => 'buddy_link_button create_account_button']])->toString()->getGeneratedLink();
-      $loginLink = Link::createFromRoute($this->t('Log in'),'buddy.user_login',[],['attributes' => ['class' => 'buddy_link_button login_button']])->toString()->getGeneratedLink();
+
+      $recommendationURL = Url::fromRoute('buddy.user_search')->toString();
+      $searchURL = Url::fromRoute('buddy.user_at_recommendation')->toString();
+      $manageToolsURL = Url::fromRoute('buddy.user_at_library')->toString();
 
 
-      $html = $this->t("Todo: Add information about what users can do here..");
+      $html = '<p >'.$this->t('With Buddy, you can:').'</p>
+               <ul class="buddy_user_main_menu">';
+
+      $html .= '<li>';
+      $html .= '<a class="buddy_link_button buddy_button" href="$recommendationURL">';
+      $html .= '<i class="fas fa-robot"></i>';
+      $html .= $this->t('Find a tool for you');
+      $html .= '</a></li>';
+
+      $html .= '<li>';
+      $html .= '<a class="buddy_link_button buddy_button" href="$searchURL">';
+      $html .= '<i class="fas fa-search"></i>';
+      $html .= $this->t('Search for tools');
+      $html .= '</a></li>';
+
+      $user = \Drupal::currentUser();
+      //Get AT Entry of description
+      $atRecordsIDs = \Drupal::entityQuery('node')
+        ->condition('type', 'user_at_record')
+        ->condition('field_user_at_record_library', true, '=')
+        ->condition('uid', $user->id(), '=')
+        ->execute();
+
+      if(count($atRecordsIDs) != 0) {
+        $html .= '<li>';
+        $html .= '<a class="buddy_link_button buddy_button" href="$manageToolsURL">';
+        $html .= '<i class="fas fa-tools"></i>';
+        $html .= $this->t('Rate your tools');
+        $html .= '</a></li>';
+      }
+
+      $html.="</ul>";
+
+
 
       $build = array(
         '#type' => 'markup',
