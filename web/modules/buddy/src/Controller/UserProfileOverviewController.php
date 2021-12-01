@@ -21,7 +21,7 @@ class UserProfileOverviewController extends ControllerBase
 
     $title = $this->t("Welcome ").$user->getAccountName();
 
-    $html = "<div>".$this->t("You can update your preferences or your account information here.")."</div>";
+    $html = "<p>".$this->t("You can update your preferences or your account information here.")."</p>";
     $html.="<h3>".$this->t("Updating your preferences allows you to:")."</h3>";
     $html.= "<ul><li>".$this->t("Tell Buddy where you need help.")."</li>";
     $html.= "<li>".$this->t("Tell Buddy which help you need.")."</li></ul>";

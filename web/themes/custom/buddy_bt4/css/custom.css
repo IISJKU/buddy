@@ -77,6 +77,14 @@
   background: #BA0096;
   color: white;
 }
+
+.buddy_download{
+  width: 80%;
+  font-size: 1.2rem;
+}
+.buddy_download svg{
+  margin-right: 20px;
+}
 .login_intro{
   margin-bottom: 20px;
 }
@@ -569,14 +577,23 @@ AT INSTall
 .at_library_container {
   display: block;
   float: left;
+  width: 100%;
 }
 
 .at_library_action_list {
   margin-bottom: 0;
 }
 
+.at_library_action_list li{
+  margin-right: 20px;
+}
+
 .at_library_container >ul{
   list-style: none;
+}
+
+.at_library_container >ul >li{
+  display: inline-block;
 }
 /*
 AT ENTRIES AT MODERATOR

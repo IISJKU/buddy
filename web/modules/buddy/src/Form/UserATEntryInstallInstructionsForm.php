@@ -375,13 +375,16 @@ class UserATEntryInstallInstructionsForm extends FormBase
       '#type' => 'submit',
       '#name' => $id,
       '#button_type' => 'primary',
-      '#value' => $this->t('Install'),
+      '#value' => $this->t('Get it!'),
       '#prefix' =>'<li class="er_type_install_item"> <div class="row"> <div class="col-8 buddy_install_description">'.$description.'</div><div class="col-4">',
       '#suffix' => '</div></div></li>',
 
     ];
 
-    $button['#attributes']['class'][] = 'buddy_link_button buddy_button';
+    $button['#attributes']['class'][] = 'buddy_link_button buddy_button buddy_download';
+    $button['#attributes']['class'][] = 'buddy-icon-button';
+    $button['#attributes']['class'][] = 'buddy-icon-before';
+    $button['#attributes']['icon'] = "fa-download";
     $button['#attributes']['aria-describedby'][] = $descriptionID;
 
     return $button;

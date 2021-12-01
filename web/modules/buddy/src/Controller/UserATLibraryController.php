@@ -68,7 +68,7 @@ class UserATLibraryController extends ControllerBase
 
       $html.="<div class='at_library_container'>";
       $html.=$content;
-      $html.="<h4>".$this->t("Actions")."</h4><ul class=\"at_library_action_list\">";
+      $html.="<h4>".$this->t("Actions")."</h4><ul class='at_library_action_list'>";
       $html.= "<li>".Link::createFromRoute($this->t('Install Instructions'),'buddy.user_at_install_form',['description' => $description->id()],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink()."</li>";
       $html.= "<li>".Link::createFromRoute($this->t('Remove'),'buddy.user_at_library_remove',['record' =>$atRecord->id()],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink()."</li>";
       $html.="</ul>";
@@ -90,7 +90,7 @@ class UserATLibraryController extends ControllerBase
         ],
       ],
       '#allowed_tags' => ['form', 'button', 'path', 'svg', 'input', 'label', 'a', 'div','img','h2','h1','p', 'b', 'g',
-        'strong','hr','ul', 'span', 'output'],
+        'strong','hr','ul','li', 'span', 'output'],
     );
 
     return $build;
