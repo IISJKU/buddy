@@ -33,19 +33,19 @@ class UserProfileCreationSelectionForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state): array {
     $form['steps'] = [
       '#type' => 'markup',
-      '#markup' => "<div class='steps'>".$this->t("Before you can start, we need to know you a little better.")."</div>",
+      '#markup' => "<div class='steps'>".$this->t("Before you can start, we need to get to know you a little better.")."</div>",
       '#allowed_tags' => ['div'],
 
     ];
     $form['login_op'] = array(
       '#type' => 'radios',
-      '#title' => $this->t('You can chose:'),
+      '#title' => $this->t('You can chose to:'),
       '#default_value' =>  0,
       '#options' => array(
         0 => $this
-          ->t('Fill in a form.'),
+          ->t('Answer a few questions'),
         1 => $this
-          ->t('Play a game(beta).'),
+          ->t('Play a game (still in development)'),
       ),
       '#required' => TRUE,
     );
