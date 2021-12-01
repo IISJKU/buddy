@@ -8,6 +8,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Display\Annotation\PageDisplayVariant;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 
@@ -29,10 +30,12 @@ class UserATLibraryController extends ControllerBase
 
     if(count($atRecordsIDs) == 0){
 
+      $recommendationURL = Url::fromRoute('buddy.user_search')->toString();
+      $searchURL = Url::fromRoute('buddy.user_at_recommendation')->toString();
       return [
         '#type' => 'markup',
-        '#markup' => '<div>'.$this->t("Your library is currently empty.").' </div><div>'
-          .$this->t("Use the search function or catalogue to add tools to your library."). '</div>',
+        '#markup' => '<p>'.$this->t("Your library is currently empty.").' </p><p>'
+          .$this->t("Buddy can ").'<a href="'.$searchURL.'">'.$this->t("find a tool for you").'</a> '.$this->t("or you can "). '<a href="'.$searchURL.'">'.$this->t("search").'</a> '.$this->t("for a tool you like.").' </p>',
         '#title' => $title,
 
       ];
