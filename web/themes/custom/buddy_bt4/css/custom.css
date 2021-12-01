@@ -291,7 +291,7 @@ Langauge Switcher
 }
 
 #block-dropdownlanguage .dropbutton-wrapper {
-  position: absolute;
+ /* position: absolute; */
   z-index: 1;
   margin: 10px 0;
   max-width: 200px;
