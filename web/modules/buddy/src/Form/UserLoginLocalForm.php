@@ -26,7 +26,7 @@ class UserLoginLocalForm extends \Drupal\user\Form\UserLoginForm
     $form['actions']['cancel'] = [
       '#type' => 'submit',
       '#value' => $this->t('Cancel'),
-      '#weight' => -1,
+      /*'#weight' => -1, */
       '#submit' => ['::userLoginLocalCancelSubmit'],
       '#limit_validation_errors' => [],
     ];
