@@ -317,7 +317,7 @@ class UserATEntryInstallInstructionsForm extends FormBase
 
     }
 
-    $tabHeader = $this->renderTabHeader($this->t("Apps"),Util::getBaseURL(false)."/modules/buddy/img/icons/app-icon.png", "app_tab","app_tab_panel",$activeTab);
+    $tabHeader = $this->renderTabHeader($this->t("App"),Util::getBaseURL(false)."/modules/buddy/img/icons/app-icon.png", "app_tab","app_tab_panel",$activeTab);
 
     $tabPanelHeader = $this->renderTabPanelHeader("app_tab","app_tab_panel",$activeTab);
     $form['intro'] = [
