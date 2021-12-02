@@ -51,6 +51,7 @@ class FocusGame extends GameScene {
   }
 
   create() {
+    super.create();
 
     this.wosh1 = this.sound.add('wosh1');
     this.wosh2 = this.sound.add('wosh1');

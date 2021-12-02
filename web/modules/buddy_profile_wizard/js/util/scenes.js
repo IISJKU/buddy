@@ -25,6 +25,10 @@ class GameScene extends Phaser.Scene {
 
   }
 
+  create(){
+    this.sound.pauseOnBlur = false;
+  }
+
   createTitle(title, style, sound) {
     console.log(title);
     if (!style) {

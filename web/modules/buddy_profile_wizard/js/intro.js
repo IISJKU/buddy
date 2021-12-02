@@ -14,6 +14,7 @@ class Intro extends GameScene {
 
   create ()
   {
+    super.create();
 
     this.coolSound = this.sound.add('no');
 
