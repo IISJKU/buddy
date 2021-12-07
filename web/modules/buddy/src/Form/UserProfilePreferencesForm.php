@@ -57,6 +57,9 @@ class UserProfilePreferencesForm extends FormBase
     foreach ($atCategories as $atCategory) {
       if($atCategory->hasTranslation($language)) {
         $atCategory = $atCategory->getTranslation($language);
+
+        $this->messenger()->addMessage($language);
+
       }
     }
 
