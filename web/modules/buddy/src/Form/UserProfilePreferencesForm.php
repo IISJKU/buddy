@@ -139,6 +139,13 @@ class UserProfilePreferencesForm extends FormBase
     $categoryContainerId = $keys[$currentPage];
     $atCategoryContainer = $atCategoryContainers[$categoryContainerId];
 
+    $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    if($atCategoryContainer->hasTranslation($language)) {
+      $atCategoryContainer = $atCategoryContainer->getTranslation($language);
+
+
+    }
+
     $sortedCategories = [];
     $index = 0;
     foreach ($atCategoryContainers as $categoryContainer){
