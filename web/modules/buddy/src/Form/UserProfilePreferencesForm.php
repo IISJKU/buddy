@@ -53,10 +53,11 @@ class UserProfilePreferencesForm extends FormBase
     $atCategories = $storage->loadMultiple($atCategoryIDs);
 
     $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    /*
     foreach ($atCategories as $atCategory) {
       $atCategory = $atCategory->getTranslation($language);
-      $atCategory->setTitle("MUH");
-    }
+
+    }*/
 
     $form_state->set('category_count', count($atCategories));
     if (!$form_state->has('category_container_num')) {
