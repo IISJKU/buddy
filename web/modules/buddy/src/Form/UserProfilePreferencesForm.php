@@ -211,7 +211,7 @@ class UserProfilePreferencesForm extends FormBase
       '#markup' => '<div class="container">
   <div class="row">
     <div class="col-2">
-      <b>Progress:</b>
+      <b>'.$this->t("Progress").':</b>
     </div>
     <div class="col-10">
       <div class="progress">

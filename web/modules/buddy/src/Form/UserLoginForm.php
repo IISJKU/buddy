@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Url;
 use Drupal\user\AccountForm;
 use Drupal\user\RegisterForm;
 use Drupal\Component\Datetime\TimeInterface;
@@ -54,9 +55,12 @@ class UserLoginForm extends FormBase
     $html .= $this->t('Log in with Google');
     $html .= '</a></div>';
 
+
+    $localLoginUrl = Url::fromRoute('buddy.user_login_local')->toString();
+
     // Email button
     $html .= '<div class="auth-option">';
-    $html .= '<a class="buddy_link_button_social_auth" href="user-login-local">';
+    $html .= '<a class="buddy_link_button_social_auth" href="'.$localLoginUrl.'">';
     $html .= '<img class="social-auth auth-icon" src="' . $social_path . 'email-logo-480.png" alt="">';
     $html .= $this->t('Log in with Email');
     $html .= '</a></div>';
