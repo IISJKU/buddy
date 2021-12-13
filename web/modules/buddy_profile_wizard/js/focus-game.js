@@ -9,6 +9,7 @@ class FocusGame extends GameScene {
     this.gamesToPlay = 3;
     this.numberOfCups = 4;
     this.secondShufflePercentage = 30;
+    this.cupFallDuration = 1000;
     this.numberOfShuffles = 10;
     this.shuffleDuration = 1000;
     this.rowHeight = 150;
@@ -270,27 +271,60 @@ class FocusGame extends GameScene {
 
    dropCups(){
 
+    let numberOfNonWinningCups = 0;
     for(let i=0; i < this.cups.length; i++){
+      let focusGame = this;
+      if(this.cups[i] === this.winningCup){
 
-      if(i === 0){
-        let focusGame = this;
-        this.tweens.add({
-          targets: this.cups[i],
-          props: {
-            y: {value: this.cups[i].y+this.cupFallHeight, duration: 1000, ease: 'Bounce.easeOut'}
+
+        this.time.addEvent({
+          delay: this.cupFallDuration*(this.cups.length-1),                // ms
+          callback: function (){
+            this.tweens.add({
+              targets: this.cups[i],
+              props: {
+                y: {value: this.cups[i].y+this.cupFallHeight, duration: this.cupFallDuration}
+              },
+              onComplete: function (tween, targets) {
+                focusGame.coin.visible = false;
+                focusGame.cupImpact.play();
+
+                focusGame.time.addEvent({
+                  delay: 500,                // ms
+                  callback: function (){
+                    focusGame.nextMove();
+                  },
+                  //args: [],
+                  callbackScope: this,
+                });
+              }
+            });
           },
-          onComplete: function (tween, targets) {
-            focusGame.coin.visible = false;
-            focusGame.nextMove();
-          }
+          callbackScope: this,
         });
       }else{
-        this.tweens.add({
-          targets: this.cups[i],
-          props: {
-            y: {value: this.cups[i].y+this.cupFallHeight, duration: 1000, ease: 'Bounce.easeOut'}
-          }
+
+        this.time.addEvent({
+          delay: this.cupFallDuration*(numberOfNonWinningCups),                // ms
+          callback: function (){
+            this.tweens.add({
+              targets: this.cups[i],
+              props: {
+                y: {value: this.cups[i].y+this.cupFallHeight, duration: this.cupFallDuration}
+              },
+              onComplete: function (tween, targets) {
+                focusGame.cupImpact.play();
+
+              }
+            });
+          },
+          callbackScope: this,
+
         });
+
+        numberOfNonWinningCups++;
+
+
 
       }
 
@@ -298,7 +332,9 @@ class FocusGame extends GameScene {
 
 
 
+
     }
+    /*
      this.time.addEvent({
        delay: 200,                // ms
        callback: function (){
@@ -307,6 +343,9 @@ class FocusGame extends GameScene {
        //args: [],
        callbackScope: this,
      });
+
+     */
+
 
   }
 
@@ -500,12 +539,17 @@ class FocusGame extends GameScene {
     let numberOfCupInRow = cupNumber-cupCount;
 
     let xPos =0;
+    let offset = 0;
+    if(this.needsOffset()){
+      offset = this.cameras.main.width/8;
+    }
+
     if(layout[rowIndex]%2 === 0){
       let spaceBetweenItems  = this.cameras.main.width/(layout[rowIndex]+1);
-      xPos = spaceBetweenItems*(numberOfCupInRow+1);
+      xPos = spaceBetweenItems*(numberOfCupInRow+1)+offset*rowIndex;
     }else{
       let spaceBetweenItems  = this.cameras.main.width/layout[rowIndex];
-      xPos = spaceBetweenItems*numberOfCupInRow+spaceBetweenItems*0.5;
+      xPos = spaceBetweenItems*numberOfCupInRow+spaceBetweenItems*0.5+offset*rowIndex;
 
     }
 
@@ -539,6 +583,13 @@ class FocusGame extends GameScene {
 
 
 
+  }
+
+  needsOffset(){
+    if(this.numberOfCups === 4){
+      return true;
+    }
+    return false;
   }
 
 

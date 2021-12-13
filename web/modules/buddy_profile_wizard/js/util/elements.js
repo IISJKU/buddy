@@ -262,6 +262,7 @@ class AvatarAudioButton extends Phaser.GameObjects.Container {
     this.background.setStrokeStyle(4, 0xefc53f);
 
 
+    /*
     this.backgroundTween = this.scene.tweens.add({
 
       targets: this.background,
@@ -272,7 +273,7 @@ class AvatarAudioButton extends Phaser.GameObjects.Container {
       duration: 200,
       ease: 'Sine.easeInOut'
 
-    });
+    }); */
 
 
 
