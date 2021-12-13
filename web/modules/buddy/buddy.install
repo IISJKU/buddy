@@ -25,6 +25,8 @@ function buddy_update_9202()
   if ($schema->tableExists($table)) {
     $spec = [
       'mysql_type' => 'datetime',
+      'pgsql_type' => 'timestamp',
+      'sqlite_type' => 'datetime',
       'description' => "Date when the rating was submitted",
       'not null' => TRUE,
       'default' => date('Y-m-d H:i:s'),  # Current date by default
