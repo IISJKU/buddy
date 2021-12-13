@@ -16,6 +16,24 @@ function buddy_schema()
 }
 
 /**
+ * Add date column to rating table
+ */
+function buddy_update_9202()
+{
+  $schema = \Drupal::database()->schema();
+  $table = 'rating';
+  if ($schema->tableExists($table)) {
+    $spec = [
+      'mysql_type' => 'datetime',
+      'description' => "Date when the rating was submitted",
+      'not null' => TRUE,
+      'default' => date('Y-m-d H:i:s'),  # Current date by default
+    ];
+    $schema->addField($table, 'date', $spec);
+  }
+}
+
+/**
  * Update DB schema when the module is already installed
  */
 function buddy_update_9201()
