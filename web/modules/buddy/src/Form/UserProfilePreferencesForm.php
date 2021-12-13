@@ -52,6 +52,19 @@ class UserProfilePreferencesForm extends FormBase
 
     $atCategories = $storage->loadMultiple($atCategoryIDs);
 
+    /*
+    $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+
+    foreach ($atCategories as $atCategory) {
+      if($atCategory->hasTranslation($language)) {
+        $atCategory = $atCategory->getTranslation($language);
+
+        $this->messenger()->addMessage($language);
+
+      }
+    }
+    */
+
     $form_state->set('category_count', count($atCategories));
     if (!$form_state->has('category_container_num')) {
 
@@ -126,6 +139,13 @@ class UserProfilePreferencesForm extends FormBase
     $categoryContainerId = $keys[$currentPage];
     $atCategoryContainer = $atCategoryContainers[$categoryContainerId];
 
+    $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    if($atCategoryContainer->hasTranslation($language)) {
+      $atCategoryContainer = $atCategoryContainer->getTranslation($language);
+
+
+    }
+
     $sortedCategories = [];
     $index = 0;
     foreach ($atCategoryContainers as $categoryContainer){
@@ -154,6 +174,13 @@ class UserProfilePreferencesForm extends FormBase
 
         if($index == $currentCategoryNumber){
           $currentCategory = $category;
+
+          $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+          if($category->hasTranslation($language)) {
+            $currentCategory = $category->getTranslation($language);
+
+
+          }
         }
         $index++;
 
@@ -184,7 +211,7 @@ class UserProfilePreferencesForm extends FormBase
       '#markup' => '<div class="container">
   <div class="row">
     <div class="col-2">
-      <b>Progress:</b>
+      <b>'.$this->t("Progress").':</b>
     </div>
     <div class="col-10">
       <div class="progress">

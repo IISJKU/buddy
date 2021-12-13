@@ -84,7 +84,7 @@ class ATDescriptionViewController extends ControllerBase
       $build = array(
       '#type' => 'markup',
       '#markup' => $html,
-      '#title' => "muh",
+      '#title' => $this->t("Preview of")." ".$description->getTitle(),
     );
 
     return $build;
