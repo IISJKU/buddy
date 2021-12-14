@@ -16,6 +16,18 @@ function buddy_schema()
 }
 
 /**
+ * Add DB table for temporary cache of ratings
+ */
+function buddy_update_9203()
+{
+  $schema = \Drupal::database()->schema();
+  $table = 'rating_cache';
+  if (!$schema->tableExists($table)) {
+    $schema->createTable($table, rating_table_schema());
+  }
+}
+
+/**
  * Add date column to rating table
  */
 function buddy_update_9202()

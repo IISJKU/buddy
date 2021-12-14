@@ -132,3 +132,24 @@ function buddy_local_tasks_alter(&$local_tasks) {
   unset($local_tasks['user.pass']);
 }
 
+/**
+ * Implements hook_cron().
+ */
+function buddy_cron()
+{
+  $route = 'api/v1/rating/collection';
+  $config = \Drupal::config('buddy.settings');
+  $mode = $config->get('mode');
+  if ($mode == 'prod') {
+    $post_url = $config->get('rating_service_prod');
+    $username = $config->get('rating_service_account');
+    $pwd = $config->get('rating_service_pwd');
+  } else {
+    $post_url = $config->get('rating_service_dev');
+    $username = $config->get('rating_service_dev_account');
+    $pwd = $config->get('rating_service_dev_pwd');
+  }
+
+  // TODO post request
+
+}
