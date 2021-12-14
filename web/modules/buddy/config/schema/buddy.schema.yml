@@ -1,0 +1,25 @@
+buddy.settings:
+  type: config_object
+  label: 'Buddy module config'
+  mapping:
+    mode:
+      type: string
+      label: 'Whether the site is in production mode (prod) or development (develop)'
+    rating_service_prod:
+      type: uri
+      label: 'URL of the production rating API'
+    rating_service_account:
+      type: email
+      label: 'Email of the authorized account to add/fetch rating data from the production API'
+    rating_service_pwd:
+      type: string
+      label: 'Plain-text password of the production API account'
+    rating_service_dev:
+      type: uri
+      label: 'URL of the development rating API'
+    rating_service_dev_account:
+      type: email
+      label: 'Email of the authorized account to add/fetch rating data from the development API'
+    rating_service_dev_pwd:
+      type: string
+      label: 'Plain-text password of the development API account'
