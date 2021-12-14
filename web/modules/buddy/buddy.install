@@ -5,6 +5,8 @@
  * Install, update, and uninstall functions for the Buddy module.
  */
 
+use Drupal\Core\Database\SchemaObjectExistsException;
+
 /**
 * Create custom DB schema for Buddy
 * @return array
@@ -16,19 +18,7 @@ function buddy_schema()
 }
 
 /**
- * Add DB table for temporary cache of ratings
- */
-function buddy_update_9203()
-{
-  $schema = \Drupal::database()->schema();
-  $table = 'rating_cache';
-  if (!$schema->tableExists($table)) {
-    $schema->createTable($table, rating_table_schema());
-  }
-}
-
-/**
- * Add date column to rating table
+ * Add date column to rating table and DB table for temporary cache of ratings
  */
 function buddy_update_9202()
 {
@@ -43,7 +33,16 @@ function buddy_update_9202()
       'not null' => TRUE,
       'default' => date('Y-m-d H:i:s'),  # Current date by default
     ];
-    $schema->addField($table, 'date', $spec);
+    try {
+      $schema->addField($table, 'date', $spec);
+    }
+    catch (SchemaObjectExistsException $e) {
+      // column already exists; ignore
+    }
+  }
+  $table = 'rating_cache';
+  if (!$schema->tableExists($table)) {
+    $schema->createTable($table, rating_table_schema());
   }
 }
 
@@ -83,6 +82,14 @@ function rating_table_schema() {
         'size' => 'tiny',
         'unsigned' => TRUE,
         'default' => 0,
+      ],
+      'date' => [
+        'mysql_type' => 'datetime',
+        'pgsql_type' => 'timestamp',
+        'sqlite_type' => 'datetime',
+        'description' => "Date when the rating was submitted",
+        'not null' => TRUE,
+        'default' => date('Y-m-d H:i:s'),
       ],
     ],
     'primary key' => [

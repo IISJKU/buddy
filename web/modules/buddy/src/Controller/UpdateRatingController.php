@@ -46,9 +46,15 @@ class UpdateRatingController extends ControllerBase
   {
     try {
       $connection = \Drupal::database();
+      // Add to main table
       $result = $connection->merge('rating')
         ->keys(['uid' => $user->id(), 'at_nid' => $atEntry->id()])
         ->fields(['rating' => $rating, 'date' => date('Y-m-d H:i:s')])
+        ->execute();
+      // Add to temporary cache
+      $result_cache = $connection->merge('rating_cache')
+        ->keys(['uid' => $user->id(), 'at_nid' => $atEntry->id()])
+        ->fields(['rating' => $rating])
         ->execute();
       $status = 'success';
       if ($result == Merge::STATUS_INSERT) {
