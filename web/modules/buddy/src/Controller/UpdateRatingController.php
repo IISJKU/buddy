@@ -48,7 +48,7 @@ class UpdateRatingController extends ControllerBase
       $connection = \Drupal::database();
       $result = $connection->merge('rating')
         ->keys(['uid' => $user->id(), 'at_nid' => $atEntry->id()])
-        ->fields(['rating' => $rating])
+        ->fields(['rating' => $rating, 'date' => date('Y-m-d H:i:s')])
         ->execute();
       $status = 'success';
       if ($result == Merge::STATUS_INSERT) {
