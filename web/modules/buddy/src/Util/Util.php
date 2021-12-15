@@ -92,6 +92,29 @@ class Util
     }
   }
 
+  /**
+   * Retrieve an environment (or configuration) variable
+   * Locally, fetch it from settings. php
+   * In docker, fetch it from an environment variable
+   * @param $var string the variable to fetch
+   */
+  public static function getBuddyEnvVar(string $var) {
+    global $config;
+    if (array_key_exists('buddy.config', $config) &&
+      array_key_exists($var, $config['buddy.config'])) {
+        return $config['buddy.config'][$var];
+    } else {
+      $value = getenv($var);
+      if ($value !== false) {
+        return $value;
+      } else {
+        \Drupal::logger('buddy')->error(
+          'Could not find configuration variable ' . $var);
+        return false;
+      }
+    }
+  }
+
   public static function getBaseURL($useLanguage = true)
   {
 
