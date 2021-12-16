@@ -43,8 +43,8 @@ class UserFrontPageController extends ControllerBase
     }else{
 
 
-      $recommendationURL = Url::fromRoute('buddy.user_search')->toString();
-      $searchURL = Url::fromRoute('buddy.user_at_recommendation')->toString();
+      $searchURL = Url::fromRoute('buddy.user_search')->toString();
+      $recommendationURL = Url::fromRoute('buddy.user_at_recommendation')->toString();
       $manageToolsURL = Url::fromRoute('buddy.user_at_library')->toString();
 
 
