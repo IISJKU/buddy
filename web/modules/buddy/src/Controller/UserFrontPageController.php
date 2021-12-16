@@ -52,13 +52,13 @@ class UserFrontPageController extends ControllerBase
                <ul class="buddy_user_main_menu">';
 
       $html .= '<li>';
-      $html .= '<a class="buddy_link_button buddy_button" href="$recommendationURL">';
+      $html .= '<a class="buddy_link_button buddy_button" href="'.$recommendationURL.'">';
       $html .= '<i class="fas fa-robot"></i>';
       $html .= $this->t('Find a tool for you');
       $html .= '</a></li>';
 
       $html .= '<li>';
-      $html .= '<a class="buddy_link_button buddy_button" href="$searchURL">';
+      $html .= '<a class="buddy_link_button buddy_button" href="'.$searchURL.'">';
       $html .= '<i class="fas fa-search"></i>';
       $html .= $this->t('Search for tools');
       $html .= '</a></li>';
@@ -73,7 +73,7 @@ class UserFrontPageController extends ControllerBase
 
       if(count($atRecordsIDs) != 0) {
         $html .= '<li>';
-        $html .= '<a class="buddy_link_button buddy_button" href="$manageToolsURL">';
+        $html .= '<a class="buddy_link_button buddy_button" href="'.$manageToolsURL.'">';
         $html .= '<i class="fas fa-tools"></i>';
         $html .= $this->t('Rate your tools');
         $html .= '</a></li>';
