@@ -86,7 +86,7 @@ class UserFrontPageController extends ControllerBase
       $build = array(
         '#type' => 'markup',
         '#markup' => $html,
-        '#title' => $this->t("Welcome ".$user->getAccountName()),
+        '#title' => $this->t("Welcome")." ".$user->getAccountName(),
         '#attached' => ['library'=> ['buddy/main_page']] ,
       );
 
