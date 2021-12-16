@@ -6,6 +6,9 @@ namespace Drupal\buddy\Util;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
 
 class BuddyRecommender
 {
@@ -78,29 +81,37 @@ class BuddyRecommender
    */
     public static function postRecentRatings() {
       $route = Util::getBuddyEnvVar('rating_service_route');
-      $post_url = Util::getBuddyEnvVar('rating_service');
+      $post_base_url = Util::getBuddyEnvVar('rating_service');
       $username = Util::getBuddyEnvVar('rating_service_account');
       $pwd = Util::getBuddyEnvVar('rating_service_pwd');
-      if (!$route | !$post_url | !$username | !$pwd) {
+      if (!$route | !$post_base_url | !$username | !$pwd) {
         return;
       }
       // Select all ratings cached in DB
       $connection = \Drupal::database();
       $query = $connection->select('rating_cache', 'r')->fields('r')->execute();
       $results = $query->fetchAll(\PDO::FETCH_OBJ);
-      $payload = array();
-      foreach ($results as $row) {
-        $payload[] = array(
-          'user_id' => $row->uid,
-          'item_id' => $row->at_nid,
-          'rating' => $row->rating,
-        );
+      if (count($results) > 0) {
+        $payload = array();
+        foreach ($results as $row) {
+          $payload[] = array(
+            'user_id' => (int) $row->uid,
+            'item_id' => (int) $row->at_nid,
+            'rating' => (int) $row->rating,
+          );
+        }
+        try {
+          $response = \Drupal::httpClient()->post($post_base_url . $route, [
+            'verify' => true,
+            'json' => $payload,
+          ])->getBody()->getContents();
+          // Clean cache
+          // $connection->delete('rating_cache')->execute();
+        } catch (ConnectException | ClientException | RequestException $e) {
+            watchdog_exception('buddy', $e);
+        } catch (\Exception $e) {
+          watchdog_exception('buddy', $e, 'Unknown exception caught');
+        }
       }
-      $json_data = json_encode($payload);
-
-      // TODO post encoded payload to API
-
-      // Clean cache
-      $connection->delete('rating_cache')->execute();
     }
 }

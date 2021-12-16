@@ -8,7 +8,6 @@ use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 function buddy_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
-  BuddyRecommender::postRecentRatings();
   if ($entity->bundle() == 'at_description' && $view_mode == 'full') {
     $node_lang = $entity->get('field_at_description_language')->getString();
     $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
