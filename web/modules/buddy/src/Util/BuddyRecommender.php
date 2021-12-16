@@ -76,15 +76,53 @@ class BuddyRecommender
     }
 
   /**
+   * Log in to the Buddy API and return the authorization token
+   * @return false|string auth token if login successful; false otherwise
+   */
+    public static function logInBuddyAPI() {
+      $base_url = Util::getBuddyEnvVar('rating_service');
+      $route = Util::getBuddyEnvVar('rating_service_login_route');
+      $username = Util::getBuddyEnvVar('rating_service_account');
+      $pwd = Util::getBuddyEnvVar('rating_service_pwd');
+      if (!$route | !$base_url | !$username | !$pwd) {
+        return false;
+      }
+      try {
+        $response = \Drupal::httpClient()->post($base_url . $route, [
+          'verify' => true,
+          'json' => [
+            'email' => $username,
+            'password' => $pwd
+          ],
+        ]);
+        $code = $response->getStatusCode();
+        if ($code >= 200 && $code < 300) {
+          $content = $response->getBody()->getContents();
+          $payload = json_decode($content, TRUE);
+          return $payload['Authorization'];
+        } else {
+          \Drupal::logger('buddy')->error(
+            'logInBuddyAPI error: returned code ' . $code);
+          return false;
+        }
+      } catch (\Exception $e) {
+        watchdog_exception('buddy', $e, 'logInBuddyAPI error');
+        return false;
+      }
+    }
+
+  /**
    * Post the ratings that have been cached in the DB to the Buddy Recommender API service.
    * After all ratings have been sent, clear the cache table
    */
     public static function postRecentRatings() {
+      $auth_token = BuddyRecommender::logInBuddyAPI();
+      if ($auth_token === false) {
+        return;
+      }
       $route = Util::getBuddyEnvVar('rating_service_route');
       $post_base_url = Util::getBuddyEnvVar('rating_service');
-      $username = Util::getBuddyEnvVar('rating_service_account');
-      $pwd = Util::getBuddyEnvVar('rating_service_pwd');
-      if (!$route | !$post_base_url | !$username | !$pwd) {
+      if (!$route | !$post_base_url) {
         return;
       }
       // Select all ratings cached in DB
@@ -108,7 +146,7 @@ class BuddyRecommender
           // Clean cache
           // $connection->delete('rating_cache')->execute();
         } catch (ConnectException | ClientException | RequestException $e) {
-            watchdog_exception('buddy', $e);
+          watchdog_exception('buddy', $e);
         } catch (\Exception $e) {
           watchdog_exception('buddy', $e, 'Unknown exception caught');
         }
