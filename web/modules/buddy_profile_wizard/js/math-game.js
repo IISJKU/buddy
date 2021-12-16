@@ -7,6 +7,11 @@ class MathGame extends GameScene {
     this.personScale = 0.55;
     this.personWidth = 100;
     this.steps = [];
+
+    this.numberOfSteps = 5;
+    this.minPeople = 1;
+    this.maxPeople = 3;
+
   }
 
   preload() {
@@ -74,23 +79,21 @@ class MathGame extends GameScene {
 
 
   startGame() {
-    let numberOfSteps = 5;
-    let minPeople = 1;
-    let maxPeople = 3;
+
     let currentPeople = 0;
-    for (let i = 0; i < numberOfSteps; i++) {
+    for (let i = 0; i < this.numberOfSteps; i++) {
 
 
       let operation = 0;
-      if (currentPeople > 0) {
+      if (this.currentPeople > 0) {
         operation = Math.floor(Math.random() * 2);
       }
 
-      let maximum = maxPeople - minPeople;
-      if (operation === 1 && maximum > currentPeople) {
-        maximum = currentPeople;
+      let maximum = this.maxPeople - this.minPeople;
+      if (operation === 1 && maximum > this.currentPeople) {
+        maximum = this.currentPeople;
       }
-      let amount = Math.floor(Math.random() * maximum) + minPeople;
+      let amount = Math.floor(Math.random() * maximum) + this.minPeople;
 
       if (operation === 0) {
         currentPeople += amount;
