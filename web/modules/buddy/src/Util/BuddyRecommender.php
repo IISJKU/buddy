@@ -116,10 +116,6 @@ class BuddyRecommender
    * After all ratings have been sent, clear the cache table
    */
     public static function postRecentRatings() {
-      $auth_token = BuddyRecommender::logInBuddyAPI();
-      if ($auth_token === false) {
-        return;
-      }
       $route = Util::getBuddyEnvVar('rating_service_route');
       $post_base_url = Util::getBuddyEnvVar('rating_service');
       if (!$route | !$post_base_url) {
@@ -129,7 +125,8 @@ class BuddyRecommender
       $connection = \Drupal::database();
       $query = $connection->select('rating_cache', 'r')->fields('r')->execute();
       $results = $query->fetchAll(\PDO::FETCH_OBJ);
-      if (count($results) > 0) {
+      $n_cached = count($results);
+      if ($n_cached> 0) {
         $payload = array();
         foreach ($results as $row) {
           $payload[] = array(
@@ -138,17 +135,38 @@ class BuddyRecommender
             'rating' => (int) $row->rating,
           );
         }
+        $auth_token = BuddyRecommender::logInBuddyAPI();
+        if ($auth_token === false) {
+          return;
+        }
         try {
           $response = \Drupal::httpClient()->post($post_base_url . $route, [
             'verify' => true,
             'json' => $payload,
-          ])->getBody()->getContents();
-          // Clean cache
-          // $connection->delete('rating_cache')->execute();
+            'headers' => [
+                'Authorization' => "Bearer {$auth_token}"
+            ]
+          ]);
+          $code = $response->getStatusCode();
+          if ($code >= 200 && $code < 300) {
+            $contents = json_decode($response->getBody()->getContents(), TRUE);
+            if ($contents['status'] == 'success') {
+              \Drupal::logger('buddy')->info($contents['message']);
+              // Clean cache
+              $connection->delete('rating_cache')->execute();
+              \Drupal::logger('buddy')->info('rating_cache cleared.');
+            } else {
+              \Drupal::logger('buddy')->error(
+                'postRecentRatings error: ' . print_r($contents, TRUE));
+            }
+          } else {
+            \Drupal::logger('buddy')->error(
+              'postRecentRatings error: returned code ' . $code);
+          }
         } catch (ConnectException | ClientException | RequestException $e) {
           watchdog_exception('buddy', $e);
         } catch (\Exception $e) {
-          watchdog_exception('buddy', $e, 'Unknown exception caught');
+          watchdog_exception('buddy', $e, 'postRecentRatings: Unknown exception caught');
         }
       }
     }

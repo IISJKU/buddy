@@ -135,6 +135,7 @@ function buddy_local_tasks_alter(&$local_tasks) {
 
 /**
  * Implements hook_cron().
+ * Post cached user-AT ratings to recommender API in regular intervals (default: 3 hours)
  */
 function buddy_cron()
 {
