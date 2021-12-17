@@ -75,8 +75,46 @@ class BuddyRecommender
       return $score;
     }
 
-    public static function get_ratings_based_recommendation($uid) {
-
+  /**
+   * Get data-based AT entries recommendations from the Buddy Recommender API
+   * @param int $uid User id of the target account
+   * @param int $top_k number of recommendations to request
+   * @return false|mixed array with recommendation (user_id, item_id, predicted_rating) triples;
+   * false if an error occurred (e.g. user does not exist).
+   */
+    public static function get_ratings_based_recommendation(int $uid, int $top_k=1) {
+      $base_url = Util::getBuddyEnvVar('rating_service');
+      $route = Util::getBuddyEnvVar('rating_service_predict_route');
+      if (!$route | !$base_url) {
+        return false;
+      }
+      $auth_token = BuddyRecommender::log_in_buddy_API();
+      if ($auth_token === false) {
+        return false;
+      }
+      $endpoint = $base_url . $route . '/top/' . $top_k . '/user/' . $uid;
+      try {
+        $response = \Drupal::httpClient()->get($endpoint, [
+          'headers' => [
+            'Authorization' => "Bearer {$auth_token}"
+          ]
+        ]);
+        $code = $response->getStatusCode();
+        if ($code >= 200 && $code < 300) {
+          $contents = json_decode($response->getBody()->getContents(), TRUE);
+          return $contents['data'];
+        } else {
+          \Drupal::logger('buddy')->error(
+            'get_ratings_based_recommendation error: returned code ' . $code);
+          return false;
+        }
+      } catch (ConnectException | ClientException | RequestException $e) {
+        watchdog_exception('buddy', $e);
+      } catch (\Exception $e) {
+        watchdog_exception('buddy', $e,
+          'get_ratings_based_recommendation: Unknown exception caught');
+      }
+      return false;
     }
 
   /**
