@@ -75,11 +75,15 @@ class BuddyRecommender
       return $score;
     }
 
+    public static function get_ratings_based_recommendation($uid) {
+
+    }
+
   /**
    * Log in to the Buddy API and return the authorization token
    * @return false|string auth token if login successful; false otherwise
    */
-    public static function logInBuddyAPI() {
+    public static function log_in_buddy_API() {
       $base_url = Util::getBuddyEnvVar('rating_service');
       $route = Util::getBuddyEnvVar('rating_service_login_route');
       $username = Util::getBuddyEnvVar('rating_service_account');
@@ -115,7 +119,7 @@ class BuddyRecommender
    * Post the ratings that have been cached in the DB to the Buddy Recommender API service.
    * After all ratings have been sent, clear the cache table
    */
-    public static function postRecentRatings() {
+    public static function post_recent_ratings() {
       $route = Util::getBuddyEnvVar('rating_service_route');
       $post_base_url = Util::getBuddyEnvVar('rating_service');
       if (!$route | !$post_base_url) {
@@ -125,8 +129,7 @@ class BuddyRecommender
       $connection = \Drupal::database();
       $query = $connection->select('rating_cache', 'r')->fields('r')->execute();
       $results = $query->fetchAll(\PDO::FETCH_OBJ);
-      $n_cached = count($results);
-      if ($n_cached> 0) {
+      if (count($results) > 0) {
         $payload = array();
         foreach ($results as $row) {
           $payload[] = array(
@@ -135,7 +138,7 @@ class BuddyRecommender
             'rating' => (int) $row->rating,
           );
         }
-        $auth_token = BuddyRecommender::logInBuddyAPI();
+        $auth_token = BuddyRecommender::log_in_buddy_API();
         if ($auth_token === false) {
           return;
         }

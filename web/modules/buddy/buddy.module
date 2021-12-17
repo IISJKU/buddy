@@ -139,5 +139,5 @@ function buddy_local_tasks_alter(&$local_tasks) {
  */
 function buddy_cron()
 {
-  BuddyRecommender::postRecentRatings();
+  BuddyRecommender::post_recent_ratings();
 }
