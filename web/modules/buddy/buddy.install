@@ -14,7 +14,21 @@ use Drupal\Core\Database\SchemaObjectExistsException;
 function buddy_schema()
 {
   $schema['rating'] = rating_table_schema();
+  $schema['rating_cache'] = rating_table_schema();
+  $schema['recs_cache'] = recommendations_cache_schema();
   return $schema;
+}
+
+/**
+ * Update DB schema: add recs_cache table
+ */
+function buddy_update_9203()
+{
+  $schema = \Drupal::database()->schema();
+  $table = 'recs_cache';
+  if (!$schema->tableExists($table)) {
+    $schema->createTable($table, recommendations_cache_schema());
+  }
 }
 
 /**
@@ -58,7 +72,68 @@ function buddy_update_9201()
   }
 }
 
-function rating_table_schema() {
+function recommendations_cache_schema(): array
+{
+  return array(
+    'description' => 'User-AT recommendations cache table',
+    'fields' => [
+      'uid' => [
+        'description' => 'The {users}.uid of the target user.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'at_nid' => [
+        'description' => 'The {node}.nid of the AT entry being recommended.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'score' => [
+        'description' => 'Recommendation score.',
+        'type' => 'float',
+        'size' => 'small',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => [
+      'uid',
+      'at_nid',
+    ],
+    'indexes' => [
+      'uid' => [
+        'uid'
+      ],
+      'at_nid' => [
+        'at_nid'
+      ],
+      'score' => [
+        'score'
+      ],
+    ],
+    'foreign keys' => [
+      'data_user' => [
+        'table' => 'users',
+        'columns' => [
+          'uid' => 'uid',
+        ],
+      ],
+      'data_at_entry' => [
+        'table' => 'node',
+        'columns' => [
+          'at_nid' => 'nid',
+        ],
+      ],
+    ],
+  );
+}
+
+function rating_table_schema(): array
+{
   return array(
     'description' => 'User-AT entries ratings table',
     'fields' => [
