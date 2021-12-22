@@ -6,6 +6,7 @@ namespace Drupal\buddy\Util;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\Database\Database;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
@@ -43,6 +44,22 @@ class BuddyRecommender
           foreach ($candidates as $at) {
             $score = BuddyRecommender::knowledge_score($at, $user_needs);
             $recs[$at] = $score;
+          }
+        }
+        // Add new recommendations to cache
+        if (!empty($recs)) {
+          $connection = \Drupal::database();
+          $query = $connection->insert('recs_cache')
+            ->fields(['uid', 'at_nid', 'score']);
+          foreach ($recs as $i => $s) {
+            $query->values([
+              $user->id(), $i, $s
+            ]);
+          }
+          try {
+            $query->execute();
+          } catch (\Exception $e) {
+            watchdog_exception('buddy', $e);
           }
         }
       }
