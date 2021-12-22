@@ -50,8 +50,11 @@ class BuddyRecommender
       $recs = array_diff($recs, $user_ats);
       $recs = array_diff($recs, $ignore_ats);
     }
-    arsort($recs);
-    return array_slice(array_keys($recs), 0, BuddyRecommender::$maxNumberOfATEntries);
+    if (!empty($recs)) {
+      arsort($recs);
+      $recs = array_slice(array_keys($recs), 0, BuddyRecommender::$maxNumberOfATEntries);
+    }
+    return $recs;
   }
 
   /**
