@@ -135,9 +135,28 @@ function buddy_local_tasks_alter(&$local_tasks) {
 
 /**
  * Implements hook_cron().
- * Post cached user-AT ratings to recommender API in regular intervals (default: 3 hours)
+ * - Post cached user-AT ratings to recommender API in regular intervals (default: 3 hours)
+ * - Clear the recommendations cache daily.
  */
 function buddy_cron()
 {
   BuddyRecommender::post_recent_ratings();
+  try {
+    $last_saved = \Drupal::state()->get('last_recs_cache', false);
+    $date_now = new \DateTime();
+    if ($last_saved !== false) {
+      $date_last = DateTime::createFromFormat('Y-m-d H:i:s', $last_saved);
+      $diff = $date_now->diff($date_last);
+      $hours = $diff->h + ($diff->days * 24);
+      if ($hours >= 24) {  // At least 24 hours have passed since last cache clear
+        $connection = \Drupal::database();
+        $connection->delete('recs_cache')->execute();
+        \Drupal::state()->set('last_recs_cache', $date_now->format('Y-m-d H:i:s'));
+      }
+    } else {
+      \Drupal::state()->set('last_recs_cache', $date_now->format('Y-m-d H:i:s'));
+    }
+  } catch (Exception $e) {
+    watchdog_exception('buddy', $e);
+  }
 }
