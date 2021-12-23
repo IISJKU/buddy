@@ -217,6 +217,9 @@ header .nav-item a:hover,header .nav-item a:focus{
   background-color: #fff;
   border-color: #000000 #000000 #fff;
 }
+.nav-link.active{
+  background-color: #9c9cc2;
+}
 
 .nav-tabs .nav-link {
   margin-bottom: -2px;
