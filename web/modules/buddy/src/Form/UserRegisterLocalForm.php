@@ -51,7 +51,7 @@ class UserRegisterLocalForm extends RegisterForm
     $form['account']['actions']['cancel'] = [
       '#type' => 'submit',
       '#value' => $this->t('Cancel'),
-      '#weight' => 2,
+      '#weight' => 20,
       '#submit' => ['::userCreateAccountCancelSubmit'],
       '#limit_validation_errors' => [],
     ];
