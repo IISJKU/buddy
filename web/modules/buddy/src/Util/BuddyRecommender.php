@@ -47,45 +47,45 @@ class BuddyRecommender
             $score = BuddyRecommender::knowledge_score($at, $user_needs);
             $recs[$at] = $score;
           }
-        }
-        // Combine with data-based scores, if available
-        $top_k = max(10, min(count($ats), 100));
-        $data_recs = BuddyRecommender::get_ratings_based_recommendation($user->id(), $top_k);
-        if ($data_recs !== false && !empty($data_recs)) {
-          $data_recs_indexed = array();
-          foreach ($data_recs as $prediction) {
-            if ($prediction['confidence'] > 0.0) {
-              $data_recs_indexed[$prediction['item_id']] = array();
-              $data_recs_indexed[$prediction['item_id']]['confidence'] = $prediction['confidence'];
-              $data_recs_indexed[$prediction['item_id']]['rating'] = $prediction['predicted_rating'];
+          // Combine with data-based scores, if available
+          $top_k = max(10, min(count($ats), 100));
+          $data_recs = BuddyRecommender::get_ratings_based_recommendation($user->id(), $top_k);
+          if ($data_recs !== false && !empty($data_recs)) {
+            $data_recs_indexed = array();
+            foreach ($data_recs as $prediction) {
+              if ($prediction['confidence'] > 0.0) {
+                $data_recs_indexed[$prediction['item_id']] = array();
+                $data_recs_indexed[$prediction['item_id']]['confidence'] = $prediction['confidence'];
+                $data_recs_indexed[$prediction['item_id']]['rating'] = $prediction['predicted_rating'];
+              }
             }
-          }
-          foreach($recs as $at_nid => $ks) {
-            if (array_key_exists($at_nid, $data_recs_indexed)) {
-              $c = $data_recs_indexed[$at_nid]['confidence'];
-              $ds = $data_recs_indexed[$at_nid]['rating'];
-              $final_recs[$at_nid] = $c*$ds + (1.0-$c)*$ks;
-            } else {
-              $final_recs[$at_nid] = 0.5*$ks;
+            foreach($recs as $at_nid => $ks) {
+              if (array_key_exists($at_nid, $data_recs_indexed)) {
+                $c = $data_recs_indexed[$at_nid]['confidence'];
+                $ds = $data_recs_indexed[$at_nid]['rating'];
+                $final_recs[$at_nid] = $c*$ds + (1.0-$c)*$ks;
+              } else {
+                $final_recs[$at_nid] = 0.5*$ks;
+              }
             }
+          } else {
+            $final_recs = $recs;
           }
-        } else {
-          $final_recs = $recs;
-        }
-        // Add new recommendations to cache
-        if (!empty($recs)) {
-          $connection = \Drupal::database();
-          $query = $connection->insert('recs_cache')
-            ->fields(['uid', 'at_nid', 'score']);
-          foreach ($recs as $i => $s) {
-            $query->values([
-              $user->id(), $i, $s
-            ]);
-          }
-          try {
-            $query->execute();
-          } catch (\Exception $e) {
-            watchdog_exception('buddy', $e);
+          // Add new recommendations to cache
+          if (!empty($final_recs)) {
+            $connection = \Drupal::database();
+            $query = $connection->insert('recs_cache')
+              ->fields(['uid', 'at_nid', 'score']);
+            foreach ($final_recs as $i => $s) {
+              $query->values([
+                $user->id(), $i, $s
+              ]);
+            }
+            try {
+              $query->execute();
+            } catch (\Exception $e) {
+              watchdog_exception('buddy', $e);
+            }
           }
         }
       }
