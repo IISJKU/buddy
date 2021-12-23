@@ -26,6 +26,7 @@ class BuddyRecommender
    */
   public static function recommend($user = null, array $ignore_ats = []): array
   {
+    $final_recs = array();
     if (!$user) {
       $user = \Drupal::currentUser();
     }
@@ -39,12 +40,37 @@ class BuddyRecommender
       if (!empty($ats)) {
         $candidates = array_diff($ats, $user_ats);
         $candidates = array_diff($candidates, $ignore_ats);
+        // Start by computing knowledge-based scores
         if (!empty($candidates)) {
           $user_needs = Util::getUserNeeds($user);
           foreach ($candidates as $at) {
             $score = BuddyRecommender::knowledge_score($at, $user_needs);
             $recs[$at] = $score;
           }
+        }
+        // Combine with data-based scores, if available
+        $top_k = max(10, min(count($ats), 100));
+        $data_recs = BuddyRecommender::get_ratings_based_recommendation($user->id(), $top_k);
+        if ($data_recs !== false && !empty($data_recs)) {
+          $data_recs_indexed = array();
+          foreach ($data_recs as $prediction) {
+            if ($prediction['confidence'] > 0.0) {
+              $data_recs_indexed[$prediction['item_id']] = array();
+              $data_recs_indexed[$prediction['item_id']]['confidence'] = $prediction['confidence'];
+              $data_recs_indexed[$prediction['item_id']]['rating'] = $prediction['predicted_rating'];
+            }
+          }
+          foreach($recs as $at_nid => $ks) {
+            if (array_key_exists($at_nid, $data_recs_indexed)) {
+              $c = $data_recs_indexed[$at_nid]['confidence'];
+              $ds = $data_recs_indexed[$at_nid]['rating'];
+              $final_recs[$at_nid] = $c*$ds + (1.0-$c)*$ks;
+            } else {
+              $final_recs[$at_nid] = 0.5*$ks;
+            }
+          }
+        } else {
+          $final_recs = $recs;
         }
         // Add new recommendations to cache
         if (!empty($recs)) {
@@ -64,14 +90,14 @@ class BuddyRecommender
         }
       }
     } else {
-      $recs = array_diff($recs, $user_ats);
-      $recs = array_diff($recs, $ignore_ats);
+      $recs = array_diff_key($recs, array_combine($user_ats, $user_ats));
+      $final_recs = array_diff_key($recs, array_combine($ignore_ats, $ignore_ats));
     }
-    if (!empty($recs)) {
-      arsort($recs);
-      $recs = array_slice(array_keys($recs), 0, BuddyRecommender::$maxNumberOfATEntries);
+    if (!empty($final_recs)) {
+      arsort($final_recs);
+      $final_recs = array_slice(array_keys($final_recs), 0, BuddyRecommender::$maxNumberOfATEntries);
     }
-    return $recs;
+    return $final_recs;
   }
 
   /**
@@ -131,7 +157,7 @@ class BuddyRecommender
    * Get data-based AT entries recommendations from the Buddy Recommender API
    * @param int $uid User id of the target account
    * @param int $top_k number of recommendations to request
-   * @return false|mixed array with recommendation (user_id, item_id, predicted_rating) triples;
+   * @return false|mixed array with recommendation (user_id, item_id, predicted_rating, confidence) tuples;
    * false if an error occurred (e.g. user does not exist).
    */
   public static function get_ratings_based_recommendation(int $uid, int $top_k = 1)
