@@ -58,6 +58,8 @@ class UserRegisterLocalForm extends RegisterForm
     $form['account']['actions']['cancel']['#attributes']['class'][] = 'buddy_small_link_button back_button';
 
     $form['#attached']['library'][] = 'buddy/user_profile_forms';
+
+    honeypot_add_form_protection($form,$form_state,['honeypot', 'time_restriction']);
     return $form;
 
 
