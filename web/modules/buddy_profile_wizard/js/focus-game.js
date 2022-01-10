@@ -645,6 +645,7 @@ class FocusGame extends GameScene {
 
 
 
+      /*
       if(this.distractionDelayTimer < 0){
         if(this.currentDistractionCount < this.maxNumbersOfDistractions && this.totalTime > this.maxDistractionAnimationTime){
 
@@ -653,6 +654,9 @@ class FocusGame extends GameScene {
           this.distractionDelayTimer = Math.floor(Math.random() * 3000);
         }
       }
+
+       */
+
 
     }
 
