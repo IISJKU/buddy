@@ -306,6 +306,17 @@ class UserProfilePreferencesForm extends FormBase
       $form['actions']['prev']['#attributes']['class'][] = 'buddy-icon-button';
       $form['actions']['prev']['#attributes']['class'][] = 'buddy-icon-before';
       $form['actions']['prev']['#attributes']['icon'] = "fa-arrow-left";
+    }else{
+      $form['actions']['prev'] = [
+        '#type' => 'submit',
+        '#value' => $this->t('Back'),
+        '#submit' => ['::backSubmit'],
+      ];
+
+      $form['actions']['prev']['#attributes']['class'][] = 'buddy-icon-button';
+      $form['actions']['prev']['#attributes']['class'][] = 'buddy-icon-before';
+      $form['actions']['prev']['#attributes']['icon'] = "fa-arrow-left";
+
     }
 
     if($currentPage !== count($sortedCategories)-1 || $currentCategoryNumber != count($sortedCategories[$currentPage]['categories'])-1){
@@ -454,6 +465,10 @@ class UserProfilePreferencesForm extends FormBase
       ->set('category_num', $currentCategory)
       ->setRebuild(TRUE);
 
+  }
+
+  public function backSubmit(array &$form, FormStateInterface $form_state){
+    $form_state->setRedirect("buddy.user_profile");
   }
 
   public function prevSubmitForm(array &$form, FormStateInterface $form_state)
