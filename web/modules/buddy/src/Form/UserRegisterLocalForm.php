@@ -51,13 +51,15 @@ class UserRegisterLocalForm extends RegisterForm
     $form['account']['actions']['cancel'] = [
       '#type' => 'submit',
       '#value' => $this->t('Cancel'),
-      '#weight' => 2,
+      '#weight' => 20,
       '#submit' => ['::userCreateAccountCancelSubmit'],
       '#limit_validation_errors' => [],
     ];
     $form['account']['actions']['cancel']['#attributes']['class'][] = 'buddy_small_link_button back_button';
 
     $form['#attached']['library'][] = 'buddy/user_profile_forms';
+
+    honeypot_add_form_protection($form,$form_state,['honeypot', 'time_restriction']);
     return $form;
 
 

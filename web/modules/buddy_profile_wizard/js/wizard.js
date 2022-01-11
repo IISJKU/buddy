@@ -1,7 +1,8 @@
 var config = {
   type: Phaser.AUTO,
   scale: {
-    mode: Phaser.Scale.WIDTH_CONTROLS_HEIGHT,
+    mode: Phaser.Scale.NONE,
+
   //  parent: 'phaser-container',
     width: 800,
     height: 600
@@ -22,7 +23,7 @@ var config = {
   },
 
   backgroundColor: '#2d2d2d',
-  scene: [Intro,UnderstandingQuiz,ReadingGameTTSSentence, FocusGame,WritingGame,TimeManagementQuiz, ReadingGameTTSWord, MathGame, MemoryGame, ReadingGameText, MemoryGameShortTerm]
+  scene: [Intro,MathGame, UnderstandingQuiz,ReadingGameTTSSentence, FocusGame,WritingGame,TimeManagementQuiz, ReadingGameTTSWord, ReadingGameText, MemoryGameShortTerm]
 
   /*scene: {
     preload: preload,

@@ -4,6 +4,7 @@
 namespace Drupal\buddy\Form;
 
 
+use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
@@ -18,9 +19,12 @@ class UserLoginLocalForm extends \Drupal\user\Form\UserLoginForm
   public function buildForm(array $form, FormStateInterface $form_state)
   {
 
-
     $form = parent::buildForm($form, $form_state);
 
+    $form['#title'] = $this->t("Log in with Email");
+    $form['name']['#title'] = $this->t("Email or username");
+    $form['name']['#description'] = $this->t("Enter your Buddy email or username");
+    $form['pass']['#description'] = $this->t("Enter the password that accompanies your email or username");
     $form['actions']['submit']['#attributes']['class'][] = 'buddy_small_link_button';
 
     $form['actions']['cancel'] = [
