@@ -28,8 +28,7 @@ class UserATLibraryController extends ControllerBase
       ->condition('uid', $user->id(), '=')
       ->execute();
 
-    if(count($atRecordsIDs) == 0){
-
+    if(count($atRecordsIDs) == 0) {
       $recommendationURL = Url::fromRoute('buddy.user_search')->toString();
       $searchURL = Url::fromRoute('buddy.user_at_recommendation')->toString();
       return [
@@ -37,15 +36,10 @@ class UserATLibraryController extends ControllerBase
         '#markup' => '<p>'.$this->t("Your library is currently empty.").' </p><p>'
           .$this->t("Buddy can ").'<a href="'.$searchURL.'">'.$this->t("find a tool for you").'</a> '.$this->t("or you can "). '<a href="'.$searchURL.'">'.$this->t("search").'</a> '.$this->t("for a tool you like.").' </p>',
         '#title' => $title,
-
       ];
     }
 
-
-
-
     $html = '<div>'.$this->t("Here is your current library of tools.").'</div>';
-
 
     $atRecords = \Drupal::entityTypeManager()->getStorage('node')
       ->loadMultiple($atRecordsIDs);
@@ -53,23 +47,27 @@ class UserATLibraryController extends ControllerBase
     foreach ($atRecords as $key => $atRecord){
 
       $atEntryID = $atRecord->get("field_user_at_record_at_entry")->getValue()[0]['target_id'];
-
-
       $atEntry = Node::load($atEntryID);
-
       $descriptions = Util::getDescriptionsOfATEntry($atEntryID);
       $user = \Drupal::currentUser();
-
       $description = Util::getDescriptionForUser($descriptions,$user);
       $languages = Util::getLanguagesOfDescriptions($descriptions);
       $platforms = Util::getPlatformsOfATEntry($atEntry);
       $content = Util::renderDescriptionTiles($description,$user,$languages,$platforms,false,false);
 
+      $atlink_1 = Link::createFromRoute($this->t('Information'),'buddy.user_at_install_form',['description' => $description->id()],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+      $atlink_2 = Link::createFromRoute($this->t('Install Instructions'),
+        'buddy.user_at_install_form',
+        ['description' => $description->id()],
+        ['attributes' => ['class' => 'buddy_link_button buddy_button'],
+          'fragment' => 'install-instructions']
+      )->toString()->getGeneratedLink();
 
       $html.="<div class='at_library_container'>";
       $html.=$content;
       $html.="<h4>".$this->t("Actions")."</h4><ul class='at_library_action_list'>";
-      $html.= "<li>".Link::createFromRoute($this->t('Install Instructions'),'buddy.user_at_install_form',['description' => $description->id()],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink()."</li>";
+      $html.= "<li>".$atlink_1."</li>";
+      $html.= "<li>".$atlink_2."</li>";
       $html.= "<li>".Link::createFromRoute($this->t('Remove'),'buddy.user_at_library_remove',['record' =>$atRecord->id()],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink()."</li>";
       $html.="</ul>";
 

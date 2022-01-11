@@ -69,7 +69,7 @@ class UserATEntryInstallInstructionsForm extends FormBase
 
     $form['introduction_install'] = [
       '#type' => 'markup',
-      '#markup' => '<hr><h2>'.$this->t("How do you get this Tool?").'</h2><div><strong>'.$this->t("This tool is available as:").'</strong></div>',
+      '#markup' => '<hr><h2 id="install-instructions">'.$this->t("How do you get this Tool?").'</h2><div><strong>'.$this->t("This tool is available as:").'</strong></div>',
       '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','strong','hr'],
 
     ];
