@@ -52,7 +52,7 @@ class ATRecommendationForm extends FormBase
           '#type' => 'markup',
           '#prefix' => "<div class='at_library_container'",
           '#markup' => $content,
-          '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
+          '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
         ];
         $entryForm['at_install'] = [
           '#name' => $atEntryID . "_" . $description->id(),

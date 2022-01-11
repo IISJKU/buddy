@@ -282,17 +282,29 @@ class Util
       }
     }
 
-    $html = "";
+    $html = '<ul class="software-type-list">';
     if ($app) {
-      $html .= '<img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/app-icon.png" alt="' . t("Mobile application") . '" title="' . t("Mobile application") . '">';
+      $html .= '<li>';
+      $title = 'Mobile phone';
+      $html .= '<span class="hide-narrow-desc">' . t($title) . '</span>';
+      $html .= ' <img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/app-icon.png" alt="" title="' . $title . '">';
+      $html .= '</li>';
     }
     if ($software) {
-      $html .= '<img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/desktop-icon.png" alt="' . t("Desktop software") . '" title="' . t("Desktop software") . '">';
+      $html .= '<li>';
+      $title = 'Personal Computer';
+      $html .= '<span class="hide-narrow-desc">' . t($title) . '</span>';
+      $html .= ' <img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/desktop-icon.png" alt="" title="' . t($title) . '">';
+      $html .= '</li>';
     }
-
     if ($browserExtension) {
-      $html .= '<img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/browser-icon.png" alt="' . t("Browser extension") . '" title="' . t("Browser extension") . '">';
+      $html .= '<li >';
+      $title = 'Browser Extension';
+      $html .= '<span class="hide-narrow-desc">' . t($title) . '</span>';
+      $html .= ' <img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/browser-icon.png" alt="" title="' . t($title) . '">';
+      $html .= '</li>';
     }
+    $html .= '</ul>';
 
     return $html;
   }

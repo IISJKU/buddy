@@ -239,7 +239,7 @@ class UserSearchForm extends FormBase
       '#type' => 'markup',
       '#prefix' => "<div class='at_library_container'",
       '#markup' => $content,
-      '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
+      '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
     ];
 
 
@@ -268,7 +268,7 @@ class UserSearchForm extends FormBase
       $form['at_install'] = [
         '#type' => 'markup',
         '#markup' => '</div>',
-        '#allowed_tags' => ['button', 'a', 'div', 'img', 'h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
+        '#allowed_tags' => ['button', 'a', 'div', 'img', 'h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'span'],
       ];
     }
 

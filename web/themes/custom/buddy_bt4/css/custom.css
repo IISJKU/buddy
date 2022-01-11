@@ -429,9 +429,6 @@ th.views-field{
   background-color: black;
 }
 
-
-
-
 .view-at-catalogue .views-row {
   padding-top: 20px;
   padding-bottom: 20px;
@@ -527,13 +524,30 @@ User Login
 Platform
  */
 
+.software-type-list {
+  list-style: none;
+  padding: 0;
+}
+
+.software-type-list li {
+  display: inline;
+  list-style: initial;
+  white-space: nowrap;
+  float: left;
+}
+
+@media all and (max-width: 479px) {
+  .hide-narrow-desc {
+    display: none;
+  }
+}
+
 .platform_overview, .language_overview{
   margin-top: 10px;
 }
 .platform_overview img, .language_overview img{
   max-height: 35px;
-  margin-left: 25px;
-
+  margin-right: 15px;
 }
 
 /*
