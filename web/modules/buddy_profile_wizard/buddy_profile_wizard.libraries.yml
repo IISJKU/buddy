@@ -18,8 +18,6 @@ buddy_profile_wizard:
     js/reading-game-tts-word.js: {}
     js/reading-game-tts-sentence.js: {}
     js/reading-game-text.js: {}
-    js/memory-game.js: {}
-    js/memory-game-working-memory.js: {}
     js/memory-game-short-term.js: {}
     js/focus-game.js: {}
     js/writing-game.js: {}
