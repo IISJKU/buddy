@@ -2,6 +2,7 @@
 
 namespace Drupal\buddy\Form;
 
+use Drupal\buddy\Util\Util;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Form\FormBase;
@@ -31,9 +32,22 @@ class UserProfileCreationSelectionForm extends FormBase {
   }
 
   public function buildForm(array $form, FormStateInterface $form_state): array {
+    $user = \Drupal::currentUser();
+    $user_profileID = \Drupal::entityQuery('node')
+      ->condition('type', 'user_profile')
+      ->condition('uid', $user->id(), '=')
+      ->condition('field_user_profile_finished', true, '=')
+      ->execute();
+    if (count($user_profileID) == 0) {
+      $a = $this->t("Setup preferences");
+      Util::setTitle($this->t("Setup preferences")." ");
+    }else{
+      Util::setTitle($this->t("Update preferences")." ");
+    }
+
     $form['steps'] = [
       '#type' => 'markup',
-      '#markup' => "<div class='steps'>".$this->t("Before you can start, we need to get to know you a little better.")."</div>",
+      '#markup' => "<div class='steps'>".$this->t("In order for Buddy to give you suitable recommendations, we need to know your preferences..")."</div>",
       '#allowed_tags' => ['div'],
 
     ];

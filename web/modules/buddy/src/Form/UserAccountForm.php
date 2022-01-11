@@ -31,4 +31,26 @@ class UserAccountForm extends ProfileForm
     parent::submitForm($form, $form_state);
     $form_state->setRedirect('buddy.user_profile_overview');
   }
+
+
+  protected function actions(array $form, FormStateInterface $form_state) {
+    $element = parent::actions($form, $form_state);
+
+    // The user account being edited.
+    $account = $this->entity;
+
+    $element['delete']['#type'] = 'submit';
+    $element['delete']['#value'] = $this->t('Cancel account');
+    $element['delete']['#submit'] = ['::cancelAccountSubmit'];
+    $element['delete']['#access'] = $account->id() > 1 && $account->access('delete');
+    $element['delete']['#attributes'] = ['class' => ['buddy_link_button buddy_button']];
+    $element['submit']['#attributes'] = ['class' => ['buddy_link_button buddy_button']];
+    return $element;
+  }
+
+  public function cancelAccountSubmit($form, FormStateInterface $form_state) {
+    $form_state->setRedirect(
+      'buddy.user_account_delete_form'
+    );
+  }
 }
