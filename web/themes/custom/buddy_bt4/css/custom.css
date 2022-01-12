@@ -230,6 +230,10 @@ header .nav-item a:hover,header .nav-item a:focus{
   .navbar-expand .navbar-nav {
     flex-direction: column;
   }
+  h1{
+    font-size: 2.5rem !important;
+    word-wrap: break-word;
+  }
 }
 
 
@@ -524,16 +528,16 @@ User Login
 Platform
  */
 
-.software-type-list {
-  list-style: none;
+.software-type-list,.language-list {
+
   padding: 0;
 }
 
-.software-type-list li {
-  display: inline;
-  list-style: initial;
+.software-type-list li,.language-list li {
+  /*display: inline; */
+  list-style: none;
   white-space: nowrap;
-  float: left;
+ /* float: left;*/
 }
 
 @media all and (max-width: 479px) {

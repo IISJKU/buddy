@@ -98,11 +98,12 @@ class Util
    * In docker, fetch it from an environment variable
    * @param $var string the variable to fetch
    */
-  public static function getBuddyEnvVar(string $var) {
+  public static function getBuddyEnvVar(string $var)
+  {
     global $config;
     if (array_key_exists('buddy.config', $config) &&
       array_key_exists($var, $config['buddy.config'])) {
-        return $config['buddy.config'][$var];
+      return $config['buddy.config'][$var];
     } else {
       $value = getenv($var);
       if ($value !== false) {
@@ -254,7 +255,7 @@ class Util
     $software = false;
     $app = false;
     foreach ($platforms as $platform) {
-      if(!$platform){
+      if (!$platform) {
         continue;
       }
       switch ($platform->bundle()) {
@@ -286,22 +287,22 @@ class Util
     if ($app) {
       $html .= '<li>';
       $title = 'Mobile phone';
-      $html .= '<span class="hide-narrow-desc">' . t($title) . '</span>';
       $html .= ' <img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/app-icon.png" alt="" title="' . $title . '">';
+      $html .= '<span class="hide-narrow-desc">' . t($title) . '</span>';
       $html .= '</li>';
     }
     if ($software) {
       $html .= '<li>';
       $title = 'Personal Computer';
-      $html .= '<span class="hide-narrow-desc">' . t($title) . '</span>';
       $html .= ' <img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/desktop-icon.png" alt="" title="' . t($title) . '">';
+      $html .= '<span class="hide-narrow-desc">' . t($title) . '</span>';
       $html .= '</li>';
     }
     if ($browserExtension) {
       $html .= '<li >';
       $title = 'Browser Extension';
-      $html .= '<span class="hide-narrow-desc">' . t($title) . '</span>';
       $html .= ' <img class="platform_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/browser-icon.png" alt="" title="' . t($title) . '">';
+      $html .= '<span class="hide-narrow-desc">' . t($title) . '</span>';
       $html .= '</li>';
     }
     $html .= '</ul>';
@@ -312,18 +313,28 @@ class Util
   public static function renderLanguageOverview($languages, $currentLanguage)
   {
 
-    $html = "";
-    if ($currentLanguage) {
-      $html .= '<img class="language_icon current_language" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/flags/' . $currentLanguage . '.png" alt="' . Util::getNameForLanguageCode($currentLanguage) . '" title="' . Util::getNameForLanguageCode($currentLanguage) . '">';
 
+    $html = '<ul class="language-list">';
+
+
+    if ($currentLanguage) {
+      $html .= '<li>';
+      $title = Util::getNameForLanguageCode($currentLanguage);
+      $html .= '<img class="language_icon current_language" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/flags/' . $currentLanguage . '.png" alt="' . Util::getNameForLanguageCode($currentLanguage) . '" title="' . Util::getNameForLanguageCode($currentLanguage) . '">';
+      $html .= '<span class="hide-narrow-desc">' . $title . '</span>';
+      $html .= '</li>';
     }
 
     foreach ($languages as $language) {
       if ($language != $currentLanguage) {
+        $html .= '<li>';
+        $title = Util::getNameForLanguageCode($language);
         $html .= '<img class="language_icon" src="' . Util::getBaseURL(false) . '/modules/buddy/img/icons/flags/' . $language . '.png" alt="' . Util::getNameForLanguageCode($language) . '" title="' . Util::getNameForLanguageCode($language) . '">';
-
+        $html .= '<span class="hide-narrow-desc">' . $title . '</span>';
+        $html .= '</li>';
       }
     }
+    $html .= '</ul>';
 
     return $html;
   }
@@ -394,7 +405,7 @@ class Util
 
   }
 
-  public static function renderDescriptionTiles($description, $user, $languages, $platforms,$renderPlatform=true,$renderLanguage=true)
+  public static function renderDescriptionTiles($description, $user, $languages, $platforms, $renderPlatform = true, $renderLanguage = true)
   {
 
     $content = $description->get("field_at_description_short")->getValue()[0]['value'];
@@ -418,7 +429,7 @@ class Util
                 </div>
             </div>';
 
-    if($renderPlatform){
+    if ($renderPlatform) {
       $platformsHTML = Util::renderPlatformOverview($platforms);
       if ($platformsHTML) {
         $html .= ' <div class="row platform_overview">
@@ -433,7 +444,7 @@ class Util
     }
 
 
-    if($renderLanguage){
+    if ($renderLanguage) {
       $currentLanguage = $description->field_at_description_language->getValue()[0]['value'];
       $languageHtml = Util::renderLanguageOverview($languages, $currentLanguage);
 
@@ -454,7 +465,9 @@ class Util
 
     return $html;
   }
-  public static function renderDescriptionDetail($description, $languages){
+
+  public static function renderDescriptionDetail($description, $languages)
+  {
     $content = $description->get("field_at_description")->getValue()[0]['value'];
     $image = $description->field_at_description_at_image->getValue();
     $altText = $image[0]['alt'];
@@ -572,7 +585,7 @@ class Util
         $user_needs = $profile->get('field_user_profile_user_needs')->getValue();
         foreach ($user_needs as $user_need) {
           $need_entry = $storage->load($user_need['target_id']);
-          if($need_entry){
+          if ($need_entry) {
             $category = $need_entry->get('field_user_need_ass_support_cat')->getString();
             $percentage = $need_entry->get('field_user_need_ass_percentage')->getString();
             if ($percentage > 0.009) {
@@ -676,11 +689,12 @@ class Util
 
   }
 
-  public static function hasRole($roleName){
+  public static function hasRole($roleName)
+  {
 
     $current_user = \Drupal::currentUser();
 
-    if(in_array($roleName, $current_user->getRoles())){
+    if (in_array($roleName, $current_user->getRoles())) {
 
       return true;
     }
@@ -689,14 +703,15 @@ class Util
 
   }
 
-  public static function getATEntryIDOfType($atType){
+  public static function getATEntryIDOfType($atType)
+  {
 
     $query = \Drupal::entityQuery('node')
       ->condition('type', 'at_entry')
       ->condition('field_at_types', $atType->id());
     $atEntry = $query->execute();
 
-    if(count($atEntry)){
+    if (count($atEntry)) {
 
       return reset($atEntry);
     }
