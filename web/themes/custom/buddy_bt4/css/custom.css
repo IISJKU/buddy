@@ -632,6 +632,11 @@ Profile
 
 .profile_container{
   margin-top: 30px;
+  border: 10px solid #E5E3F0;
+  margin-bottom: 10px;
+  border-radius: 30px;
+  background: white;
+  padding: 20px 20px 0 20px;
 }
 /*FOOTER */
 footer.mt-auto{

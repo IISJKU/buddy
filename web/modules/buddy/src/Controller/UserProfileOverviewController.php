@@ -21,18 +21,18 @@ class UserProfileOverviewController extends ControllerBase
 
     $title = $this->t("Welcome ").$user->getAccountName();
 
-    $html = "<p>".$this->t("You can update your preferences or your account information here.")."</p>";
-    $html.="<div class='profile_container'><h3>".$this->t("Updating your preferences allows you to:")."</h3>";
-    $html.= "<ul><li>".$this->t("Tell Buddy where you need help.")."</li>";
-    $html.= "<li>".$this->t("Tell Buddy which help you need.")."</li></ul>";
+    $html = "<p>".$this->t("You can change your preferences or adjust your account here.")."</p>";
+    $html.="<div class='profile_container'><h3>".$this->t("Preferences")."</h3><p>".$this->t("If you are not happy with the tools that Buddy recommends you, you can update your preferences to tell Buddy what help you need.")."</p>";
+
     $html.= Link::createFromRoute($this->t('Update preferences'),'buddy.user_profile',[],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
     $html.= "</div>";
-    $html.="<div class='profile_container'><h3>".$this->t("Updating your account information allows you to:")."</h3>";
-    $html.= "<ul><li>".$this->t("Update your password")."</li>";
-    $html.= "<li>".$this->t("Change email address")."</li>";
-    $html.= "<li>".$this->t("Change language")."</li></ul></div>";
-    $html.= Link::createFromRoute($this->t('Update account information'),'buddy.user_account_form',[],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
-
+    $html.="<div class='profile_container'><h3>".$this->t("Account")."</h3><p>".$this->t("Adjusting your account allows you to:")."</p>";
+    $html.= "<ul><li>".$this->t("Change your password")."</li>";
+    $html.= "<li>".$this->t("Change your email address")."</li>";
+    $html.= "<li>".$this->t("Change language")."</li>";
+    $html.= "<li>".$this->t("Delete your account")."</li></ul>";
+    $html.= Link::createFromRoute($this->t('Adjust account'),'buddy.user_account_form',[],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+    $html.= "</div>";
 
 
 

@@ -47,17 +47,17 @@ class UserProfileCreationSelectionForm extends FormBase {
 
     $form['steps'] = [
       '#type' => 'markup',
-      '#markup' => "<div class='steps'>".$this->t("In order for Buddy to give you suitable recommendations, we need to know your preferences..")."</div>",
+      '#markup' => "<div class='steps'>".$this->t("In order for Buddy to give you suitable recommendations, we need to know your preferences.")."</div>",
       '#allowed_tags' => ['div'],
 
     ];
     $form['login_op'] = array(
       '#type' => 'radios',
-      '#title' => $this->t('You can chose to:'),
+      '#title' => $this->t('You can set your preferences by:'),
       '#default_value' =>  0,
       '#options' => array(
         0 => $this
-          ->t('Answer a few questions'),
+          ->t('Answering a few questions'),
         1 => $this
           ->t('Play a game (still in development)'),
       ),
