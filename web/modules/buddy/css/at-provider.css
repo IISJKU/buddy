@@ -124,3 +124,14 @@
     font-size: 0.8rem;
   }
 }
+
+.buddy_category_table{
+  width: 100%;
+}
+table.buddy_category_table th:first-child, table.buddy_category_table  td:first-child {
+  border-radius: initial;
+}
+
+table.buddy_category_table  th:last-child, table.buddy_category_table  td:last-child {
+  border-radius: initial;
+}

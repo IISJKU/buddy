@@ -26,6 +26,25 @@ class ATModeratorATEntriesOverviewController extends ControllerBase
     $atEntries = \Drupal::entityTypeManager()->getStorage('node')
       ->loadMultiple($atEntriesID);
 
+    $atCategoriesID = \Drupal::entityQuery('node')
+      ->condition('type', 'at_category')
+      ->sort('title', 'ASC')
+      ->execute();
+
+    $atCategories = \Drupal::entityTypeManager()->getStorage('node')
+      ->loadMultiple($atCategoriesID);
+
+
+    $categoryMatrix = [];
+    foreach ($atCategories as $atCategory){
+
+      $categoryMatrix[$atCategory->id()]['title'] = $atCategory->getTitle();
+      $categoryMatrix[$atCategory->id()]['count']  = 0;
+      $categoryMatrix[$atCategory->id()]['languages']['en'] = 0;
+      $categoryMatrix[$atCategory->id()]['languages']['de'] = 0;
+      $categoryMatrix[$atCategory->id()]['languages']['sv'] = 0;
+    }
+
 
     $atDescriptionsOfATEntries = [];
     $atPlatformsOfATEntries = [];
@@ -53,6 +72,7 @@ class ATModeratorATEntriesOverviewController extends ControllerBase
                 <th scope="row">'.$this->t("Author").'</th>
                 <th scope="row">'.$this->t("Languages").'</th>
                 <th scope="row">'.$this->t("Platforms").'</th>
+                <th scope="row">'.$this->t("Categories").'</th>
                 <th scope="row">'.$this->t("Edit").'</th>
 </tr>';
 
@@ -69,6 +89,7 @@ class ATModeratorATEntriesOverviewController extends ControllerBase
       $descriptions = $atDescriptionsOfATEntries[$atEntry->id()];
       $descriptionHTML = "";
       $firstTime = true;
+      $supportedLangs = [];
       foreach ($descriptions as $description){
 
         if(!$firstTime){
@@ -76,6 +97,7 @@ class ATModeratorATEntriesOverviewController extends ControllerBase
         }
         $lang = $description->field_at_description_language->getValue();
         $descriptionHTML.=$lang[0]['value'];
+        $supportedLangs[] = $lang[0]['value'];
         $firstTime = false;
       }
       $html.= "<td>".$descriptionHTML."</td>";
@@ -83,7 +105,38 @@ class ATModeratorATEntriesOverviewController extends ControllerBase
       $platforms = $atPlatformsOfATEntries[$atEntry->id()];
 
 
+
       $html.= "<td>".Util::renderPlatformOverview($platforms)."</td>";
+
+      $categories = $atEntry->field_at_categories->getValue();
+
+      $categoryText = "";
+      $firstElement  = true;
+      foreach ($categories as $category){
+
+        $categoryID = $category['target_id'];
+
+        if(isset($categoryMatrix[$categoryID])){
+          $categoryMatrix[$categoryID]['count']++;
+
+          foreach ($supportedLangs as $lang){
+            $categoryMatrix[$categoryID]['languages'][$lang]++;
+
+          }
+
+          if($firstElement){
+
+            $firstElement = false;
+          }else{
+            $categoryText.=", ";
+          }
+
+          $categoryText.=$categoryMatrix[$categoryID]['title'];
+        }
+
+
+      }
+      $html.= "<td>".$categoryText."</td>";
       $editURL = Link::createFromRoute($this->t('Edit'),'buddy.at_moderator_at_entry_overview',['atEntry' => $atEntry->id()])->toString()->getGeneratedLink();
 
       $html.= "<td>".$editURL."</td>";
@@ -94,7 +147,15 @@ class ATModeratorATEntriesOverviewController extends ControllerBase
 
     $html.="</table>";
 
-     $build = array(
+    $html.="<h2>Category Overview</h2>";
+
+    $html.="<table class='buddy_category_table'><tr><td></td><th scope='col'>".$this->t("English")."</th><th scope='col'>".$this->t("German")."</th><th scope='col'>".$this->t("Swedish")."</th></tr>";
+    foreach ($categoryMatrix as $category){
+
+      $html.='<tr><th scope="row">'.$category['title'].'</th><td>'.$category['languages']['en'].'</td><td>'.$category['languages']['de'].'</td><td>'.$category['languages']['sv'].'</td> </tr>';
+    }
+    $html.="</table>";
+    $build = array(
       '#type' => 'markup',
       '#markup' => $html,
       '#title' => $this->t("Manage Tools"),
