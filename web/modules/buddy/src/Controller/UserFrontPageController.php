@@ -21,47 +21,54 @@ class UserFrontPageController extends ControllerBase
     $user = \Drupal::currentUser();
     $logged_in = \Drupal::currentUser()->isAuthenticated();
 
-
+    $leftColumnHTML="";
+    $rightColumnHTML = "";
+    $title = $this->t("Welcome to Buddy!");
     if(!$logged_in){
+      $title = $this->t("Welcome to Buddy!");
+
       $createUserLink = Link::createFromRoute($this->t('Create account'),'buddy.user_register',[],['attributes' => ['class' => 'buddy_link_button create_account_button']])->toString()->getGeneratedLink();
       $loginLink = Link::createFromRoute($this->t('Log in'),'buddy.user_login',[],['attributes' => ['class' => 'buddy_link_button login_button']])->toString()->getGeneratedLink();
 
-      $html = '<p class="mobile_intro_text">'.$this->t('<span class="buddy_main_page_intro_line">The assistive technology</span><span class="buddy_main_page_intro_line"> platform - that finds tools</span><span class="buddy_main_page_intro_line"> that work for you.</span>').'</p>
-               <p class="desktop_intro_text">'.$this->t('<span class="buddy_main_page_intro_line">The assistive technology platform</span><span class="buddy_main_page_intro_line">  - that finds tools that work for you.</span>').'</p>
+      $leftColumnHTML = '<p class="mobile_intro_text">'.$this->t('<span class="buddy_main_page_intro_line">The assistive technology platform </span><span class="buddy_main_page_intro_line">that finds tools</span><span class="buddy_main_page_intro_line"> that work for you.</span>').'</p>
+               <p class="desktop_intro_text">'.$this->t('<span class="buddy_main_page_intro_line">The assistive technology platform </span><span class="buddy_main_page_intro_line">that finds tools that work for you.</span>').'</p>
                <ul class="buddy_login_menu">
 	                  <li>'.$createUserLink.'</li>
 	                  <li>'.$loginLink.'</li>
                </ul>';
 
-      $build = array(
-        '#type' => 'markup',
-        '#markup' => $html,
-        '#title' => $this->t("Welcome to Buddy!"),
-        '#attached' => ['library'=> ['buddy/main_page']] ,
-      );
-      return $build;
+
+
+      $rightColumnHTML = '<h2>'.$this->t("This is what Buddy can do for you").'</h2>';
+      $rightColumnHTML.="<p>".$this->t("In the Buddy platform you can find assistive technology")."</p>";
+      $rightColumnHTML.="<p>".$this->t("You can find a tool on your own, or let Buddy suggest one for you.")."</p>";
+      $rightColumnHTML.="<p>".$this->t("If you want reading support on this platform you can use Easy Reading, located in the top right corner.")."</p>";
+
     }else{
 
+
+
+      $title = $this->t("Welcome")." ".$user->getAccountName();
 
       $searchURL = Url::fromRoute('buddy.user_search')->toString();
       $recommendationURL = Url::fromRoute('buddy.user_at_recommendation')->toString();
       $manageToolsURL = Url::fromRoute('buddy.user_at_library')->toString();
 
 
-      $html = '<p >'.$this->t('With Buddy, you can:').'</p>
+      $leftColumnHTML = '<p >'.$this->t('With Buddy, you can:').'</p>
                <ul class="buddy_user_main_menu">';
 
-      $html .= '<li>';
-      $html .= '<a class="buddy_link_button buddy_button" href="'.$recommendationURL.'">';
-      $html .= '<i class="fas fa-robot"></i>';
-      $html .= $this->t('Find a tool for you');
-      $html .= '</a></li>';
+      $leftColumnHTML .= '<li>';
+      $leftColumnHTML .= '<a class="buddy_link_button buddy_button" href="'.$recommendationURL.'">';
+      $leftColumnHTML .= '<i class="fas fa-robot"></i>';
+      $leftColumnHTML .= $this->t('Find a tool for you');
+      $leftColumnHTML .= '</a></li>';
 
-      $html .= '<li>';
-      $html .= '<a class="buddy_link_button buddy_button" href="'.$searchURL.'">';
-      $html .= '<i class="fas fa-search"></i>';
-      $html .= $this->t('Search for tools');
-      $html .= '</a></li>';
+      $leftColumnHTML .= '<li>';
+      $leftColumnHTML .= '<a class="buddy_link_button buddy_button" href="'.$searchURL.'">';
+      $leftColumnHTML .= '<i class="fas fa-search"></i>';
+      $leftColumnHTML .= $this->t('Search for tools');
+      $leftColumnHTML .= '</a></li>';
 
       $user = \Drupal::currentUser();
       //Get AT Entry of description
@@ -72,28 +79,36 @@ class UserFrontPageController extends ControllerBase
         ->execute();
 
       if(count($atRecordsIDs) != 0) {
-        $html .= '<li>';
-        $html .= '<a class="buddy_link_button buddy_button" href="'.$manageToolsURL.'">';
-        $html .= '<i class="fas fa-tools"></i>';
-        $html .= $this->t('Rate your tools');
-        $html .= '</a></li>';
+        $leftColumnHTML .= '<li>';
+        $leftColumnHTML .= '<a class="buddy_link_button buddy_button" href="'.$manageToolsURL.'">';
+        $leftColumnHTML .= '<i class="fas fa-tools"></i>';
+        $leftColumnHTML .= $this->t('Rate your tools');
+        $leftColumnHTML .= '</a></li>';
       }
 
-      $html.="</ul>";
+      $leftColumnHTML.="</ul>";
 
 
+      $rightColumnHTML = '<h2>'.$this->t("This is what Buddy can do for you").'</h2>';
+      $rightColumnHTML.="<p>".$this->t("In the Buddy platform you can find assistive technology")."</p>";
+      $rightColumnHTML.="<p>".$this->t("You can find a tool on your own, or let Buddy suggest one for you.")."</p>";
+      $rightColumnHTML.="<p>".$this->t("If you want reading support on this platform you can use Easy Reading, located in the top right corner.")."</p>";
 
-      $build = array(
-        '#type' => 'markup',
-        '#markup' => $html,
-        '#title' => $this->t("Welcome")." ".$user->getAccountName(),
-        '#attached' => ['library'=> ['buddy/main_page']] ,
-      );
-
-      return $build;
     }
 
 
+    $html = '<div class="row">
+  <div class="col-12 col-lg-6">'.$leftColumnHTML.'</div>
+  <div class="col-12 col-lg-6">'.$rightColumnHTML.'</div>
+</div>';
+
+    $build = array(
+      '#type' => 'markup',
+      '#markup' => $html,
+      '#title' => $title,
+      '#attached' => ['library'=> ['buddy/main_page']] ,
+    );
+    return $build;
 
 
   }

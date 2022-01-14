@@ -193,12 +193,14 @@ class UserProfilePreferencesForm extends FormBase
 
     if ($atCategoryContainer->field_category_container_user_ti->value) {
 
-      $title = $this->t("Create Profile:")." ".$atCategoryContainer->field_category_container_user_ti->value;
+      $title = $this->t("Set your preferences")."";
+   //   $title = $this->t("Create Profile:")." ".$atCategoryContainer->field_category_container_user_ti->value;
       Util::setTitle($title);
       $form_state->set('current_title',$title);
 
     }else{
-      $title = $this->t("Create Profile:")." ".$atCategoryContainer->title->value;
+      $title = $this->t("Set your preferences")."";
+      //$title = $this->t("Create Profile:")." ".$atCategoryContainer->title->value;
       Util::setTitle($title);
       $form_state->set('current_title',$title);
     }
@@ -210,10 +212,10 @@ class UserProfilePreferencesForm extends FormBase
       '#type' => 'markup',
       '#markup' => '<div class="container">
   <div class="row">
-    <div class="col-2">
+    <div class="col-12 col-md-4">
       <b>'.$this->t("Progress").':</b>
     </div>
-    <div class="col-10">
+    <div class="col-12 col-md-8">
       <div class="progress">
         <div id="profile-progress-bar" class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
         <span class="sr-only">0% complete</span>
@@ -225,6 +227,9 @@ class UserProfilePreferencesForm extends FormBase
     );
 
 
+    $prefixHTML = '<div class="buddy-user-profile-category-container"><div class="row">
+  <div class="col-12 col-lg-4 buddy-category-image">'.$currentCategory->field_at_category_user_descript->value.'</div>
+  <div class="col-12 col-lg-8"><h2>'.$currentCategory->field_at_category_user_title->value.'</h2>';
     if ($atCategoryContainer->field_category_container_user_de->value) {
 
       $form['category_container_' . $categoryContainerId]['container_description'] = array(
@@ -237,17 +242,26 @@ class UserProfilePreferencesForm extends FormBase
 
 
 
-
+/*
     $form['category_container_' . $categoryContainerId]['category_' . $currentCategory->id()]['title'] = [
       '#type' => 'item',
       '#markup' => "<h2>".$currentCategory->field_at_category_user_title->value."</h2>",
       '#prefix' => '<div class="buddy-user-profile-category-container">',
-    ];
+    ];*/
+
+    /*
+    $html = '<div class="row">
+  <div class="col-12 col-lg-4">'.$currentCategory->field_at_category_user_descript->value.'</div>
+  <div class="col-12 col-lg-8"><h2>'.$currentCategory->field_at_category_user_title->value.'</h2>';
 
     $form['category_container_' . $categoryContainerId]['category_' . $currentCategory->id()]['description'] = [
       '#type' => 'item',
-      '#markup' => "<p>".$currentCategory->field_at_category_user_descript->value."</p>",
+      '#prefix' => '<div class="buddy-user-profile-category-container">',
+      '#markup' => $html,
     ];
+
+    */
+
 
     if ($currentCategory->field_at_category_user_question->value) {
       $form['category_container_' . $categoryContainerId]['category_' . $currentCategory->id()]["cat_".$currentCategory->id()] = array(
@@ -257,9 +271,11 @@ class UserProfilePreferencesForm extends FormBase
         '#options' => array(
           '100' => $this->t('Yes'),
           '0' => $this->t('No'),
+          '50' => $this->t('It depends'),
         ),
-
-        '#suffix' => '</div>',
+        '#prefix' => $prefixHTML,
+        '#suffix' => '</div>
+</div></div>',
 
 
       );
@@ -271,11 +287,12 @@ class UserProfilePreferencesForm extends FormBase
         '#options' => array(
           '100' => $this->t('Yes'),
           '0' => $this->t('No'),
+          '50' => $this->t('It depends'),
         ),
 
-        '#suffix' => '</div>',
-
-
+        '#prefix' => $prefixHTML,
+        '#suffix' => '</div>
+</div></div>',
       );
     }
 
