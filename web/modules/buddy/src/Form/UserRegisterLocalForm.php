@@ -35,17 +35,23 @@ class UserRegisterLocalForm extends RegisterForm
 
   public function buildForm(array $form, FormStateInterface $form_state) {
 
+    /*
     $form['steps'] = [
       '#type' => 'markup',
       '#markup' => "<div class='steps'>".$this->t("Step 2 out of 2")."</div>",
       '#allowed_tags' => ['div'],
 
     ];
+    */
 
     Util::setTitle("Register with email");
 
     $form['account'] = parent::buildForm(array(),$form_state);
-    $form['account']['actions']['submit']['#value'] = $this->t("Register");
+
+    unset($form['account']['account']['mail']['#description']);
+    unset($form['account']['account']['name']['#description']);
+    unset($form['account']['account']['pass']['#description']);
+    $form['account']['actions']['submit']['#value'] = $this->t("Create account");
     $form['account']['actions']['submit']['#attributes']['class'][] = 'buddy_small_link_button';
 
     $form['account']['actions']['cancel'] = [

@@ -31,73 +31,82 @@ class UserRegisterForm extends FormBase {
   }
 
   public function buildForm(array $form, FormStateInterface $form_state): array {
-    $form['steps'] = [
+
+
+    $form['intro'] = [
       '#type' => 'markup',
-      '#markup' => "<div class='steps'>".$this->t("Step 1 out of 2")."</div>",
+      '#markup' => "<div class='login_intro'>".$this->t("How would you like to register?")."</div>",
       '#allowed_tags' => ['div'],
 
     ];
-    $form['login_op'] = array(
-      '#type' => 'radios',
-      '#title' => $this
-        ->t('How do you want to register?'),
-      '#default_value' =>  0,
-      '#options' => array(
-        0 => $this
-          ->t('Register with email.'),
-        1 => $this
-          ->t('Register with Facebook or Google.'),
-      ),
-      '#required' => TRUE,
-    );
+    $html = '<div id="user-entry-social-auth" class="social-auth-container clearfix">';
 
-    $form['actions'] = [
-      '#type' => 'actions',
-    ];
+    global $base_url;
+    $module_path = drupal_get_path('module', 'buddy');
+    $social_path = $base_url . '/' . $module_path . '/img/social/';
 
-    $backLink = Link::createFromRoute($this->t('Back'),'<front>',[],['attributes' => ['class' => 'btn btn-primary buddy_small_link_button back_button']])->toString()->getGeneratedLink();
+    // Facebook button
+    $html .= '<div class="auth-option">';
+    $html .= '<a class="buddy_link_button_social_auth" href="user/login/facebook">';
+    $html .= '<img class="social-auth auth-icon" src="' . $social_path . 'facebook-logo-480.png" alt="">';
+    $html .= $this->t('Register with Facebook');
+    $html .= '</a></div>';
+    // Google button
+    $html .= '<div class="auth-option">';
+    $html .= '<a class="buddy_link_button_social_auth" href="user/login/google">';
+    $html .= '<img class="social-auth auth-icon" src="' . $social_path . 'google-logo-480.png" alt="">';
+    $html .= $this->t('Register with Google');
+    $html .= '</a></div>';
 
-    $form['back_link'] = [
+
+    $localLoginUrl = Url::fromRoute('buddy.user_login_local')->toString();
+
+    // Email button
+    $html .= '<div class="auth-option">';
+    $html .= '<a class="buddy_link_button_social_auth" href="'.$localLoginUrl.'">';
+    $html .= '<img class="social-auth auth-icon" src="' . $social_path . 'email-logo-480.png" alt="">';
+    $html .= $this->t('Register with Email');
+    $html .= '</a></div>';
+
+    $html .= '</div>';
+
+
+    $form['federalized_buttons'] = [
       '#type' => 'markup',
-      '#markup' => $backLink,
-      '#allowed_tags' => ['button', 'a', 'div', 'img', 'h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
+      '#markup' => $html,
+
+    ];
+
+    $markup = "<div class='login_info_registration'>".$this->t("Already have an account?");
+    $markup.= " ".Link::createFromRoute($this->t('Log in'),'buddy.user_login')->toString()->getGeneratedLink();
+    $markup.= "</div>";
+
+    $form['create_account'] = [
+      '#type' => 'markup',
+      '#markup' => $markup,
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
 
     ];
 
 
-    // Add a submit button that handles the submission of the form.
-    $form['submit'] = [
+    $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Next'),
+      '#prefix' =>'<div class="auth-option>',
+      '#value' => $this->t('Back'),
+      '#suffix' => '</div>',
     ];
-
-    $form['submit']['#attributes']['class'][] = 'buddy_small_link_button';
+    $form['actions']['submit']['#attributes']['class'][] = 'buddy_link_button_social_auth back_button';
     $form['#attached']['library'][] = 'buddy/user_profile_forms';
-
 
     return $form;
 
   }
 
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    $login_op = $form_state->getValue('login_op');
+  public function submitForm(array &$form, FormStateInterface $form_state)
+  {
 
-    switch ($login_op) {
-      case 0:{
-        $form_state->setRedirect('buddy.user_register_local');
-        break;
-      }
-      case 1:{
-        $form_state->setRedirect('buddy.user_register_external');
-        break;
-      }
-      /*
-      case 2:{
-        $form_state->setRedirect('buddy.user_password_form',["return"=>"entry"]);
-        break;
-      }
-      */
-    }
+    $form_state->setRedirect('<front>');
+
   }
 
 
