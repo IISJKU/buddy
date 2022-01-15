@@ -13,7 +13,7 @@ use Drupal\node\Entity\Node;
 
 class ATRecommendationForm extends FormBase
 {
-
+  protected int $maxNumberOfATEntries = 1;
   public function getFormId()
   {
     return "buddy_recommendation_form";
@@ -21,75 +21,154 @@ class ATRecommendationForm extends FormBase
 
   public function buildForm(array $form, FormStateInterface $form_state)
   {
-    if (!$form_state->has('page_num')) {
-      $form_state->set('page_num', 0);
+
+    if (!$form_state->has('mode')) {
+      $form_state->set('mode', 0);
     }
+    $mode = $form_state->get("mode");
     $user = \Drupal::currentUser();
 
 
+    $form['mode_recommender'] = [
+      '#type' => 'submit',
+      '#button_type' => 'primary',
+      '#value' =>$this->t("Recommendations"),
+      '#submit' => ['::recommendationsSubmit'],
+      '#ajax' => array(
+        'callback' => '::recommendationsAjaxSubmit',
+        'wrapper' => "buddy_recommendations",
+      ),
+    ];
 
-    $ajaxUpdate =  $form_state->get('ajax_update');
-    if($ajaxUpdate){
-      $recommendations = $form_state->get('oldRecommendations');
-      $form_state->set('ajax_update',false);
+    $form['mode_all_tools'] = [
+      '#type' => 'submit',
+      '#button_type' => 'primary',
+      '#value' =>$this->t("All tools"),
+      '#submit' => ['::allToolsSubmit'],
+      '#ajax' => array(
+        'callback' => '::allToolsAjaxSubmit',
+        'wrapper' => "buddy_recommendations",
+      ),
+    ];
+
+
+    if($mode == 0){
+      $form['mode_recommender']['#disabled'] = TRUE;
+
     }else{
-      $recommendations_all = array();
-      $storage = $form_state->getStorage();
-      if (array_key_exists('recommendations', $storage)) {
-        $recommendations_all = $storage['recommendations'];
-      }
-      $recommendations = BuddyRecommender::recommend($user, $recommendations_all);
-      $form_state->set('oldRecommendations',$recommendations);
+      $form['mode_all_tools']['#disabled'] = TRUE;
     }
 
-    $oarsch = $form_state->get('oldRecommendations');
 
-    if (!empty($recommendations)) {
+    $ajaxUpdate =  $form_state->get('ajax_update');
+    $form_state->set('ajax_update',false);
+    if($mode == 0){
+
+      if($ajaxUpdate){
+        $recommendations = $form_state->get('oldRecommendations');
+
+      }else{
+        $recommendations_all = array();
+        $storage = $form_state->getStorage();
+        if (array_key_exists('recommendations', $storage)) {
+          $recommendations_all = $storage['recommendations'];
+        }
+        $recommendations = BuddyRecommender::recommend($user, $recommendations_all);
+        $form_state->set('oldRecommendations',$recommendations);
+      }
+
+
+      if (!empty($recommendations)) {
+        $form['recommendations'] = [
+          '#type' => 'markup',
+          '#prefix' => "<div id='buddy_recommendations'>",
+          '#markup' => $this->t("Based on your preferences, Buddy recommends the following tools for you:"),
+          '#suffix' => "</div>",
+          '#allowed_tags' => ['div','h2'],
+        ];
+        $maxResults = min(count($recommendations), BuddyRecommender::$maxNumberOfATEntries);
+        for ($i = 0; $i < $maxResults; $i++) {
+          $atEntryID = array_shift($recommendations);
+
+          $form['recommendations'][$atEntryID] = $this->renderATEntryForm($atEntryID);
+          if(!$ajaxUpdate){
+            $recommendations_all[] = $atEntryID;
+          }
+        }
+        $form['recommendations']['actions'] = [
+          '#type' => 'actions',
+        ];
+
+        $form['recommendations']['actions']['submit'] = [
+          '#type' => 'submit',
+          '#value' => $this->t('Show me more tools!'),
+        ];
+        $form['recommendations']['actions']['submit']['#attributes']['class'][] = 'buddy_link_button buddy_button';
+      } else {
+
+        $form['recommendations'] = [
+          '#type' => 'markup',
+          '#prefix' => "<div id='buddy_recommendations'>",
+          '#markup' => '<p>'. t("There are no more ATs to recommend at the moment!") .'</p>',
+          '#suffix' => "</div>",
+          '#allowed_tags' => ['div','h2'],
+        ];
+
+      }
+
+
+      if(!$ajaxUpdate){
+        // Store recommendations
+        $form_state->set('recommendations', $recommendations_all);
+      }
+
+      return $form;
+    }else{
+
+      if (!$form_state->has('page_num')) {
+        $form_state->set('page_num', 0);
+      }
+      $currentPage = $form_state->get('page_num');
+
+
+
+
+      $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
+
+      $query = \Drupal::entityQuery('node')
+        ->condition('type', 'at_description')
+        ->condition('field_at_description_language', $user_lang)
+        ->condition('status', 1);
+      $results = $query->execute();
+
+
+
+
+
       $form['recommendations'] = [
         '#type' => 'markup',
-        '#prefix' => "<div class='buddy_recommendations'>",
+        '#prefix' => "<div id='buddy_recommendations'>",
+        '#markup' => "OAAA",
         '#suffix' => "</div>",
         '#allowed_tags' => ['div','h2'],
       ];
-      $maxResults = min(count($recommendations), BuddyRecommender::$maxNumberOfATEntries);
-      for ($i = 0; $i < $maxResults; $i++) {
-        $atEntryID = array_shift($recommendations);
 
+      foreach ($results as $descriptionID){
+        $atEntryID = Node::load($descriptionID)->field_at_entry->getValue()[0]['target_id'];
         $form['recommendations'][$atEntryID] = $this->renderATEntryForm($atEntryID);
-        if(!$ajaxUpdate){
-          $recommendations_all[] = $atEntryID;
-        }
       }
-      $form['actions'] = [
-        '#type' => 'actions',
-      ];
 
-      $form['actions']['submit'] = [
-        '#type' => 'submit',
-        '#value' => $this->t('Show me more tools!'),
-      ];
-      $form['actions']['submit']['#attributes']['class'][] = 'buddy_link_button buddy_button';
-    } else {
-      $form['title'] = [
-        '#type' => 'markup',
-        '#markup' => "<div class='at_container'><h2>Nothing to show</h2>",
-        '#allowed_tags' => ['div','h2'],
-      ];
+    //  $atEntryID = array_shift($recommendations);
 
-      $form['text'] = [
-        '#type' => 'markup',
-        '#markup' => '<p>'. t("There are no more ATs to recommend at the moment!") .'</p>',
-        '#allowed_tags' => ['button', 'a', 'div', 'img', 'h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
-      ];
+   //   $form['recommendations'][$atEntryID] = $this->renderATEntryForm($atEntryID);
+
+
+
+
+
+      return $form;
     }
 
-
-    if(!$ajaxUpdate){
-      // Store recommendations
-      $form_state->set('recommendations', $recommendations_all);
-    }
-
-     return $form;
   }
 
   private function renderATEntryForm($atEntryID){
@@ -182,6 +261,41 @@ class ATRecommendationForm extends FormBase
     $atEntryID = $arguments[0];
     return $form['recommendations'][$atEntryID]['at_favourites'];
   }
+
+  public function recommendationsSubmit(array &$form, FormStateInterface $form_state)
+  {
+    $form_state->set('mode', 0);
+    $form_state->setRebuild();
+
+
+
+  }
+  public function recommendationsAjaxSubmit(array &$form, FormStateInterface $form_state)
+  {
+    return $form['recommendations'];
+
+
+  }
+
+  public function allToolsSubmit(array &$form, FormStateInterface $form_state)
+  {
+    $form_state->set('mode', 1);
+    $form_state->set('ajax_update',false);
+    $form_state->set('recommendations',array());
+    $form_state->setRebuild();
+
+
+  }
+  public function allToolsAjaxSubmit(array &$form, FormStateInterface $form_state)
+  {
+    return $form['recommendations'];
+
+
+  }
+
+
+
+
 
   public function submitForm(array &$form, FormStateInterface $form_state)
   {
