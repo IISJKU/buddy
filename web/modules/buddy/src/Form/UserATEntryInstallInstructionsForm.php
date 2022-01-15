@@ -31,6 +31,8 @@ class UserATEntryInstallInstructionsForm extends FormBase
   public function buildForm(array $form, FormStateInterface $form_state, $description = null)
   {
 
+    Util::setTitle($this->t("How to get this tool")."");
+
     $browser = new Browser();
     $this->browser = $browser->getBrowser();
     $this->platform = $browser->getPlatform();
@@ -48,57 +50,43 @@ class UserATEntryInstallInstructionsForm extends FormBase
       ->loadMultiple($atEntriesID);
 
     $atEntry = array_shift($atEntries);
-
-    $descriptions = Util::getDescriptionsOfATEntry($atEntry->id());
+    $atEntryID = $atEntry->id();
+    $descriptions = Util::getDescriptionsOfATEntry($atEntryID);
     $user = \Drupal::currentUser();
-
+    $supportCategories = Util::getSupportCategoriesOfAtEntry(Node::load($atEntryID));
     $description = Util::getDescriptionForUser($descriptions,$user);
-
-    $descriptions = Util::getDescriptionsOfATEntry($atEntriesID);
     $languages = Util::getLanguagesOfDescriptions($descriptions);
-
-    $content = Util::renderDescriptionDetail($description,$languages);
+    $platforms = Util::getPlatformsOfATEntry(Node::load($atEntryID));
+    $content = Util::renderDescriptionTiles2($description,$supportCategories,$platforms,$languages);
 
     $form['description'] = [
       '#type' => 'markup',
+      '#prefix' => "<div class='at_library_container'>",
       '#markup' => $content,
-      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
-
+      '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
     ];
 
 
-    $form['introduction_install'] = [
-      '#type' => 'markup',
-      '#markup' => '<hr><h2 id="install-instructions">'.$this->t("How do you get this Tool?").'</h2><div><strong>'.$this->t("This tool is available as:").'</strong></div>',
-      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','strong','hr'],
-
-    ];
 
 
-    //Get all types (extensions, software and apps)
-    $typesIDs = $atEntry->get("field_at_types")->getValue();
     $browserExtensions = [];
     $software = [];
     $apps = [];
-    foreach ($typesIDs as $typeID){
 
-      $type = Node::load($typeID['target_id']);
-
-      $platform = $type->bundle();
-
-      switch ($type->bundle()){
+    foreach ($platforms as $platform){
+      switch ($platform->bundle()){
         case "at_type_browser_extension":{
-          $browserExtensions[] = $type;
+          $browserExtensions[] = $platform;
           break;
         }
 
         case "at_type_app": {
-          $apps[] = $type;
+          $apps[] = $platform;
           break;
         }
 
         case "at_type_software": {
-          $software[] = $type;
+          $software[] = $platform;
           break;
         }
         default: {
@@ -108,74 +96,30 @@ class UserATEntryInstallInstructionsForm extends FormBase
     }
 
 
-    Util::setTitle($description->getTitle());
+    $installHTML ="<ul>";
 
-    $formElements = [];
-    $activeTab = true;
-    if(count($browserExtensions)){
+    $installHTML.=$this->renderSoftware($software);
+    $installHTML.=$this->renderBrowserExtensions($browserExtensions);
+    $installHTML.=$this->renderApps($apps);
 
-      $formElements['browser_extension'] = $this->renderBrowserExtensions($browserExtensions, $form, $activeTab);
-
-
-      $activeTab = false;
-    }
-
-
-    if(count($software)){
-      $formElements['software'] = $this->renderSoftware($software,$activeTab);
-      $activeTab = false;
-    }
-
-    if(count($apps)){
-      $formElements['apps'] = $this->renderApps($apps,$activeTab);
-      $activeTab = false;
-    }
-
-    $tabHeader = "";
-    foreach ($formElements as $key => $value){
-      $tabHeader.= $value['tab_header'];
-    }
-
-    $markup = '<nav>
-                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        '.$tabHeader.'
-                    </div>
-                </nav>
-                <div class="tab-content buddy_install_tab" id="nav-tabContent">';
+    $installHTML.="</ul>";
+    $installContent = '
+            <div class="row">
+                <div class="col-3">
+                 </div>
+                 <div class="col-9">
+                ' .$installHTML . '
+                </div>
+             </div>';
 
 
-    $form['tab_list_start'] = [
+    $form['introduction_install'] = [
       '#type' => 'markup',
-      '#markup' => $markup,
-      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
+      '#markup' => $installContent,
+      '#allowed_tags' => ['button', 'a', 'div','img','ul','li','p','b','strong','hr'],
+      '#suffix' => "</div>",
 
     ];
-
-    foreach ($formElements as $key => $value){
-
-
-      $form[$key] = $value['form'];
-    }
-
-
-    $form['tab_list_end'] = [
-      '#type' => 'markup',
-      '#markup' => '</div>',
-      '#allowed_tags' => ['div'],
-
-    ];
-
-    /*
-    $markup = Link::createFromRoute($this->t('Back to my AT library'),'buddy.user_at_library',[],  ['attributes' => ['class' => 'btn btn-primary overview-button']])->toString()->getGeneratedLink();
-
-    $form['links'] = [
-      '#type' => 'markup',
-      '#markup' => $markup,
-      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
-
-    ];
-    */
-
 
 
     $form['#attached']['library'][] = 'buddy/user_at_detail';
@@ -183,7 +127,7 @@ class UserATEntryInstallInstructionsForm extends FormBase
   }
 
 
-  protected function renderBrowserExtensions($extensions,$activeTab){
+  protected function renderBrowserExtensions($extensions){
 
     $form = [];
 
@@ -203,42 +147,29 @@ class UserATEntryInstallInstructionsForm extends FormBase
 
     }
 
-    $tabHeader = $this->renderTabHeader($this->t("Browser Extension"),Util::getBaseURL(false)."/modules/buddy/img/icons/browser-icon.png", "extension_tab","extension_tab_panel",$activeTab);
 
-    $tabPanelHeader = $this->renderTabPanelHeader("extension_tab","extension_tab_panel",$activeTab);
-    $form['intro'] = [
-      '#type' => 'markup',
-      '#markup' =>  $tabPanelHeader."<ul>",
-      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr','ul'],
-
-    ];
-
-
+    $html = "";
     foreach ($compatibleExtensions as $currentExtension){
 
-      $form['extension_'.$currentExtension['extension']->id()] = $this->renderBrowserDescription($currentExtension['browser'],$currentExtension['extension']->id(), $this->t('You are currently using this browser.'));
+      $downloadLink = $currentExtension['extension']->field_type_download_link->getValue()[0]['uri'];
+      $html.=$this->renderDownloadLinkListItem($currentExtension['browser'],$downloadLink,$this->t("Compatible with your browser"));
+
 
     }
 
     foreach ($otherExtensions as $currentExtension){
 
-      $form['extension_'.$currentExtension['extension']->id()] = $this->renderBrowserDescription($currentExtension['browser'],$currentExtension['extension']->id());
+      $downloadLink = $currentExtension['extension']->field_type_download_link->getValue()[0]['uri'];
+      $html.=$this->renderDownloadLinkListItem($currentExtension['browser'],$downloadLink);
 
     }
 
-    $form['outro'] = [
-      '#type' => 'markup',
-      '#markup' =>  '</ul></div>',
-      '#allowed_tags' => ['div','ul'],
-
-    ];
-
-    return ["form" => $form, "tab_header" => $tabHeader];
+    return $html;
 
   }
 
 
-  protected function renderSoftware($software,$activeTab){
+  protected function renderSoftware($software){
     $compatibleSoftware = [];
     $otherSoftware = [];
     foreach ($software as $currentSoft){
@@ -264,41 +195,27 @@ class UserATEntryInstallInstructionsForm extends FormBase
 
     }
 
-    $tabHeader = $this->renderTabHeader($this->t("Software"),Util::getBaseURL(false)."/modules/buddy/img/icons/desktop-icon.png", "software_tab","software_tab_panel",$activeTab);
-    $tabPanelHeader = $this->renderTabPanelHeader("software_tab","software_tab_panel",$activeTab);
-
-    $form['intro'] = [
-      '#type' => 'markup',
-      '#markup' =>  $tabPanelHeader."<ul>",
-      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr','ul'],
-
-    ];
+    $html="";
 
 
     foreach ($compatibleSoftware as $currentSoft){
 
-      $form['software_'.$currentSoft['software']->id()] = $this->renderOsDescription($currentSoft['os'],$currentSoft['software']->id(), $this->t('You are currently using this operating system.'));
+      $downloadLink = $currentSoft['software']->field_type_download_link->getValue()[0]['uri'];
 
-
+      $html.=$this->renderDownloadLinkListItem($currentSoft['os'],$downloadLink,$this->t("Compatible with your computer"));
     }
-
     foreach ($otherSoftware as $currentSoft){
-      $form['software_'.$currentSoft['software']->id()] = $this->renderOsDescription($currentSoft['os'],$currentSoft['software']->id());
+      $downloadLink = $currentSoft['software']->field_type_download_link->getValue()[0]['uri'];
 
+      $html.=$this->renderDownloadLinkListItem($currentSoft['os'],$downloadLink);
     }
 
-    $form['outro'] = [
-      '#type' => 'markup',
-      '#markup' =>  '</ul></div>',
-      '#allowed_tags' => ['div','ul'],
 
-    ];
-
-    return ["form" => $form, "tab_header" => $tabHeader];
+    return $html;
 
   }
 
-  protected function renderApps($apps,$activeTab){
+  protected function renderApps($apps){
 
     $compatibleApps = [];
     $otherApps = [];
@@ -317,44 +234,34 @@ class UserATEntryInstallInstructionsForm extends FormBase
 
     }
 
-    $tabHeader = $this->renderTabHeader($this->t("App"),Util::getBaseURL(false)."/modules/buddy/img/icons/app-icon.png", "app_tab","app_tab_panel",$activeTab);
-
-    $tabPanelHeader = $this->renderTabPanelHeader("app_tab","app_tab_panel",$activeTab);
-    $form['intro'] = [
-      '#type' => 'markup',
-      '#markup' =>  $tabPanelHeader."<ul>",
-      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr','ul'],
-
-    ];
 
 
+    $html = "";
 
-    $appHTML = '<h2>'.$this->t("This assistive technology is available for the following operating system(s):").'</h2>';
     foreach ($compatibleApps as $currentApp){
 
-
-
-
-      $form['app_'.$currentApp['app']->id()] = $this->renderOsDescription($currentApp['os'],$currentApp['app']->id(), $this->t('You are currently using this operating system.'));
-
+      $downloadLink = $currentApp['app']->field_type_download_link->getValue()[0]['uri'];
+      $html.=$this->renderDownloadLinkListItem($currentApp['os'],$downloadLink,$this->t("Compatible with your device"));
 
     }
 
     foreach ($otherApps as $currentApp){
-      $form['app_'.$currentApp['app']->id()] = $this->renderOsDescription($currentApp['os'],$currentApp['app']->id());
+      $downloadLink = $currentApp['app']->field_type_download_link->getValue()[0]['uri'];
+      $html.=$this->renderDownloadLinkListItem($currentApp['os'],$downloadLink);
 
     }
 
-    $form['outro'] = [
-      '#type' => 'markup',
-      '#markup' =>  '</ul></div>',
-      '#allowed_tags' => ['div','ul'],
-
-    ];
-
-    return ["form" => $form, "tab_header" => $tabHeader];
+    return $html;
   }
 
+  protected function renderDownloadLinkListItem($type,$url,$additionalMessage=null){
+
+    if($additionalMessage){
+      $additionalMessage = " - ".$additionalMessage;
+    }
+    return '<li><a href="'.$url.'">'.$this->t("Download for ").$type->getTitle().$additionalMessage.'</a></li>';
+
+  }
 
   protected function renderTypeDescription($type,$id,$currentMessage){
     $icon = $type->field_icon->getValue();

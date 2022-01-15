@@ -262,6 +262,11 @@ class Util
     return $sortedPlatforms;
   }
 
+  public static function renderPlatformInstallationInstruction($platforms){
+
+    return "THIS IS BULLSHIT";
+  }
+
   public static function getSupportCategoriesOfAtEntry($atEntry){
 
     $atCategories = $atEntry->get("field_at_categories")->getValue();

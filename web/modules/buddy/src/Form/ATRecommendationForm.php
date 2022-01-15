@@ -197,7 +197,7 @@ class ATRecommendationForm extends FormBase
 
     $entryForm['content'] = [
       '#type' => 'markup',
-      '#prefix' => "<div class='at_library_container'",
+      '#prefix' => "<div class='at_library_container'>",
       '#suffix' => '<div class="col-2">',
       '#markup' => $content,
       '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
