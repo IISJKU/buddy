@@ -26,13 +26,22 @@ class ATRecommendationForm extends FormBase
     }
     $user = \Drupal::currentUser();
 
-    $recommendations_all = array();
-    $storage = $form_state->getStorage();
-    if (array_key_exists('recommendations', $storage)) {
-      $recommendations_all = $storage['recommendations'];
+
+
+    $ajaxUpdate =  $form_state->get('ajax_update');
+    if($ajaxUpdate){
+      $recommendations = $form_state->get('recommendations');
+      $form_state->set('ajax_update',false);
+    }else{
+      $recommendations_all = array();
+      $storage = $form_state->getStorage();
+      if (array_key_exists('recommendations', $storage)) {
+        $recommendations_all = $storage['recommendations'];
+      }
+      $recommendations = BuddyRecommender::recommend($user, $recommendations_all);
+      $form_state->set('recommendations',$recommendations);
     }
 
-    $recommendations = BuddyRecommender::recommend($user, $recommendations_all);
 
     if (!empty($recommendations)) {
       $maxResults = min(count($recommendations), BuddyRecommender::$maxNumberOfATEntries);
@@ -57,6 +66,7 @@ class ATRecommendationForm extends FormBase
           '#markup' => $content,
           '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
         ];*/
+        /*
         $entryForm['at_install'] = [
           '#name' => $atEntryID . "_" . $description->id(),
           '#type' => 'submit',
@@ -66,9 +76,42 @@ class ATRecommendationForm extends FormBase
           '#prefix' => '<div class="at_library_container">'.$content.'<div class="col-2">',
           '#suffix' => '</div></div></div></div>'
         ];
-        $entryForm['at_install']['#attributes']['class'][] = 'buddy_link_button buddy_button';
+        */
+        $entryForm['content'] = [
+          '#type' => 'markup',
+          '#prefix' => "<div class='at_library_container'",
+          '#suffix' => '<div class="col-2">',
+          '#markup' => $content,
+          '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
+        ];
 
-        $form[] = $entryForm;
+        $atRecord = Util::getATRecordOfATEntry($atEntryID);
+        $valueLabel = $this->getLabelForFavourite(false);
+        if($atRecord){
+          $valueLabel = $this->getLabelForFavourite(true);
+        }
+        $entryForm['at_favourites'] = [
+          '#name' => $atEntryID . "_" . $description->id(),
+          '#type' => 'submit',
+          '#button_type' => 'primary',
+          '#value' =>$valueLabel,
+          '#submit' => ['::test1'],
+          '#ajax' => array(
+            'callback' => '::test2',
+            'wrapper' => "favourites_wrapper_".$atEntryID,
+          ),
+          '#prefix' => '<div id="favourites_wrapper_'.$atEntryID.'">',
+          '#suffix' => '</div>'
+        ];
+
+        $entryForm['close'] = [
+          '#type' => 'markup',
+           '#markup' => '</div></div></div></div>',
+          '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
+        ];
+        $entryForm['at_favourites']['#attributes']['class'][] = 'buddy_link_button buddy_button';
+
+        $form[$atEntryID] = $entryForm;
 
         $recommendations_all[] = $atEntryID;
       }
@@ -99,6 +142,43 @@ class ATRecommendationForm extends FormBase
     $form_state->setStorage(array('recommendations' => $recommendations_all));
 
     return $form;
+  }
+
+  public function test1(array &$form, FormStateInterface $form_state) {
+
+    $user = \Drupal::currentUser();
+    $test = $form_state->getTriggeringElement()['#name'];
+    $arguments = explode("_", $form_state->getTriggeringElement()['#name']);
+
+    $atEntryID = $arguments[0];
+
+    $atRecord = Util::getATRecordOfATEntry($atEntryID);
+    $isFavourite = false;
+    if($atRecord){
+
+      $atRecord->delete();
+
+    }else{
+      $node = Node::create([
+        'type' => 'user_at_record',
+        'title' => "AT Record: " . $atEntryID . "-" . \Drupal::currentUser()->id(),
+        'field_user_at_record_at_entry' => ["target_id" => $atEntryID],
+        'field_user_at_record_library' => ["value" => true],
+      ]);
+      $node->save();
+
+
+    }
+
+    $form_state->set('ajax_update', true);
+    $form_state->setRebuild();
+
+
+  }
+  public function test2(array &$form, FormStateInterface $form_state) {
+    $arguments = explode("_", $form_state->getTriggeringElement()['#name']);
+    $atEntryID = $arguments[0];
+    return $form[$atEntryID]['at_favourites'];
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state)
@@ -150,5 +230,13 @@ class ATRecommendationForm extends FormBase
     $url = Url::fromUserInput("/user-at-install/" . $descriptionID);
     $form_state->setRedirectUrl($url);
 
+  }
+
+  private function getLabelForFavourite($isFavourite){
+    if($isFavourite){
+      return $this->t("Remove from favourites");
+    }
+
+    return $this->t("Add to favourites");
   }
 }

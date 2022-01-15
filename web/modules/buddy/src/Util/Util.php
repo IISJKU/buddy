@@ -892,4 +892,22 @@ class Util
 
   }
 
+  public static function getATRecordOfATEntry($entryID){
+    $user = \Drupal::currentUser();
+    $query = \Drupal::entityQuery('node')
+      ->condition('type', 'user_at_record')
+      ->condition('field_user_at_record_at_entry', $entryID)
+      ->condition('uid', $user->id(), '=');
+
+    $results = $query->execute();
+    if (!empty($results)) {
+      $storage = \Drupal::service('entity_type.manager')->getStorage('node');
+      $entries = $storage->loadMultiple($results);
+      return reset($entries);
+
+    }
+  }
+
 }
+
+
