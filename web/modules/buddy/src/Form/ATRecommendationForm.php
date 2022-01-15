@@ -30,7 +30,7 @@ class ATRecommendationForm extends FormBase
 
     $ajaxUpdate =  $form_state->get('ajax_update');
     if($ajaxUpdate){
-      $recommendations = $form_state->get('recommendations');
+      $recommendations = $form_state->get('oldRecommendations');
       $form_state->set('ajax_update',false);
     }else{
       $recommendations_all = array();
@@ -39,9 +39,10 @@ class ATRecommendationForm extends FormBase
         $recommendations_all = $storage['recommendations'];
       }
       $recommendations = BuddyRecommender::recommend($user, $recommendations_all);
-      $form_state->set('recommendations',$recommendations);
+      $form_state->set('oldRecommendations',$recommendations);
     }
 
+    $oarsch = $form_state->get('oldRecommendations');
 
     if (!empty($recommendations)) {
       $maxResults = min(count($recommendations), BuddyRecommender::$maxNumberOfATEntries);
@@ -86,10 +87,8 @@ class ATRecommendationForm extends FormBase
         ];
 
         $atRecord = Util::getATRecordOfATEntry($atEntryID);
-        $valueLabel = $this->getLabelForFavourite(false);
-        if($atRecord){
-          $valueLabel = $this->getLabelForFavourite(true);
-        }
+        $valueLabel = $this->getLabelForFavourite($atRecord);
+
         $entryForm['at_favourites'] = [
           '#name' => $atEntryID . "_" . $description->id(),
           '#type' => 'submit',
@@ -139,9 +138,8 @@ class ATRecommendationForm extends FormBase
     }
 
     // Store recommendations
-    $form_state->setStorage(array('recommendations' => $recommendations_all));
-
-    return $form;
+    $form_state->set('recommendations', $recommendations_all);
+     return $form;
   }
 
   public function test1(array &$form, FormStateInterface $form_state) {
@@ -156,7 +154,15 @@ class ATRecommendationForm extends FormBase
     $isFavourite = false;
     if($atRecord){
 
-      $atRecord->delete();
+      $isLibrary = $atRecord->field_user_at_record_library->getValue()[0]['value'];
+
+      if($isLibrary){
+        $atRecord->set("field_user_at_record_library", false);
+      }else{
+        $atRecord->set("field_user_at_record_library", true);
+      }
+
+      $atRecord->save();
 
     }else{
       $node = Node::create([
@@ -189,6 +195,7 @@ class ATRecommendationForm extends FormBase
     } else {
       $form_state->set('page_num', $form_state->get('page_num')+1);
     }
+    $form_state->set('oldRecommendations',$form_state->get('oldRecommendations'));
     $form_state->setRebuild(true);
   }
 
@@ -232,9 +239,15 @@ class ATRecommendationForm extends FormBase
 
   }
 
-  private function getLabelForFavourite($isFavourite){
-    if($isFavourite){
-      return $this->t("Remove from favourites");
+  private function getLabelForFavourite($atRecord){
+    if($atRecord){
+
+      $isLibrary = $atRecord->field_user_at_record_library->getValue()[0]['value'];
+
+      if($isLibrary){
+        return $this->t("Remove from favourites");
+      }
+
     }
 
     return $this->t("Add to favourites");

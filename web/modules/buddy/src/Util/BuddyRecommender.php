@@ -14,7 +14,7 @@ use GuzzleHttp\Exception\RequestException;
 class BuddyRecommender
 {
 
-  public static int $maxNumberOfATEntries = 3;
+  public static int $maxNumberOfATEntries = 1;
 
   /**
    * Return AT recommendations for the given user, or the current logged-in user if no user is given
