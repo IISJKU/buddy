@@ -49,6 +49,9 @@ class UserATLibraryController extends ControllerBase
 
       $atEntryID = $atRecord->get("field_user_at_record_at_entry")->getValue()[0]['target_id'];
       $atEntry = Node::load($atEntryID);
+      if(!$atEntry){
+        continue;
+      }
       $descriptions = Util::getDescriptionsOfATEntry($atEntryID);
       $user = \Drupal::currentUser();
       $description = Util::getDescriptionForUser($descriptions,$user);
@@ -64,7 +67,7 @@ class UserATLibraryController extends ControllerBase
       $content.= Link::createFromRoute($this->t('Remove from favourites'),'buddy.user_at_library_remove',['record' =>$atRecord->id()],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
       $content.='</div></div>';
 
-      $installLink = Link::createFromRoute($this->t('How to get this tool'),'buddy.user_at_install_form',['description' => $description->id()],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+      $installLink = Link::createFromRoute($this->t('How to get this tool'),'buddy.user_at_install_form',['description' => $description->id(),"return"=>"library"],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
 
 
       $content.= ' <div class="row">

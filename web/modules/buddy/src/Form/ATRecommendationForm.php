@@ -222,7 +222,7 @@ class ATRecommendationForm extends FormBase
     ];
     $entryForm['at_favourites']['#attributes']['class'][] = 'buddy_link_button buddy_button';
 
-    $installLink = Link::createFromRoute($this->t('How to get this tool'),'buddy.user_at_install_form',['description' => $description->id()],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+    $installLink = Link::createFromRoute($this->t('How to get this tool'),'buddy.user_at_install_form',['description' => $description->id(),"return"=>"recommender"],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
     $installHtml = ' <div class="row">
     <div class="col">
     </div>

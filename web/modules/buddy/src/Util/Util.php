@@ -233,6 +233,9 @@ class Util
 
   public static function getPlatformsOfATEntry($atEntry)
   {
+    if(!$atEntry){
+      return;
+    }
     $storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $platformIDs = $atEntry->get("field_at_types")->getValue();
     $platforms = [];

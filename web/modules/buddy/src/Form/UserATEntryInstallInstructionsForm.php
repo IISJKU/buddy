@@ -31,6 +31,9 @@ class UserATEntryInstallInstructionsForm extends FormBase
   public function buildForm(array $form, FormStateInterface $form_state, $description = null)
   {
 
+    $return = \Drupal::request()->query->get('return');
+    $form_state->set('return', $return);
+
     Util::setTitle($this->t("How to get this tool")."");
 
     $browser = new Browser();
@@ -122,6 +125,13 @@ class UserATEntryInstallInstructionsForm extends FormBase
     ];
 
 
+
+
+    $form['actions']['no_submit'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Back'),
+      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
+    ];
     $form['#attached']['library'][] = 'buddy/user_at_detail';
     return $form;
   }
@@ -267,15 +277,17 @@ class UserATEntryInstallInstructionsForm extends FormBase
   public function submitForm(array &$form, FormStateInterface $form_state)
   {
 
-    $typID  = $form_state->getTriggeringElement()['#name'];
+    $return = $form_state->get('return');
 
-    $type = Node::load($typID);
+    if($return == "search"){
 
-    $link = $type->get("field_type_download_link")->getValue();
+      $form_state->setRedirect('buddy.user_search');
+    }else if($return == "recommender"){
 
-
-    $form_state->setResponse(new TrustedRedirectResponse($link[0]['uri']));
-
+      $form_state->setRedirect('buddy.user_at_recommendation');
+    }else{
+      $form_state->setRedirect('buddy.user_at_library');
+    }
   }
 
 }
