@@ -96,7 +96,7 @@ class UserATEntryInstallInstructionsForm extends FormBase
     }
 
 
-    $installHTML ="<ul>";
+    $installHTML ="<h2>".$this->t("You can download the tool here:")."</h2><ul class='tool_download_link'>";
 
     $installHTML.=$this->renderSoftware($software);
     $installHTML.=$this->renderBrowserExtensions($browserExtensions);
@@ -262,88 +262,6 @@ class UserATEntryInstallInstructionsForm extends FormBase
     return '<li><a href="'.$url.'">'.$this->t("Download for ").$type->getTitle().$additionalMessage.'</a></li>';
 
   }
-
-  protected function renderTypeDescription($type,$id,$currentMessage){
-    $icon = $type->field_icon->getValue();
-    $altText = $icon[0]['alt'];
-    $styled_image_url = ImageStyle::load('medium')->buildUrl($type->field_icon->entity->getFileUri());
-    $description = "";
-    if($currentMessage != ""){
-
-      $currentMessage = '('.$currentMessage.')';
-    }
-
-    $descriptionID = "buddy_description_id_".$id;
-    $description.= "
-            <h3 id='".$descriptionID."'><img src='".$styled_image_url."' alt='' class='buddy-type-icon'>".$type->getTitle().$currentMessage."</h3>";
-
-
-    $button =  [
-      '#type' => 'submit',
-      '#name' => $id,
-      '#button_type' => 'primary',
-      '#value' => $this->t('Get it!'),
-      '#prefix' =>'<li class="er_type_install_item"> <div class="row"> <div class="col-8 buddy_install_description">'.$description.'</div><div class="col-4">',
-      '#suffix' => '</div></div></li>',
-
-    ];
-
-    $button['#attributes']['class'][] = 'buddy_link_button buddy_button buddy_download';
-    $button['#attributes']['class'][] = 'buddy-icon-button';
-    $button['#attributes']['class'][] = 'buddy-icon-before';
-    $button['#attributes']['icon'] = "fa-download";
-    $button['#attributes']['aria-describedby'][] = $descriptionID;
-
-    return $button;
-
-  }
-
-  protected function renderBrowserDescription($browser,$id,$currentBrowserMessage =""){
-    return $this->renderTypeDescription($browser,$id,$currentBrowserMessage);
-  }
-
-  protected function renderOsDescription($os,$id, $currentOSMessage = ""){
-    return $this->renderTypeDescription($os,$id, $currentOSMessage);
-  }
-
-  protected function renderMobileOSDescription($os,$id, $currentOSMessage = ""){
-
-    return $this->renderTypeDescription($os,$id, $currentOSMessage);
-  }
-
-
-
-
-
-
-
-
-  protected function renderTabHeader($name, $icon, $tabID, $tabPanelID, $activeTab){
-
-    $active = "";
-    $ariaSelected = "false";
-    if($activeTab){
-      $active = "active";
-      $ariaSelected = "true";
-    }
-
-    return '<a class="nav-link buddy_install_tab_link '.$active.'" id="'.$tabID.'" data-toggle="tab" href="#'.$tabPanelID.'" role="tab" aria-controls="'.$tabPanelID.'" aria-selected="'.$ariaSelected.'"><img src="'.$icon.'" width="50" height="50" alt="" title="">'.$name.'</a>';
-
-  }
-
-
-  protected function renderTabPanelHeader($tabID, $tabPanelID, $activeTab){
-
-    $activeTabHTML = "";
-    if($activeTab){
-      $activeTabHTML =" show active";
-    }
-    return '  <div class="tab-pane fade'.$activeTabHTML.'" id="'.$tabPanelID.'" role="tabpanel" aria-labelledby="'.$tabID.'">';
-  }
-
-
-
-
 
 
   public function submitForm(array &$form, FormStateInterface $form_state)
