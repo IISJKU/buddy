@@ -262,16 +262,17 @@ class Util
     return $sortedPlatforms;
   }
 
-  public static function renderPlatformInstallationInstruction($platforms){
-
-    return "THIS IS BULLSHIT";
-  }
 
   public static function getSupportCategoriesOfAtEntry($atEntry){
 
+    $muh = $atEntry->getTitle();
     $atCategories = $atEntry->get("field_at_categories")->getValue();
-    $storage = \Drupal::service('entity_type.manager')->getStorage('node');
-    $supportCategories = $storage->loadMultiple(array_keys($atCategories));
+    $supportCategories = [];
+    foreach ($atCategories as $atCategory){
+
+      $supportCategories[] = Node::load($atCategory['target_id']);
+
+    }
     return $supportCategories;
   }
 

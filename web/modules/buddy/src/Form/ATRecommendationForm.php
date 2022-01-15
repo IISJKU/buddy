@@ -8,6 +8,7 @@ use Drupal\buddy\Util\BuddyRecommender;
 use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 
@@ -217,15 +218,25 @@ class ATRecommendationForm extends FormBase
         'wrapper' => "favourites_wrapper_".$atEntryID,
       ),
       '#prefix' => '<div id="favourites_wrapper_'.$atEntryID.'">',
-      '#suffix' => '</div>'
-    ];
-
-    $entryForm['close'] = [
-      '#type' => 'markup',
-      '#markup' => '</div></div></div></div>',
-      '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
+      '#suffix' => '</div></div></div>'
     ];
     $entryForm['at_favourites']['#attributes']['class'][] = 'buddy_link_button buddy_button';
+
+    $installLink = Link::createFromRoute($this->t('How to get this tool'),'buddy.user_at_install_form',['description' => $description->id()],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+    $installHtml = ' <div class="row">
+    <div class="col">
+    </div>
+    <div class="col text-align-right">
+        '.$installLink.'
+    </div>
+    </div>';
+
+    $entryForm['install'] = [
+      '#type' => 'markup',
+      '#markup' => $installHtml.'</div></div>',
+      '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
+    ];
+
 
     return $entryForm;
   }

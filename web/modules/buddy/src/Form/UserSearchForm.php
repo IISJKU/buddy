@@ -7,6 +7,7 @@ namespace Drupal\buddy\Form;
 use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 
@@ -231,49 +232,63 @@ class UserSearchForm extends FormBase
     $languages = Util::getLanguagesOfDescriptions($descriptions);
     $platforms = Util::getPlatformsOfATEntry($atEntry);
     $supportCategories = Util::getSupportCategoriesOfAtEntry(Node::load($atEntryID));
-    $content = Util::renderDescriptionTiles($description,$user,$languages,$platforms,$supportCategories);
 
     $form = [];
 
-
-    $form['content'] = [
-      '#type' => 'markup',
-      '#prefix' => "<div class='at_library_container'",
-      '#markup' => $content,
-      '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
-    ];
-
-
     if( \Drupal::currentUser()->isAuthenticated()){
+      $content = Util::renderDescriptionTiles2($description,$supportCategories,$platforms,$languages,false,2);
 
-      /*
-      $form['detail'] = [
-        '#name' => $atEntryID,
-        '#type' => 'submit',
-        '#button_type' => 'primary',
-        '#value' => $this->t('More Information'),
-        '#submit' => ['::moreInformationSubmitHandler'],
+      $form['content'] = [
+        '#type' => 'markup',
+        '#prefix' => "<div class='at_library_container'>",
+        '#suffix' => '<div class="col-2">',
+        '#markup' => $content,
+        '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
       ];
-      */
 
-      $form['at_install'] = [
+      $atRecord = Util::getATRecordOfATEntry($atEntryID);
+      $valueLabel = $this->getLabelForFavourite($atRecord);
+
+      $form['at_favourites'] = [
         '#name' => $atEntryID . "_" . $description->id(),
         '#type' => 'submit',
         '#button_type' => 'primary',
-        '#value' => $this->t('Try this tool'),
-        '#submit' => ['::installATSubmitHandler'],
-        '#suffix' => '</div>'
+        '#value' =>$valueLabel,
+        '#submit' => ['::favouriteSubmit'],
+        '#ajax' => array(
+          'callback' => '::favouriteAjaxCallback',
+          'wrapper' => "favourites_wrapper_".$atEntryID,
+        ),
+        '#prefix' => '<div id="favourites_wrapper_'.$atEntryID.'">',
+        '#suffix' => '</div></div></div>'
       ];
-      $form['at_install']['#attributes']['class'][] = 'buddy_link_button buddy_button';
+      $form['at_favourites']['#attributes']['class'][] = 'buddy_link_button buddy_button';
+
     }else{
-      $form['at_install'] = [
+
+      $content = Util::renderDescriptionTiles2($description,$supportCategories,$platforms,$languages);
+      $form['content'] = [
         '#type' => 'markup',
-        '#markup' => '</div>',
-        '#allowed_tags' => ['button', 'a', 'div', 'img', 'h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'span'],
+        '#prefix' => "<div class='at_library_container'",
+        '#markup' => $content,
+        '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
       ];
     }
 
+    $installLink = Link::createFromRoute($this->t('How to get this tool'),'buddy.user_at_install_form',['description' => $description->id()],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+    $installHtml = ' <div class="row">
+    <div class="col">
+    </div>
+    <div class="col text-align-right">
+        '.$installLink.'
+    </div>
+    </div>';
 
+    $form['install'] = [
+      '#type' => 'markup',
+      '#markup' => $installHtml.'</div></div>',
+      '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
+    ];
 
 
 
@@ -295,4 +310,17 @@ class UserSearchForm extends FormBase
     Util::installATSubmitHandler($form,$form_state);
   }
 
+  private function getLabelForFavourite($atRecord){
+    if($atRecord){
+
+      $isLibrary = $atRecord->field_user_at_record_library->getValue()[0]['value'];
+
+      if($isLibrary){
+        return $this->t("Remove from favourites");
+      }
+
+    }
+
+    return $this->t("Add to favourites");
+  }
 }
