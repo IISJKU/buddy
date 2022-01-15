@@ -80,7 +80,9 @@ class ATLibraryForm  extends FormBase
       $description = Util::getDescriptionForUser($descriptions,$user);
       $languages = Util::getLanguagesOfDescriptions($descriptions);
       $platforms = Util::getPlatformsOfATEntry($atEntry);
-      $content = Util::renderDescriptionTiles($description,$user,$languages,$platforms,false,false);
+      $supportCategories = Util::getSupportCategoriesOfAtEntry(Node::load($atEntryID));
+
+      $content = Util::renderDescriptionTiles($description,$user,$languages,$platforms,$supportCategories,false,false);
 
       $form['content_'.$key] = [
         '#type' => 'markup',

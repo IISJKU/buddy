@@ -53,7 +53,9 @@ class UserATLibraryController extends ControllerBase
       $description = Util::getDescriptionForUser($descriptions,$user);
       $languages = Util::getLanguagesOfDescriptions($descriptions);
       $platforms = Util::getPlatformsOfATEntry($atEntry);
-      $content = Util::renderDescriptionTiles($description,$user,$languages,$platforms,false,false);
+      $supportCategories = Util::getSupportCategoriesOfAtEntry(Node::load($atEntryID));
+
+      $content = Util::renderDescriptionTiles($description,$user,$languages,$platforms,$supportCategories,false,false);
 
       $atlink_1 = Link::createFromRoute($this->t('Information'),'buddy.user_at_install_form',['description' => $description->id()],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
       $atlink_2 = Link::createFromRoute($this->t('Install Instructions'),

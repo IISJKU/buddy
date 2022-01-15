@@ -114,7 +114,9 @@ class ATCatalogueForm extends FormBase
     $description = Util::getDescriptionForUser($descriptions,$user);
     $languages = Util::getLanguagesOfDescriptions($descriptions);
     $platforms = Util::getPlatformsOfATEntry(Node::load($atEntryID));
-    $content = Util::renderDescriptionTiles($description,$user,$languages,$platforms);
+    $supportCategories = Util::getSupportCategoriesOfAtEntry(Node::load($atEntryID));
+
+    $content = Util::renderDescriptionTiles($description,$user,$languages,$platforms,$supportCategories);
 
     $form = [];
 

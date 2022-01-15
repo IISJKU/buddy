@@ -240,8 +240,34 @@ class Util
       $platforms[] = Node::load($platformID['target_id']);
     }
 
+    $sortedPlatforms = [];
+    foreach ($platforms as $platform){
+      if($platform->bundle() == "at_type_browser_extension"){
+        $sortedPlatforms[] = $platform;
+      }
+    }
 
-    return $platforms;
+    foreach ($platforms as $platform){
+      if($platform->bundle() == "at_type_app"){
+        $sortedPlatforms[] = $platform;
+      }
+    }
+
+    foreach ($platforms as $platform){
+      if($platform->bundle() == "at_type_software"){
+        $sortedPlatforms[] = $platform;
+      }
+    }
+
+    return $sortedPlatforms;
+  }
+
+  public static function getSupportCategoriesOfAtEntry($atEntry){
+
+    $atCategories = $atEntry->get("field_at_categories")->getValue();
+    $storage = \Drupal::service('entity_type.manager')->getStorage('node');
+    $supportCategories = $storage->loadMultiple(array_keys($atCategories));
+    return $supportCategories;
   }
 
   public static function renderPlatformOverview($platforms)
@@ -405,7 +431,7 @@ class Util
 
   }
 
-  public static function renderDescriptionTiles($description, $user, $languages, $platforms, $renderPlatform = true, $renderLanguage = true)
+  public static function renderDescriptionTiles($description, $user, $languages, $platforms,$supportCategories, $renderPlatform = true, $renderLanguage = true,$renderSupportCategories = true)
   {
 
     $content = $description->get("field_at_description_short")->getValue()[0]['value'];
@@ -417,14 +443,11 @@ class Util
     $html = '
        <div class="at_container">
             <div class="row">
-             <div class="col-12"><h3>
-            ' . $description->getTitle() . '</h3></div>
-            </div>
-            <div class="row">
                 <div class="col-2">
                     <img src="' . $styled_image_url . '" alt="' . $altText . '" class="img-fluid w-100 at_description_image">
                 </div>
-                 <div class="col-10">
+                 <div class="col-10"><h3>
+            ' . $description->getTitle() . '</h3>
                    ' . $content . '
                 </div>
             </div>';
@@ -465,6 +488,155 @@ class Util
 
     return $html;
   }
+  public static function renderDescriptionTiles2($description,$supportCategories,$platforms, $languages,$closeBootstrapRow = true,$rightColumnWidth=0)
+  {
+
+
+    $shortDescription = $description->get("field_at_description_short")->getValue()[0]['value'];
+    $image = $description->field_at_description_at_image->getValue();
+    $altText = $image[0]['alt'];
+    $styled_image_url = ImageStyle::load('medium')->buildUrl($description->field_at_description_at_image->entity->getFileUri());
+
+
+    $content ="";
+    $content.='<h3>' . $description->getTitle() . '</h3>';
+    $content.=$shortDescription;
+    $content.="<ul>";
+    $content.="<li>".Util::renderSupportCategories($supportCategories)."</li>";
+    $content.="<li>".Util::renderPlatforms($platforms)."</li>";
+    $content.="<li>".Util::renderLanguages($languages)."</li>";
+    $content.="<li>".Util::renderCosts($platforms)."</li>";
+
+
+    $content.="</ul>";
+    $html =  '
+       <div class="at_container">
+            <div class="row">
+                <div class="col-3">
+                    <img src="' . $styled_image_url . '" alt="' . $altText . '" class="img-fluid w-100 at_description_image">
+                </div>
+                 <div class="col-'.(9-$rightColumnWidth).'">
+            ' .$content . '
+                </div>';
+
+
+    if($closeBootstrapRow){
+
+      $html.='</div></div>';
+    }
+    return $html;
+
+  }
+
+  public static function renderSupportCategories($supportCategories){
+
+    $html = "<b>".t("Supports").": </b>";
+    $firstCategory = true;
+    foreach ($supportCategories as $supportCategory){
+
+      if(!$firstCategory){
+        $html.=", ";
+      }
+
+      $html.=$supportCategory->getTitle();
+      $firstCategory = false;
+    }
+
+    return $html;
+
+  }
+
+  public static function renderPlatforms($platforms){
+    $html = "<b>".t("Available for").": </b>";
+    $firstCategory = true;
+    foreach ($platforms as $platform){
+
+      if(!$firstCategory){
+        $html.=", ";
+      }
+
+      switch ($platform->bundle()) {
+        case "at_type_browser_extension":
+        {
+
+          $browser = Node::load($platform->field_type_browser->getValue()[0]['target_id']);
+          $html.=$browser->getTitle();
+          break;
+        }
+
+        case "at_type_app":
+        {
+
+          $appOs = Node::load($platform->field_app_os->getValue()[0]['target_id']);
+          $html.=$appOs->getTitle();
+
+          break;
+        }
+
+        case "at_type_software":
+        {
+
+          $desktopOS = Node::load($platform->field_type_software_os->getValue()[0]['target_id']);
+          $html.=$desktopOS->getTitle();
+          break;
+        }
+        default:
+        {
+
+        }
+      }
+
+
+
+      $firstCategory = false;
+    }
+
+    return $html;
+  }
+
+  public static function renderLanguages($languages){
+    $html = "<b>".t("Available for").": </b>";
+    $firstCategory = true;
+
+    foreach ($languages as $language){
+
+      if(!$firstCategory){
+        $html.=", ";
+      }
+      $html.= Util::getNameForLanguageCode($language);
+
+      $firstCategory = false;
+    }
+
+    return $html;
+  }
+
+  public static function renderCosts($platforms){
+
+    $html = "<b>".t("Cost").": </b>";
+    $license = "";
+    $firstLicense = true;
+    foreach ($platforms as $platform){
+
+      if($firstLicense){
+
+        $license = $platform->field_type_license->getValue()[0]['value'];
+        $firstLicense = false;
+      }else{
+
+        $newLicense = $platform->field_type_license->getValue()[0]['value'];
+        if($license != $newLicense){
+          $license = t("Mixed");
+          break;
+        }
+      }
+
+
+
+    }
+
+    return $html.$license;
+  }
 
   public static function renderDescriptionDetail($description, $languages)
   {
@@ -500,6 +672,7 @@ class Util
 
     return $html;
   }
+
 
   public static function getDescriptionOfATEntry($atID)
   {

@@ -41,26 +41,30 @@ class ATRecommendationForm extends FormBase
 
         $descriptions = Util::getDescriptionsOfATEntry($atEntryID);
         $user = \Drupal::currentUser();
+        $supportCategories = Util::getSupportCategoriesOfAtEntry(Node::load($atEntryID));
         $description = Util::getDescriptionForUser($descriptions,$user);
         $languages = Util::getLanguagesOfDescriptions($descriptions);
         $platforms = Util::getPlatformsOfATEntry(Node::load($atEntryID));
-        $content = Util::renderDescriptionTiles($description,$user,$languages,$platforms);
+        $content = Util::renderDescriptionTiles($description,$user,$languages,$platforms,$supportCategories);
 
+        $content = Util::renderDescriptionTiles2($description,$supportCategories,$platforms,$languages,false,2);
 
         $entryForm = [];
+        /*
         $entryForm['content'] = [
           '#type' => 'markup',
           '#prefix' => "<div class='at_library_container'",
           '#markup' => $content,
           '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
-        ];
+        ];*/
         $entryForm['at_install'] = [
           '#name' => $atEntryID . "_" . $description->id(),
           '#type' => 'submit',
           '#button_type' => 'primary',
           '#value' => $this->t('Try this tool'),
           '#submit' => ['::tryoutATSubmitHandler'],
-          '#suffix' => '</div>'
+          '#prefix' => '<div class="at_library_container">'.$content.'<div class="col-2">',
+          '#suffix' => '</div></div></div></div>'
         ];
         $entryForm['at_install']['#attributes']['class'][] = 'buddy_link_button buddy_button';
 

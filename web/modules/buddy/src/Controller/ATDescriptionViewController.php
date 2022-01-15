@@ -65,8 +65,10 @@ class ATDescriptionViewController extends ControllerBase
     $description = Util::getDescriptionForUser($descriptions,$user);
     $languages = Util::getLanguagesOfDescriptions($descriptions);
     $platforms = Util::getPlatformsOfATEntry(Node::load($atEntryID));
+    $supportCategories = Util::getSupportCategoriesOfAtEntry(Node::load($atEntryID));
+
     $html= "<h2>".$this->t("Preview: Search view")."</h2>";
-    $html.= Util::renderDescriptionTiles($description,$user,$languages,$platforms);
+    $html.= Util::renderDescriptionTiles($description,$user,$languages,$platforms,$supportCategories);
     $html.= "<hr><h2>".$this->t("Preview: Full view")."</h2>";
     $html.= Util::renderDescriptionDetail($description,$languages);
 
