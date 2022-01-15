@@ -18,7 +18,7 @@ class UserATLibraryController extends ControllerBase
 
   public function content()
   {
-    $title = $this->t("Tool library");
+    $title = $this->t("Favourites");
     $user = \Drupal::currentUser();
 
     //Get AT Entry of description
@@ -39,7 +39,8 @@ class UserATLibraryController extends ControllerBase
       ];
     }
 
-    $html = '<div>'.$this->t("Here is your current library of tools.").'</div>';
+    $html = '<p>'.$this->t("This is the list of tools you saved to your favourites.").'</p>';
+    $html.= '<p>'.$this->t("Rating your favourite tools helps Buddy to improve its recommendations").'</p>';
 
     $atRecords = \Drupal::entityTypeManager()->getStorage('node')
       ->loadMultiple($atRecordsIDs);
@@ -56,27 +57,29 @@ class UserATLibraryController extends ControllerBase
       $supportCategories = Util::getSupportCategoriesOfAtEntry(Node::load($atEntryID));
 
       $content = Util::renderDescriptionTiles($description,$user,$languages,$platforms,$supportCategories,false,false);
+      $content = Util::renderDescriptionTiles2($description,$supportCategories,$platforms,$languages,false,2);
 
-      $atlink_1 = Link::createFromRoute($this->t('Information'),'buddy.user_at_install_form',['description' => $description->id()],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
-      $atlink_2 = Link::createFromRoute($this->t('Install Instructions'),
-        'buddy.user_at_install_form',
-        ['description' => $description->id()],
-        ['attributes' => ['class' => 'buddy_link_button buddy_button'],
-          'fragment' => 'install-instructions']
-      )->toString()->getGeneratedLink();
+
+      $content.='<div class="col-2">';
+      $content.= Link::createFromRoute($this->t('Remove from favourites'),'buddy.user_at_library_remove',['record' =>$atRecord->id()],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+      $content.='</div></div>';
+
+      $installLink = Link::createFromRoute($this->t('How to get this tool'),'buddy.user_at_install_form',['description' => $description->id()],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+
+
+      $content.= ' <div class="row">
+    <div class="col">
+        '.$this->rating_widget_html($user->id(), $atEntryID).'
+    </div>
+    <div class="col">
+        '.$installLink.'
+
+    </div>
+    </div>';
 
       $html.="<div class='at_library_container'>";
       $html.=$content;
-      $html.="<h4>".$this->t("Actions")."</h4><ul class='at_library_action_list'>";
-      $html.= "<li>".$atlink_1."</li>";
-      $html.= "<li>".$atlink_2."</li>";
-      $html.= "<li>".Link::createFromRoute($this->t('Remove'),'buddy.user_at_library_remove',['record' =>$atRecord->id()],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink()."</li>";
-      $html.="</ul>";
-
-      $html.="<h4>".$this->t("Rate this tool:")."</h4>";
-      $html .= $this->rating_widget_html($user->id(), $atEntryID);
-
-      $html .= "</div>";
+      $html .= "</div></div>";
 
     }
 

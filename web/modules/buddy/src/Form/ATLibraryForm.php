@@ -59,7 +59,7 @@ class ATLibraryForm  extends FormBase
 
     $form['library_description'] = [
       '#type' => 'markup',
-      '#markup' => '<div>'.$this->t("Here is your current library of tools.").'</div>',
+      '#markup' => '<p>'.$this->t("This is the list of tools you saved to your favourites").'</p><p>'.$this->t("Rating your favourite tools helps Buddy to improve its recommendations.").'</p>',
       '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
 
     ];
