@@ -60,24 +60,7 @@ class ATRecommendationForm extends FormBase
         $content = Util::renderDescriptionTiles2($description,$supportCategories,$platforms,$languages,false,2);
 
         $entryForm = [];
-        /*
-        $entryForm['content'] = [
-          '#type' => 'markup',
-          '#prefix' => "<div class='at_library_container'",
-          '#markup' => $content,
-          '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
-        ];*/
-        /*
-        $entryForm['at_install'] = [
-          '#name' => $atEntryID . "_" . $description->id(),
-          '#type' => 'submit',
-          '#button_type' => 'primary',
-          '#value' => $this->t('Try this tool'),
-          '#submit' => ['::tryoutATSubmitHandler'],
-          '#prefix' => '<div class="at_library_container">'.$content.'<div class="col-2">',
-          '#suffix' => '</div></div></div></div>'
-        ];
-        */
+
         $entryForm['content'] = [
           '#type' => 'markup',
           '#prefix' => "<div class='at_library_container'",
@@ -94,9 +77,9 @@ class ATRecommendationForm extends FormBase
           '#type' => 'submit',
           '#button_type' => 'primary',
           '#value' =>$valueLabel,
-          '#submit' => ['::test1'],
+          '#submit' => ['::favouriteSubmit'],
           '#ajax' => array(
-            'callback' => '::test2',
+            'callback' => '::favouriteAjaxCallback',
             'wrapper' => "favourites_wrapper_".$atEntryID,
           ),
           '#prefix' => '<div id="favourites_wrapper_'.$atEntryID.'">',
@@ -112,7 +95,10 @@ class ATRecommendationForm extends FormBase
 
         $form[$atEntryID] = $entryForm;
 
-        $recommendations_all[] = $atEntryID;
+        if(!$ajaxUpdate){
+
+          $recommendations_all[] = $atEntryID;
+        }
       }
       $form['actions'] = [
         '#type' => 'actions',
@@ -137,12 +123,16 @@ class ATRecommendationForm extends FormBase
       ];
     }
 
-    // Store recommendations
-    $form_state->set('recommendations', $recommendations_all);
+
+    if(!$ajaxUpdate){
+      // Store recommendations
+      $form_state->set('recommendations', $recommendations_all);
+    }
+
      return $form;
   }
 
-  public function test1(array &$form, FormStateInterface $form_state) {
+  public function favouriteSubmit(array &$form, FormStateInterface $form_state) {
 
     $user = \Drupal::currentUser();
     $test = $form_state->getTriggeringElement()['#name'];
@@ -181,7 +171,7 @@ class ATRecommendationForm extends FormBase
 
 
   }
-  public function test2(array &$form, FormStateInterface $form_state) {
+  public function favouriteAjaxCallback(array &$form, FormStateInterface $form_state) {
     $arguments = explode("_", $form_state->getTriggeringElement()['#name']);
     $atEntryID = $arguments[0];
     return $form[$atEntryID]['at_favourites'];
