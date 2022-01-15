@@ -13,7 +13,7 @@ use Drupal\node\Entity\Node;
 
 class ATRecommendationForm extends FormBase
 {
-  protected int $maxNumberOfATEntries = 1;
+  protected int $maxNumberOfATEntries = 3;
   public function getFormId()
   {
     return "buddy_recommendation_form";
@@ -28,6 +28,9 @@ class ATRecommendationForm extends FormBase
     $mode = $form_state->get("mode");
     $user = \Drupal::currentUser();
 
+
+    $form['#prefix'] = "<div id='buddy_recommendations'>";
+    $form['#suffix'] = "</div>";
 
     $form['mode_recommender'] = [
       '#type' => 'submit',
@@ -81,9 +84,7 @@ class ATRecommendationForm extends FormBase
       if (!empty($recommendations)) {
         $form['recommendations'] = [
           '#type' => 'markup',
-          '#prefix' => "<div id='buddy_recommendations'>",
-          '#markup' => $this->t("Based on your preferences, Buddy recommends the following tools for you:"),
-          '#suffix' => "</div>",
+          '#markup' => '<div><p>'.$this->t("Based on your preferences, Buddy recommends the following tools for you:").'</p></div>',
           '#allowed_tags' => ['div','h2'],
         ];
         $maxResults = min(count($recommendations), BuddyRecommender::$maxNumberOfATEntries);
@@ -108,9 +109,7 @@ class ATRecommendationForm extends FormBase
 
         $form['recommendations'] = [
           '#type' => 'markup',
-          '#prefix' => "<div id='buddy_recommendations'>",
-          '#markup' => '<p>'. t("There are no more ATs to recommend at the moment!") .'</p>',
-          '#suffix' => "</div>",
+          '#markup' => '<div><p>'. t("There are no more tools to recommend at the moment!") .'</p></div>',
           '#allowed_tags' => ['div','h2'],
         ];
 
@@ -135,32 +134,46 @@ class ATRecommendationForm extends FormBase
 
       $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
+      $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
+
       $query = \Drupal::entityQuery('node')
         ->condition('type', 'at_description')
         ->condition('field_at_description_language', $user_lang)
-        ->condition('status', 1);
+        ->condition('status', 1)
+        ->range($currentPage*$this->maxNumberOfATEntries, $this->maxNumberOfATEntries);
       $results = $query->execute();
 
 
+      if(count($results)){
+        $form['recommendations'] = [
+          '#type' => 'markup',
+          '#markup' => '<div>'.$this->t("All tools supporting your language:").'</div>',
+          '#allowed_tags' => ['div','h2'],
+        ];
 
+        foreach ($results as $descriptionID){
+          $atEntryID = Node::load($descriptionID)->field_at_entry->getValue()[0]['target_id'];
+          $form['recommendations'][$atEntryID] = $this->renderATEntryForm($atEntryID);
+        }
 
+        $form['recommendations_more'] = [
+          '#type' => 'submit',
+          '#button_type' => 'primary',
+          '#value' => $this->t('Show me more tools!'),
+          '#submit' => ['::allSubmit'],
+        ];
+      }else{
 
-      $form['recommendations'] = [
-        '#type' => 'markup',
-        '#prefix' => "<div id='buddy_recommendations'>",
-        '#markup' => "OAAA",
-        '#suffix' => "</div>",
-        '#allowed_tags' => ['div','h2'],
-      ];
+        $form['recommendations'] = [
+          '#type' => 'markup',
+          '#markup' => '<div><p>'. t("There are no more tools in the list at the moment!") .'</p></div>',
+          '#allowed_tags' => ['div','h2'],
+        ];
 
-      foreach ($results as $descriptionID){
-        $atEntryID = Node::load($descriptionID)->field_at_entry->getValue()[0]['target_id'];
-        $form['recommendations'][$atEntryID] = $this->renderATEntryForm($atEntryID);
       }
 
-    //  $atEntryID = array_shift($recommendations);
 
-   //   $form['recommendations'][$atEntryID] = $this->renderATEntryForm($atEntryID);
+
 
 
 
@@ -266,13 +279,13 @@ class ATRecommendationForm extends FormBase
   {
     $form_state->set('mode', 0);
     $form_state->setRebuild();
-
+    $form_state->set('recommendations',array());
 
 
   }
   public function recommendationsAjaxSubmit(array &$form, FormStateInterface $form_state)
   {
-    return $form['recommendations'];
+    return $form;
 
 
   }
@@ -281,24 +294,32 @@ class ATRecommendationForm extends FormBase
   {
     $form_state->set('mode', 1);
     $form_state->set('ajax_update',false);
-    $form_state->set('recommendations',array());
+    $form_state->set('page_num', 0);
     $form_state->setRebuild();
 
 
   }
   public function allToolsAjaxSubmit(array &$form, FormStateInterface $form_state)
   {
-    return $form['recommendations'];
+    return $form;
+
+
+  }
+
+
+  public function allSubmit(array &$form, FormStateInterface $form_state)
+  {
+    $form_state->set('page_num', $form_state->get('page_num')+1);
+    $form_state->setRebuild();
 
 
   }
 
 
 
-
-
   public function submitForm(array &$form, FormStateInterface $form_state)
   {
+    /*
     $recommendations = $form_state->getStorage()['recommendations'];
     if (($form_state->get('page_num')+1)*BuddyRecommender::$maxNumberOfATEntries >= count($recommendations)) {
       $form_state->set('page_num', 0);
@@ -306,6 +327,7 @@ class ATRecommendationForm extends FormBase
       $form_state->set('page_num', $form_state->get('page_num')+1);
     }
     $form_state->set('oldRecommendations',$form_state->get('oldRecommendations'));
+    */
     $form_state->setRebuild(true);
   }
 
