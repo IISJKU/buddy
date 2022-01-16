@@ -139,9 +139,11 @@ class UserFrontPageController extends ControllerBase
     }
 
 
+    $decorativeImageURL = Util::getBaseURL(false)."/modules/buddy/img/main.svg";
+
     $html = '<div class="row">
   <div class="col-12 col-lg-6">'.$leftColumnHTML.'</div>
-  <div class="col-12 col-lg-6">'.$rightColumnHTML.'</div>
+  <div class="col-12 col-lg-6"><div><img src="'.$decorativeImageURL.'" alt="" id="main-bg-img"></div>'.$rightColumnHTML.'</div>
 </div>';
 
     $build = array(

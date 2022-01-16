@@ -169,7 +169,6 @@ buddy.user_at_install_form:
     _form: '\Drupal\buddy\Form\UserATEntryInstallInstructionsForm'
     _title: 'Install Instructions'
   requirements:
-    _user_is_logged_in: 'TRUE'
     _entity_bundles: 'description:at_description'
   options:
     parameters:
