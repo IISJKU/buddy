@@ -27,8 +27,8 @@ class UserFrontPageController extends ControllerBase
     if(!$logged_in){
       $title = $this->t("Welcome to Buddy!");
 
-      $createUserLink = Link::createFromRoute($this->t('Create account'),'buddy.user_register',[],['attributes' => ['class' => 'buddy_link_button create_account_button']])->toString()->getGeneratedLink();
-      $loginLink = Link::createFromRoute($this->t('Log in'),'buddy.user_login',[],['attributes' => ['class' => 'buddy_link_button login_button']])->toString()->getGeneratedLink();
+      $createUserLink = Link::createFromRoute($this->t('Create account'),'buddy.user_register',[],['attributes' => ['class' => 'buddy_menu_button buddy_menu_button_large']])->toString()->getGeneratedLink();
+      $loginLink = Link::createFromRoute($this->t('Log in'),'buddy.user_login',[],['attributes' => ['class' => 'buddy_menu_button buddy_menu_button_large']])->toString()->getGeneratedLink();
 
       $leftColumnHTML = '<p class="mobile_intro_text">'.$this->t('<span class="buddy_main_page_intro_line">The assistive technology platform </span><span class="buddy_main_page_intro_line">that finds tools</span><span class="buddy_main_page_intro_line"> that work for you.</span>').'</p>
                <p class="desktop_intro_text">'.$this->t('<span class="buddy_main_page_intro_line">The assistive technology platform </span><span class="buddy_main_page_intro_line">that finds tools that work for you.</span>').'</p>
@@ -66,7 +66,7 @@ class UserFrontPageController extends ControllerBase
                <ul class="buddy_user_main_menu">';
 
         $leftColumnHTML .= '<li>';
-        $leftColumnHTML .= '<a class="buddy_link_button buddy_button" href="'.$recommendationURL.'">';
+        $leftColumnHTML .= '<a class="buddy_menu_button buddy_menu_button_large" href="'.$recommendationURL.'">';
      //   $leftColumnHTML .= '<i class="fas fa-robot"></i>';
         $leftColumnHTML .= $this->t('Find a tool for you');
         $leftColumnHTML .= '</a></li>';
@@ -81,14 +81,14 @@ class UserFrontPageController extends ControllerBase
 
         if(count($atRecordsIDs) != 0) {
           $leftColumnHTML .= '<li>';
-          $leftColumnHTML .= '<a class="buddy_link_button buddy_button" href="'.$manageToolsURL.'">';
+          $leftColumnHTML .= '<a class="buddy_menu_button buddy_menu_button_large" href="'.$manageToolsURL.'">';
           //    $leftColumnHTML .= '<i class="fas fa-tools"></i>';
           $leftColumnHTML .= $this->t('Rate your favourite tools');
           $leftColumnHTML .= '</a></li>';
         }
 
         $leftColumnHTML .= '<li>';
-        $leftColumnHTML .= '<a class="buddy_link_button buddy_button" href="'.$preferencesURL.'">';
+        $leftColumnHTML .= '<a class="buddy_menu_button buddy_menu_button_large" href="'.$preferencesURL.'">';
       //  $leftColumnHTML .= '<i class="fas fa-search"></i>';
         $leftColumnHTML .= $this->t('Update your preferences');
         $leftColumnHTML .= '</a></li>';
@@ -118,7 +118,7 @@ class UserFrontPageController extends ControllerBase
 
         $leftColumnHTML = '<p>'.$this->t("Let buddy know about the support you need, so it can recommend you suitable tools.").'</p>';
         $leftColumnHTML .= '<div>';
-        $leftColumnHTML .= '<a class="buddy_link_button buddy_button" href="'.$preferencesURL.'">';
+        $leftColumnHTML .= '<a class="buddy_menu_button buddy_menu_button_large" href="'.$preferencesURL.'">';
      //   $leftColumnHTML .= '<i class="fas fa-robot"></i>';
         $leftColumnHTML .= $this->t('Set preferences');
         $leftColumnHTML .= '</a></div>';

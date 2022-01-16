@@ -92,7 +92,7 @@ class UserLoginForm extends FormBase
       '#value' => $this->t('Back'),
       '#suffix' => '</div>',
     ];
-    $form['actions']['submit']['#attributes']['class'][] = 'buddy_link_button_social_auth back_button';
+    $form['actions']['submit']['#attributes']['class'][] = 'buddy_menu_button';
     $form['#attached']['library'][] = 'buddy/user_profile_forms';
 
     return $form;

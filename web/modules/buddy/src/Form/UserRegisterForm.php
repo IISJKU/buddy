@@ -59,11 +59,11 @@ class UserRegisterForm extends FormBase {
     $html .= '</a></div>';
 
 
-    $localLoginUrl = Url::fromRoute('buddy.user_login_local')->toString();
+    $registerURL = Url::fromRoute('buddy.user_register_local')->toString();
 
     // Email button
     $html .= '<div class="auth-option">';
-    $html .= '<a class="buddy_link_button_social_auth" href="'.$localLoginUrl.'">';
+    $html .= '<a class="buddy_link_button_social_auth" href="'.$registerURL.'">';
     $html .= '<img class="social-auth auth-icon" src="' . $social_path . 'email-logo-480.png" alt="">';
     $html .= $this->t('Register with Email');
     $html .= '</a></div>';
@@ -95,7 +95,7 @@ class UserRegisterForm extends FormBase {
       '#value' => $this->t('Back'),
       '#suffix' => '</div>',
     ];
-    $form['actions']['submit']['#attributes']['class'][] = 'buddy_link_button_social_auth back_button';
+    $form['actions']['submit']['#attributes']['class'][] = 'buddy_menu_button';
     $form['#attached']['library'][] = 'buddy/user_profile_forms';
 
     return $form;

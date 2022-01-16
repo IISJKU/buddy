@@ -52,7 +52,7 @@ class UserRegisterLocalForm extends RegisterForm
     unset($form['account']['account']['name']['#description']);
     unset($form['account']['account']['pass']['#description']);
     $form['account']['actions']['submit']['#value'] = $this->t("Create account");
-    $form['account']['actions']['submit']['#attributes']['class'][] = 'buddy_small_link_button';
+    $form['account']['actions']['submit']['#attributes']['class'][] = 'buddy_menu_button buddy_mobile_100';
 
     $form['account']['actions']['cancel'] = [
       '#type' => 'submit',
@@ -60,8 +60,9 @@ class UserRegisterLocalForm extends RegisterForm
       '#weight' => 20,
       '#submit' => ['::userCreateAccountCancelSubmit'],
       '#limit_validation_errors' => [],
+      '#attributes' => ['class' => ['buddy_menu_button','buddy_invert_button','buddy_mobile_100']]
     ];
-    $form['account']['actions']['cancel']['#attributes']['class'][] = 'buddy_small_link_button back_button';
+
 
     $form['#attached']['library'][] = 'buddy/user_profile_forms';
 

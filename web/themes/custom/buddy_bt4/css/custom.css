@@ -87,6 +87,17 @@
   color: white;
   border: 3px solid #080866;
 }
+
+.buddy_menu_button_large{
+  width: 380px;
+}
+@media (max-width: 675px) {
+  .buddy_menu_button_large {
+    width: 100%;
+
+  }
+}
+
 .buddy_menu_button:focus, .buddy_menu_button:hover{
   background: white;
   color: #080866;
@@ -105,6 +116,12 @@
   border: 3px solid #080866;
 }
 
+@media (max-width: 675px) {
+  .buddy_mobile_100 {
+    width: 100%;
+
+  }
+}
 
 .buddy_invert_button:disabled,.buddy_invert_button:disabled:hover  {
   color: #fff !important;
@@ -151,6 +168,11 @@
 .at_detail_list{
   list-style: none;
   padding-left: 0;
+}
+
+.li_header{
+  display: block;
+  font-weight: bold;
 }
 
 /*v, .buddy_button:focus,.buddy-icon-button:hover,.buddy-icon-button:focus*/
@@ -717,9 +739,9 @@ Profile
 
 .profile_container{
   margin-top: 30px;
-  border: 10px solid #E5E3F0;
+  border: 3px solid #080866;
   margin-bottom: 10px;
-  border-radius: 30px;
+  border-radius: 5px;
   background: white;
   padding: 20px 20px 0 20px;
 }

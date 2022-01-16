@@ -6,6 +6,7 @@ namespace Drupal\buddy\Form;
 
 use Drupal\buddy\Util\Util;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 class UserLoginLocalForm extends \Drupal\user\Form\UserLoginForm
@@ -23,9 +24,11 @@ class UserLoginLocalForm extends \Drupal\user\Form\UserLoginForm
 
     $form['#title'] = $this->t("Log in with Email");
     $form['name']['#title'] = $this->t("Email or username");
-    $form['name']['#description'] = $this->t("Enter your Buddy email or username");
-    $form['pass']['#description'] = $this->t("Enter the password that accompanies your email or username");
-    $form['actions']['submit']['#attributes']['class'][] = 'buddy_small_link_button';
+ //   $form['name']['#description'] = $this->t("Enter your Buddy email or username");
+    unset($form['name']['#description'] );
+ //   $form['pass']['#description'] = $this->t("Enter the password that accompanies your email or username");
+    unset($form['pass']['#description']);
+    $form['actions']['submit']['#attributes']['class'][] = 'buddy_menu_button buddy_mobile_100';
 
     $form['actions']['cancel'] = [
       '#type' => 'submit',
@@ -33,8 +36,21 @@ class UserLoginLocalForm extends \Drupal\user\Form\UserLoginForm
       /*'#weight' => -1, */
       '#submit' => ['::userLoginLocalCancelSubmit'],
       '#limit_validation_errors' => [],
+      '#attributes' => ['class' => ['buddy_menu_button','buddy_invert_button','buddy_mobile_100']]
     ];
-    $form['actions']['cancel']['#attributes']['class'][] = 'buddy_small_link_button back_button';
+
+    $forgotPWLink = Link::createFromRoute($this->t('Forgot password?'),'user.pass')->toString()->getGeneratedLink();
+
+
+    $form['actions']['forgot_pass'] = [
+      '#type' => 'markup',
+      '#markup' => "<div>".$forgotPWLink."</div>",
+      '#allowed_tags' => ['div','a'],
+
+    ];
+
+
+
 
     $form['#attached']['library'][] = 'buddy/user_profile_forms';
 

@@ -35,9 +35,9 @@ class UserProfileOverviewController extends ControllerBase
       ->execute();
     if (count($user_profileID) == 1) {
 
-      $html.= Link::createFromRoute($this->t('Update preferences'),'buddy.user_profile',[],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+      $html.= Link::createFromRoute($this->t('Update preferences'),'buddy.user_profile',[],  ['attributes' => ['class' => 'buddy_menu_button buddy_mobile_100']])->toString()->getGeneratedLink();
     }else{
-      $html.= Link::createFromRoute($this->t('Set preferences'),'buddy.user_profile',[],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+      $html.= Link::createFromRoute($this->t('Set preferences'),'buddy.user_profile',[],  ['attributes' => ['class' => 'buddy_menu_button buddy_mobile_100']])->toString()->getGeneratedLink();
     }
     $html.= "</div>";
     $html.="<div class='profile_container'><h3>".$this->t("Account information")."</h3><p>".$this->t("Here you can:")."</p>";
@@ -45,7 +45,7 @@ class UserProfileOverviewController extends ControllerBase
     $html.= "<li>".$this->t("Change email address")."</li>";
     $html.= "<li>".$this->t("Change language")."</li>";
     $html.= "<li>".$this->t("Delete your account")."</li></ul>";
-    $html.= Link::createFromRoute($this->t('Adjust account information'),'buddy.user_account_form',[],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+    $html.= Link::createFromRoute($this->t('Adjust account information'),'buddy.user_account_form',[],  ['attributes' => ['class' => 'buddy_menu_button buddy_mobile_100']])->toString()->getGeneratedLink();
     $html.= "</div>";
 
 
