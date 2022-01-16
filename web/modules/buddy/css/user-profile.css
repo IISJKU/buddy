@@ -11,7 +11,20 @@ legend{
   margin-right: 20px;
 }
 
+@media (max-width: 767px) {
+  .buddy_menu_button{
+    min-width: 100px !important;
+  }
 
+  .profile-progress{
+    text-align: center;
+  }
+
+}
+
+.buddy-icon-button{
+  font-size: 1.1rem !important;
+}
 .buddy-icon-button>svg{
   margin-left: 10px;
   margin-right: 10px;

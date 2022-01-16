@@ -53,9 +53,8 @@ class UserSearchForm extends FormBase
     $form['actions']['search'] = [
       '#type' => 'submit',
       '#value' => $this->t('Search'),
-      '#attributes' => ['class' => ['buddy_menu_button']],
+      '#attributes' => ['class' => ['buddy_menu_button','buddy_menu_button_large','buddy_mobile_100']],
     ];
-    $form['actions']['search']['#attributes']['class'][] = 'buddy_link_button buddy_button';
 
     $categoryIDs = $storage->getQuery()
       ->condition('type', 'at_category')

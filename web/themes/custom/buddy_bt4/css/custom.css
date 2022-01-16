@@ -141,6 +141,14 @@
   font-size: 1rem;
 
 }
+
+@media (max-width: 767px) {
+  .buddy_favourites_button{
+    margin: 10px 0 !important;
+
+
+  }
+}
 .buddy_favourites_button>span{
   padding-right: 10px;
 }
@@ -151,8 +159,9 @@
 
   }
 
+
   .buddy_recommendation_menu .buddy_menu_button{
-    width: 90%;
+    min-width: 100%;
   }
   .star_rating label, .star_rating output {
     display: inline;

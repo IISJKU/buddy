@@ -212,7 +212,7 @@ class UserProfilePreferencesForm extends FormBase
       '#type' => 'markup',
       '#markup' => '
   <div class="row">
-    <div class="col-12 col-md-4">
+    <div class="col-12 col-md-4 text-align-right profile-progress">
       <b>'.$this->t("Progress").':</b>
     </div>
     <div class="col-12 col-md-8">
