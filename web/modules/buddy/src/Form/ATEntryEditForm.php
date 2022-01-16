@@ -52,13 +52,13 @@ class ATEntryEditForm extends ATEntryCreateForm {
       }
     }
 
-    $form['actions']['submit']['#attributes']['class'][] = 'buddy_link_button buddy_button';
+    $form['actions']['submit']['#attributes']['class'][] = 'buddy_menu_button';
     $form['actions']['back'] = [
       '#type' => 'submit',
       '#button_type' => 'primary',
       '#value' => $this->t('Cancel'),
       '#submit' => ['::backFormSubmit'],
-      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
+      '#attributes' => ['class' => ['buddy_menu_button']],
     ];
     return $form;
   }

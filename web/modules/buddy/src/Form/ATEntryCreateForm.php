@@ -123,7 +123,7 @@ class ATEntryCreateForm extends FormBase {
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Submit'),
-      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
+      '#attributes' => ['class' => ['buddy_menu_button']],
     ];
 
     $form['actions']['back'] = [
@@ -132,7 +132,7 @@ class ATEntryCreateForm extends FormBase {
       '#value' => $this->t('Cancel'),
       '#submit' => ['::backFormSubmit'],
       '#limit_validation_errors' => [],
-      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
+      '#attributes' => ['class' => ['buddy_menu_button']],
     ];
 
     return $form;

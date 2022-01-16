@@ -52,6 +52,10 @@ class ATDescriptionEditForm extends ATDescriptionCreateForm
       $form['actions']['submit']['#value']= $this->t('Create new revision');
     }
 
+    $form['actions']['submit']['#attributes']['class'][] = 'buddy_menu_button';
+
+
+
     return $form;
   }
 

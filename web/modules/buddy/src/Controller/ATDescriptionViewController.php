@@ -75,10 +75,10 @@ class ATDescriptionViewController extends ControllerBase
     $backLink ="";
     $route_name = \Drupal::routeMatch()->getRouteName();
     if($route_name == "buddy.at_moderator_description_view"){
-      $backLink = Link::createFromRoute($this->t('Back'),'buddy.at_moderator_at_entry_overview',['atEntry' =>$atEntryID],['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+      $backLink = Link::createFromRoute($this->t('Back'),'buddy.at_moderator_at_entry_overview',['atEntry' =>$atEntryID],['attributes' => ['class' => 'buddy_menu_button']])->toString()->getGeneratedLink();
 
     }else{
-      $backLink = Link::createFromRoute($this->t('Back'),'buddy.at_entry_overview',[],['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+      $backLink = Link::createFromRoute($this->t('Back'),'buddy.at_entry_overview',[],['attributes' => ['class' => 'buddy_menu_button']])->toString()->getGeneratedLink();
 
     }
 

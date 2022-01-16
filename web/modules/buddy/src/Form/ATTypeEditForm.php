@@ -52,7 +52,7 @@ class ATTypeEditForm extends ATTypeCreateForm {
       '#type' => 'submit',
 
       '#value' => $this->t('Save'),
-      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
+      '#attributes' => ['class' => ['buddy_menu_button']],
     ];
 
     $form['actions']['back'] = [
@@ -60,7 +60,7 @@ class ATTypeEditForm extends ATTypeCreateForm {
       '#button_type' => 'primary',
       '#value' => $this->t('Cancel'),
       '#submit' => ['::backFormSubmit'],
-      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
+      '#attributes' => ['class' => ['buddy_menu_button']],
 
     ];
 

@@ -54,14 +54,14 @@ class ATTypeDeleteForm extends ATTypeCreateForm {
       '#button_type' => 'primary',
       '#value' => $this->t('Yes'),
       '#submit' => ['::deleteFormSubmit'],
-      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
+      '#attributes' => ['class' => ['buddy_menu_button']],
 
     ];
     // Add a submit button that handles the submission of the form.
     $form['actions']['no_submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('No'),
-      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
+      '#attributes' => ['class' => ['buddy_menu_button']],
     ];
     return $form;
   }

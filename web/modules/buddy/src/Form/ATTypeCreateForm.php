@@ -71,7 +71,7 @@ class ATTypeCreateForm extends FormBase
       '#value' => $this->t('Back'),
       '#submit' => ['::backFormSubmit'],
       '#limit_validation_errors' => [],
-      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
+      '#attributes' => ['class' => ['buddy_menu_button']],
     ];
 
     $form['actions']['next'] = [
@@ -82,7 +82,7 @@ class ATTypeCreateForm extends FormBase
       '#submit' => ['::pageOneSubmit'],
       // Custom validation handler for page 1.
       '#validate' => ['::pageOneSubmitValidate'],
-      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
+      '#attributes' => ['class' => ['buddy_menu_button']],
     ];
 
 
@@ -185,14 +185,14 @@ class ATTypeCreateForm extends FormBase
       // We won't bother validating the required 'color' field, since they
       // have to come back to this page to submit anyway.
       '#limit_validation_errors' => [],
-      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
+      '#attributes' => ['class' => ['buddy_menu_button']],
     ];
     $form['submit'] = [
       '#type' => 'submit',
       '#button_type' => 'primary',
       '#weight' => 999999,
       '#value' => $this->t('Submit'),
-      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
+      '#attributes' => ['class' => ['buddy_menu_button']],
     ];
 
     return $form;

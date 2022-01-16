@@ -4,9 +4,11 @@
 namespace Drupal\buddy\Controller;
 
 
+use Drupal\buddy\Util\Util;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 
 class ATProviderController extends ControllerBase
@@ -19,9 +21,11 @@ class ATProviderController extends ControllerBase
     if($atEntry){
       $node =$atEntry;
     }else if($description){
-      $node =$description;
+      $atEntry = Node::load($description->field_at_entry->getValue()[0]['target_id']);
+      $node =$atEntry;
     }else if($type){
-      $node =$type;
+      $atEntry = Node::load(Util::getATEntryIDOfType($type));
+      $node =$atEntry;
     }
 
     if(in_array("administrator", $account->getRoles())){
