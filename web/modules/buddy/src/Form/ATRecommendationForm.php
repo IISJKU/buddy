@@ -42,6 +42,7 @@ class ATRecommendationForm extends FormBase
         'callback' => '::recommendationsAjaxSubmit',
         'wrapper' => "buddy_recommendations",
       ),
+      '#attributes' => ['class' => ['buddy_menu_button buddy_invert_button']],
     ];
 
     $form['mode_all_tools'] = [
@@ -53,6 +54,7 @@ class ATRecommendationForm extends FormBase
         'callback' => '::allToolsAjaxSubmit',
         'wrapper' => "buddy_recommendations",
       ),
+      '#attributes' => ['class' => ['buddy_menu_button buddy_invert_button']],
     ];
 
 
