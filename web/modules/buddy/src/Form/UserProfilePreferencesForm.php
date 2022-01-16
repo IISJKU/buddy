@@ -210,7 +210,7 @@ class UserProfilePreferencesForm extends FormBase
 
     $form['progress']  = array(
       '#type' => 'markup',
-      '#markup' => '<div class="container">
+      '#markup' => '
   <div class="row">
     <div class="col-12 col-md-4">
       <b>'.$this->t("Progress").':</b>
@@ -221,8 +221,6 @@ class UserProfilePreferencesForm extends FormBase
         <span class="sr-only">0% complete</span>
       </div>
     </div>
-
-  </div>
 </div>',
     );
 
@@ -310,7 +308,7 @@ class UserProfilePreferencesForm extends FormBase
     if ($currentPage > 0 || $currentCategoryNumber > 0) {
       $form['actions']['prev'] = [
         '#type' => 'submit',
-        '#value' => $this->t('Previous step'),
+        '#value' => $this->t('Back'),
         '#submit' => ['::prevSubmitForm'],
         '#ajax' => [
           'wrapper' => 'user-entry-form-wrapper',
@@ -318,21 +316,25 @@ class UserProfilePreferencesForm extends FormBase
           'effect' => 'fade',
           'speed' => 500
         ],
+        '#attributes' =>
+          ['class' => ['buddy_menu_button','buddy-icon-button','buddy-icon-before'],
+            'icon' => "fa-arrow-left",
+          ]
       ];
 
-      $form['actions']['prev']['#attributes']['class'][] = 'buddy-icon-button';
-      $form['actions']['prev']['#attributes']['class'][] = 'buddy-icon-before';
-      $form['actions']['prev']['#attributes']['icon'] = "fa-arrow-left";
+
     }else{
       $form['actions']['prev'] = [
         '#type' => 'submit',
         '#value' => $this->t('Back'),
         '#submit' => ['::backSubmit'],
+        '#attributes' =>
+          ['class' => ['buddy_menu_button','buddy-icon-button','buddy-icon-before'],
+            'icon' => "fa-arrow-left",
+          ]
       ];
 
-      $form['actions']['prev']['#attributes']['class'][] = 'buddy-icon-button';
-      $form['actions']['prev']['#attributes']['class'][] = 'buddy-icon-before';
-      $form['actions']['prev']['#attributes']['icon'] = "fa-arrow-left";
+
 
     }
 
@@ -340,7 +342,7 @@ class UserProfilePreferencesForm extends FormBase
       $form['actions']['next'] = [
         '#type' => 'submit',
         '#button_type' => 'primary',
-        '#value' => $this->t('Next step'),
+        '#value' => $this->t('Next'),
         '#submit' => ['::nextSubmitForm'],
         '#ajax' => [
           'wrapper' => 'user-entry-form-wrapper',
@@ -348,27 +350,24 @@ class UserProfilePreferencesForm extends FormBase
           'effect' => 'fade',
           'speed' => 500
         ],
-        "#icon" => array(
-          '#type' => "html_tag",
-          '#tag' => "span",
-          '#value' => "",
-          '#attributes' =>  array(
-            'class' => array("fa","fa-facebook")
-          )
-        )
+        '#attributes' =>
+          ['class' => ['buddy_menu_button','buddy-icon-button','buddy-icon-after'],
+            'icon' => "fa-arrow-right",
+          ],
       ];
-      $form['actions']['next']['#attributes']['class'][] = 'buddy-icon-button';
-      $form['actions']['next']['#attributes']['icon'] = "fa-arrow-right";
+
 
     }else{
 
       $form['actions']['submit'] = [
         '#type' => 'submit',
         '#value' => $this->t('Finish'),
+        '#attributes' =>
+          ['class' => ['buddy_menu_button','buddy-icon-button','buddy-icon-after'],
+            'icon' => "fa-check",
+          ],
       ];
-      $form['actions']['submit']['#attributes']['class'][] = 'buddy-icon-button';
-      $form['actions']['submit']['#attributes']['class'][] = 'buddy-icon-before';
-      $form['actions']['submit']['#attributes']['icon'] = "fa-check";
+
 
     }
 
