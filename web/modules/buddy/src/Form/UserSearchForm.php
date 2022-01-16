@@ -53,6 +53,7 @@ class UserSearchForm extends FormBase
     $form['actions']['search'] = [
       '#type' => 'submit',
       '#value' => $this->t('Search'),
+      '#attributes' => ['class' => ['buddy_menu_button']],
     ];
     $form['actions']['search']['#attributes']['class'][] = 'buddy_link_button buddy_button';
 
@@ -100,7 +101,7 @@ class UserSearchForm extends FormBase
         foreach ($searchResults as $searchResult){
 
           $textForm = $this->renderATEntry($searchResult);
-          $form['search_results'][] = $textForm;
+          $form['search_results'][$searchResult] = $textForm;
         }
 
 
@@ -236,12 +237,12 @@ class UserSearchForm extends FormBase
     $form = [];
 
     if( \Drupal::currentUser()->isAuthenticated()){
-      $content = Util::renderDescriptionTiles2($description,$supportCategories,$platforms,$languages,false,2);
+      $content = Util::renderDescriptionTiles2($description,$supportCategories,$platforms,$languages,false,3);
 
       $form['content'] = [
         '#type' => 'markup',
         '#prefix' => "<div class='at_library_container'>",
-        '#suffix' => '<div class="col-2">',
+        '#suffix' => '<div class="col-12 col-lg-3 buddy_favourite_col buddy_recommendation_menu">',
         '#markup' => $content,
         '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
       ];
@@ -260,10 +261,15 @@ class UserSearchForm extends FormBase
           'wrapper' => "favourites_wrapper_".$atEntryID,
         ),
         '#prefix' => '<div id="favourites_wrapper_'.$atEntryID.'">',
-        '#suffix' => '</div></div></div>'
+        '#suffix' => '</div></div></div>',
+        '#attributes' => [
+        'class' => ['buddy-icon-button', 'buddy-icon-after','buddy_menu_button','buddy_invert_button','buddy_favourites_button'],
+        'icon' => "fa-plus",
+         ]
       ];
-      $form['at_favourites']['#attributes']['class'][] = 'buddy_link_button buddy_button';
-
+      if($this->isFavourite($atRecord)){
+        $form['at_favourites']['#attributes']['icon'] = "fa-minus";
+      }
     }else{
 
       $content = Util::renderDescriptionTiles2($description,$supportCategories,$platforms,$languages);
@@ -275,11 +281,11 @@ class UserSearchForm extends FormBase
       ];
     }
 
-    $installLink = Link::createFromRoute($this->t('How to get this tool'),'buddy.user_at_install_form',['description' => $description->id(),"return"=>"search"],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+    $installLink = Link::createFromRoute($this->t('How to get this tool'),'buddy.user_at_install_form',['description' => $description->id(),"return"=>"search"],  ['attributes' => ['class' => 'buddy_menu_button']])->toString()->getGeneratedLink();
     $installHtml = ' <div class="row">
     <div class="col">
     </div>
-    <div class="col text-align-right">
+    <div class="col buddy_recommendation_menu text-align-right">
         '.$installLink.'
     </div>
     </div>';
@@ -322,5 +328,62 @@ class UserSearchForm extends FormBase
     }
 
     return $this->t("Add to favourites");
+  }
+
+  public function favouriteAjaxCallback(array &$form, FormStateInterface $form_state) {
+    $arguments = explode("_", $form_state->getTriggeringElement()['#name']);
+    $atEntryID = $arguments[0];
+    return $form['search_results'][$atEntryID]['at_favourites'];
+  }
+
+  public function favouriteSubmit(array &$form, FormStateInterface $form_state) {
+
+    $arguments = explode("_", $form_state->getTriggeringElement()['#name']);
+
+    $atEntryID = $arguments[0];
+
+    $atRecord = Util::getATRecordOfATEntry($atEntryID);
+    if($atRecord){
+
+      $isLibrary = $atRecord->field_user_at_record_library->getValue()[0]['value'];
+
+      if($isLibrary){
+        $atRecord->set("field_user_at_record_library", false);
+      }else{
+        $atRecord->set("field_user_at_record_library", true);
+      }
+
+      $atRecord->save();
+
+    }else{
+      $node = Node::create([
+        'type' => 'user_at_record',
+        'title' => "AT Record: " . $atEntryID . "-" . \Drupal::currentUser()->id(),
+        'field_user_at_record_at_entry' => ["target_id" => $atEntryID],
+        'field_user_at_record_library' => ["value" => true],
+      ]);
+      $node->save();
+
+
+    }
+
+    $form_state->set('ajax_update', true);
+    $form_state->setRebuild();
+
+
+  }
+
+  private function isFavourite($atRecord){
+    if($atRecord){
+
+      $isLibrary = $atRecord->field_user_at_record_library->getValue()[0]['value'];
+
+      if($isLibrary){
+        return true;
+      }
+
+    }
+
+    return false;
   }
 }
