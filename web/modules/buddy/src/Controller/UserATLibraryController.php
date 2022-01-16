@@ -60,21 +60,22 @@ class UserATLibraryController extends ControllerBase
       $supportCategories = Util::getSupportCategoriesOfAtEntry(Node::load($atEntryID));
 
       $content = Util::renderDescriptionTiles($description,$user,$languages,$platforms,$supportCategories,false,false);
-      $content = Util::renderDescriptionTiles2($description,$supportCategories,$platforms,$languages,false,2);
+      $content = Util::renderDescriptionTiles2($description,$supportCategories,$platforms,$languages,false,3);
 
 
-      $content.='<div class="col-2">';
-      $content.= Link::createFromRoute($this->t('Remove from favourites'),'buddy.user_at_library_remove',['record' =>$atRecord->id()],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+      $content.='<div class="col-12 col-lg-3 buddy_favourite_col buddy_recommendation_menu">';
+      $removeFromFavouritesURL  = Url::fromRoute('buddy.user_at_library_remove',['record' =>$atRecord->id()])->toString();
+      $content.='<a href="'.$removeFromFavouritesURL.'" class="buddy_menu_button buddy_invert_button buddy_favourites_button"><span>'.$this->t('Remove from favourites').'</span><i class="fas fa-minus"></i><span></a>';
       $content.='</div></div>';
 
-      $installLink = Link::createFromRoute($this->t('How to get this tool'),'buddy.user_at_install_form',['description' => $description->id(),"return"=>"library"],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+      $installLink = Link::createFromRoute($this->t('How to get this tool'),'buddy.user_at_install_form',['description' => $description->id(),"return"=>"library"],  ['attributes' => ['class' => ['buddy_menu_button']]])->toString()->getGeneratedLink();
 
 
       $content.= ' <div class="row">
-    <div class="col">
+    <div class="col-12 col-lg-6 buddy_recommendation_menu"><div class="rate_header"><strong>'.$this->t("Rate this tool:").'</strong></div>
         '.$this->rating_widget_html($user->id(), $atEntryID).'
     </div>
-    <div class="col">
+    <div class="col-12 col-lg-6 buddy_recommendation_menu text-align-right">
         '.$installLink.'
 
     </div>
@@ -95,8 +96,8 @@ class UserATLibraryController extends ControllerBase
           'buddy/user_at_library',
         ],
       ],
-      '#allowed_tags' => ['form', 'button', 'path', 'svg', 'input', 'label', 'a', 'div','img','h2','h1','p', 'b', 'g',
-        'strong','hr','ul','li', 'span', 'output'],
+      '#allowed_tags' => ['form', 'button', 'path', 'svg', 'input', 'label', 'a', 'div','img','h3','h2','h1','p', 'b', 'g',
+        'strong','hr','ul','li', 'span', 'output','i'],
     );
 
     return $build;

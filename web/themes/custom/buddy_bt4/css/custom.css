@@ -121,6 +121,7 @@
 
 .buddy_favourites_button{
   margin: 0px !important;
+  font-size: 1rem;
 
 }
 .buddy_favourites_button>span{
@@ -135,6 +136,15 @@
 
   .buddy_recommendation_menu .buddy_menu_button{
     width: 90%;
+  }
+  .star_rating label, .star_rating output {
+    display: inline;
+    float: none;
+    font-size: 2.5em;
+  }
+
+  .rate_header{
+    margin-top: 10px;
   }
 }
 
