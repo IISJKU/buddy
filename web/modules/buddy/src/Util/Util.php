@@ -510,7 +510,7 @@ class Util
     $content ="";
     $content.='<h3>' . $description->getTitle() . '</h3>';
     $content.=$shortDescription;
-    $content.="<ul>";
+    $content.="<ul class='at_detail_list'>";
     $content.="<li>".Util::renderSupportCategories($supportCategories)."</li>";
     $content.="<li>".Util::renderPlatforms($platforms)."</li>";
     $content.="<li>".Util::renderLanguages($languages)."</li>";

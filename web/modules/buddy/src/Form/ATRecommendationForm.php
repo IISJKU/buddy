@@ -105,9 +105,12 @@ class ATRecommendationForm extends FormBase
 
         $form['recommendations']['actions']['submit'] = [
           '#type' => 'submit',
+          '#prefix' => '<div class="row"><div class="col buddy_recommendation_menu">',
+          '#suffix' => '</div></div>',
           '#value' => $this->t('Show me more tools!'),
+          '#attributes' => ['class' => ['buddy_menu_button']],
         ];
-        $form['recommendations']['actions']['submit']['#attributes']['class'][] = 'buddy_link_button buddy_button';
+
       } else {
 
         $form['recommendations'] = [
@@ -162,8 +165,11 @@ class ATRecommendationForm extends FormBase
         $form['recommendations_more'] = [
           '#type' => 'submit',
           '#button_type' => 'primary',
+          '#prefix' => '<div class="row"><div class="col buddy_recommendation_menu">',
+          '#suffix' => '</div></div>',
           '#value' => $this->t('Show me more tools!'),
           '#submit' => ['::allSubmit'],
+          '#attributes' => ['class' => ['buddy_menu_button']],
         ];
       }else{
 
@@ -201,7 +207,7 @@ class ATRecommendationForm extends FormBase
     $entryForm['content'] = [
       '#type' => 'markup',
       '#prefix' => "<div class='at_library_container'>",
-      '#suffix' => '<div class="col-12 col-lg-3 buddy_favourite_col">',
+      '#suffix' => '<div class="col-12 col-lg-3 buddy_favourite_col buddy_recommendation_menu">',
       '#markup' => $content,
       '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
     ];
@@ -232,11 +238,9 @@ class ATRecommendationForm extends FormBase
       $entryForm['at_favourites']['#attributes']['icon'] = "fa-minus";
     }
 
-    $installLink = Link::createFromRoute($this->t('How to get this tool'),'buddy.user_at_install_form',['description' => $description->id(),"return"=>"recommender"],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+    $installLink = Link::createFromRoute($this->t('How to get this tool'),'buddy.user_at_install_form',['description' => $description->id(),"return"=>"recommender"],  ['attributes' => ['class' => 'buddy_menu_button']])->toString()->getGeneratedLink();
     $installHtml = ' <div class="row">
-    <div class="col">
-    </div>
-    <div class="col text-align-right">
+    <div class="col buddy_recommendation_menu text-align-right">
         '.$installLink.'
     </div>
     </div>';

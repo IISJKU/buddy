@@ -83,6 +83,15 @@
   padding: 10px;
   margin: 20px 0;
   font-weight: 700;
+  background: #080866;
+  color: white;
+  border: 3px solid #080866;
+}
+.buddy_menu_button:focus, .buddy_menu_button:hover{
+  background: white;
+  color: #080866;
+  border: 3px solid #080866;
+  text-decoration: none;
 }
 
 .buddy_invert_button{
@@ -102,17 +111,36 @@
   background-color: #A20784 !important;
   border-color: #A20784 !important;
 }
-.buddy_favourite_col{
-  padding: 0 10px 0 0;
-  margin: 0;
-  text-align: right;
+@media (min-width: 676px){
+  .buddy_favourite_col{
+    padding: 0 10px 0 0;
+    margin: 0;
+    text-align: right;
+  }
 }
+
 .buddy_favourites_button{
   margin: 0px !important;
 
 }
 .buddy_favourites_button>span{
   padding-right: 10px;
+}
+
+@media (max-width: 675px) {
+  .buddy_recommendation_menu{
+    text-align: center;
+
+  }
+
+  .buddy_recommendation_menu .buddy_menu_button{
+    width: 90%;
+  }
+}
+
+.at_detail_list{
+  list-style: none;
+  padding-left: 0;
 }
 
 /*v, .buddy_button:focus,.buddy-icon-button:hover,.buddy-icon-button:focus*/
@@ -631,7 +659,7 @@ AT INSTall
 /* AT LIBRARY */
 
 .at_library_container, #user-entry-form-wrapper {
-  border: 5px solid #080866;
+  border: 3px solid #080866;
   margin-bottom: 10px;
   border-radius: 10px;
   background: white;
