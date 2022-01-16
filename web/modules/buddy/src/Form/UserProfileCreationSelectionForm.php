@@ -47,34 +47,59 @@ class UserProfileCreationSelectionForm extends FormBase {
 
     $form['steps'] = [
       '#type' => 'markup',
-      '#markup' => "<div class='steps'>".$this->t("In order for Buddy to give you suitable recommendations, we need to know your preferences.")."</div>",
-      '#allowed_tags' => ['div'],
+      '#markup' => "<div class='profile_step_introduction'>".$this->t("By letting Buddy know about where you need support, it can recommend suitable tools for you.")."</div>
+        <p>".$this->t("You can set your preferences in two ways:")."</p>
+        <ol>
+        <li>".$this->t("You can answer questions about what support you need.")."</li>
+        <li>".$this->t("You can also play some games. Buddy will then user artificial intelligence to calculate what support you need.")."</li>
+</ol>",
+      '#allowed_tags' => ['div','p','li','ol'],
 
     ];
-    $form['login_op'] = array(
-      '#type' => 'radios',
-      '#title' => $this->t('You can set your preferences by:'),
-      '#default_value' =>  0,
-      '#options' => array(
-        0 => $this
-          ->t('Answering a few questions'),
-        1 => $this
-          ->t('Play a game (still in development)'),
-      ),
-      '#required' => TRUE,
-    );
+
 
     $form['actions'] = [
       '#type' => 'actions',
     ];
 
     // Add a submit button that handles the submission of the form.
-    $form['submit'] = [
+    $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Next'),
+      '#value' => $this->t('Answering questions'),
+      '#attributes' => ['class' => ['buddy_menu_button_large','buddy_menu_button','buddy_mobile_100']],
+      '#prefix' => '<div>',
+      '#suffix' => '</div>',
     ];
 
-    $form['submit']['#attributes']['class'][] = 'buddy_small_link_button';
+    $form['actions']['game'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Play a game'),
+      /*'#weight' => -1, */
+      '#submit' => ['::userPlayGameSubmit'],
+      '#attributes' => ['class' => ['buddy_menu_button_large','buddy_menu_button','buddy_mobile_100']],
+      '#prefix' => '<div>',
+      '#suffix' => '</div>',
+    ];
+
+    $user = \Drupal::currentUser();
+    $user_profileID = \Drupal::entityQuery('node')
+      ->condition('type', 'user_profile')
+      ->condition('uid', $user->id(), '=')
+      ->condition('field_user_profile_finished', true, '=')
+      ->execute();
+    if (count($user_profileID) == 1) {
+      $form['actions']['cancel'] = [
+        '#type' => 'submit',
+        '#value' => $this->t('Cancel'),
+        /*'#weight' => -1, */
+        '#submit' => ['::userCancelSubmit'],
+        '#attributes' => ['class' => ['buddy_menu_button_large','buddy_menu_button','buddy_invert_button','buddy_mobile_100']],
+        '#prefix' => '<div>',
+        '#suffix' => '</div>',
+      ];
+    }
+
+
     $form['#attached']['library'][] = 'buddy/user_profile_forms';
 
 
@@ -83,19 +108,19 @@ class UserProfileCreationSelectionForm extends FormBase {
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $login_op = $form_state->getValue('login_op');
+    $form_state->setRedirect('buddy.user_profile_classic');
 
-    switch ($login_op) {
-      case 0:{
-        $form_state->setRedirect('buddy.user_profile_classic');
-        break;
-      }
-      case 1:{
-        $form_state->setRedirect('buddy_profile_wizard.profile_wizard');
-        break;
-      }
     }
-  }
+
+    public function userPlayGameSubmit(array &$form, FormStateInterface $form_state)
+    {
+      $form_state->setRedirect('buddy_profile_wizard.profile_wizard');
+    }
+
+    public function userCancelSubmit(array &$form, FormStateInterface $form_state)
+    {
+      $form_state->setRedirect('buddy.user_profile_overview');
+    }
 
 
 }
