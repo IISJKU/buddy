@@ -521,10 +521,10 @@ class Util
     $html =  '
        <div class="at_container">
             <div class="row">
-                <div class="col-3">
+                <div class="col-12 col-lg-3">
                     <img src="' . $styled_image_url . '" alt="' . $altText . '" class="img-fluid w-100 at_description_image">
                 </div>
-                 <div class="col-'.(9-$rightColumnWidth).'">
+                 <div class="col-12 col-lg-'.(9-$rightColumnWidth).'">
             ' .$content . '
                 </div>';
 

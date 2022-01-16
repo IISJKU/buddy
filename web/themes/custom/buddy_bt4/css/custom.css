@@ -19,7 +19,8 @@
   }
 }
 
-.buddy_link_button,.buddy-icon-button{
+/*.buddy-icon-button*/
+.buddy_link_button{
   width: 380px;
   border-radius: 120px;
   display: inline-block;
@@ -101,7 +102,21 @@
   background-color: #A20784 !important;
   border-color: #A20784 !important;
 }
-.create_account_button:hover, .create_account_button:focus, .buddy_button:hover, .buddy_button:focus,.buddy-icon-button:hover,.buddy-icon-button:focus{
+.buddy_favourite_col{
+  padding: 0 10px 0 0;
+  margin: 0;
+  text-align: right;
+}
+.buddy_favourites_button{
+  margin: 0px !important;
+
+}
+.buddy_favourites_button>span{
+  padding-right: 10px;
+}
+
+/*v, .buddy_button:focus,.buddy-icon-button:hover,.buddy-icon-button:focus*/
+.create_account_button:hover, .create_account_button:focus, .buddy_button:hover{
   background: #BA0096;
   color: white;
 }
@@ -616,9 +631,9 @@ AT INSTall
 /* AT LIBRARY */
 
 .at_library_container, #user-entry-form-wrapper {
-  border: 10px solid #E5E3F0;
+  border: 5px solid #080866;
   margin-bottom: 10px;
-  border-radius: 30px;
+  border-radius: 10px;
   background: white;
   padding: 20px 20px 0 20px;
 }

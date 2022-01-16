@@ -194,14 +194,14 @@ class ATRecommendationForm extends FormBase
     $description = Util::getDescriptionForUser($descriptions,$user);
     $languages = Util::getLanguagesOfDescriptions($descriptions);
     $platforms = Util::getPlatformsOfATEntry(Node::load($atEntryID));
-    $content = Util::renderDescriptionTiles2($description,$supportCategories,$platforms,$languages,false,2);
+    $content = Util::renderDescriptionTiles2($description,$supportCategories,$platforms,$languages,false,3);
 
     $entryForm = [];
 
     $entryForm['content'] = [
       '#type' => 'markup',
       '#prefix' => "<div class='at_library_container'>",
-      '#suffix' => '<div class="col-2">',
+      '#suffix' => '<div class="col-12 col-lg-3 buddy_favourite_col">',
       '#markup' => $content,
       '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
     ];
@@ -220,9 +220,17 @@ class ATRecommendationForm extends FormBase
         'wrapper' => "favourites_wrapper_".$atEntryID,
       ),
       '#prefix' => '<div id="favourites_wrapper_'.$atEntryID.'">',
-      '#suffix' => '</div></div></div>'
+      '#suffix' => '</div></div></div>',
+      '#attributes' => [
+        'class' => ['buddy-icon-button', 'buddy-icon-after','buddy_menu_button','buddy_invert_button','buddy_favourites_button'],
+        'icon' => "fa-plus",
+
+      ]
     ];
-    $entryForm['at_favourites']['#attributes']['class'][] = 'buddy_link_button buddy_button';
+
+    if($this->isFavourite($atRecord)){
+      $entryForm['at_favourites']['#attributes']['icon'] = "fa-minus";
+    }
 
     $installLink = Link::createFromRoute($this->t('How to get this tool'),'buddy.user_at_install_form',['description' => $description->id(),"return"=>"recommender"],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
     $installHtml = ' <div class="row">
@@ -396,5 +404,19 @@ class ATRecommendationForm extends FormBase
     }
 
     return $this->t("Add to favourites");
+  }
+
+  private function isFavourite($atRecord){
+    if($atRecord){
+
+      $isLibrary = $atRecord->field_user_at_record_library->getValue()[0]['value'];
+
+      if($isLibrary){
+        return true;
+      }
+
+    }
+
+    return false;
   }
 }

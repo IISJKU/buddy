@@ -12,9 +12,9 @@
 #}
 {% if attributes.hasClass('button') and attributes.hasClass('buddy-icon-button') %}
   {% if attributes.hasClass('buddy-icon-before') %}
-    <button{{ attributes.addClass('btn btn-primary') }} ><i class="fas {{ attributes.icon }}"></i>{{ attributes.value }}</button>
+    <button{{ attributes.addClass('btn btn-primary') }} ><i class="fas {{ attributes.icon }}"></i><span>{{ attributes.value }}</span></button>
   {% else %}
-    <button{{ attributes.addClass('btn btn-primary') }} >{{ attributes.value }}<i class="fas {{ attributes.icon }}"></i></button>
+    <button{{ attributes.addClass('btn btn-primary') }} ><span>{{ attributes.value }}</span><i class="fas {{ attributes.icon }}"></i></button>
   {% endif %}
 {% elseif attributes.hasClass('button') and not attributes.hasClass('field-add-more-submit') %}
   <input{{ attributes.addClass('btn btn-primary') }} />
