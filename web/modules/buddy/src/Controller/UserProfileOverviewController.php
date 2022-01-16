@@ -19,19 +19,33 @@ class UserProfileOverviewController extends ControllerBase
 
     $user = \Drupal::currentUser();
 
-    $title = $this->t("Welcome ").$user->getAccountName();
+    $title = $this->t("Profile for ").$user->getAccountName();
 
-    $html = "<p>".$this->t("You can change your preferences or adjust your account here.")."</p>";
-    $html.="<div class='profile_container'><h3>".$this->t("Preferences")."</h3><p>".$this->t("If you are not happy with the tools that Buddy recommends you, you can update your preferences to tell Buddy what help you need.")."</p>";
+    $html = "<p>".$this->t("Here you can update your preferences and your account information.")."</p>";
+    $html.="<div class='profile_container'><h3>".$this->t("Profile preferences")."</h3>";
+    $html.="<p>".$this->t("If you keep your profile updated, Buddy can recommend you the most suitable tools.")."</p>";
+    $html.="<p>".$this->t("This way, you do not have to look for tools by themselves by searching for specific tools.")."</p>";
 
-    $html.= Link::createFromRoute($this->t('Update preferences'),'buddy.user_profile',[],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+
+    $user = \Drupal::currentUser();
+    $user_profileID = \Drupal::entityQuery('node')
+      ->condition('type', 'user_profile')
+      ->condition('uid', $user->id(), '=')
+      ->condition('field_user_profile_finished', true, '=')
+      ->execute();
+    if (count($user_profileID) == 1) {
+
+      $html.= Link::createFromRoute($this->t('Update preferences'),'buddy.user_profile',[],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+    }else{
+      $html.= Link::createFromRoute($this->t('Set preferences'),'buddy.user_profile',[],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+    }
     $html.= "</div>";
-    $html.="<div class='profile_container'><h3>".$this->t("Account")."</h3><p>".$this->t("Adjusting your account allows you to:")."</p>";
-    $html.= "<ul><li>".$this->t("Change your password")."</li>";
-    $html.= "<li>".$this->t("Change your email address")."</li>";
+    $html.="<div class='profile_container'><h3>".$this->t("Account information")."</h3><p>".$this->t("Here you can:")."</p>";
+    $html.= "<ul><li>".$this->t("Update your password")."</li>";
+    $html.= "<li>".$this->t("Change email address")."</li>";
     $html.= "<li>".$this->t("Change language")."</li>";
     $html.= "<li>".$this->t("Delete your account")."</li></ul>";
-    $html.= Link::createFromRoute($this->t('Adjust account'),'buddy.user_account_form',[],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
+    $html.= Link::createFromRoute($this->t('Adjust account information'),'buddy.user_account_form',[],  ['attributes' => ['class' => 'buddy_link_button buddy_button']])->toString()->getGeneratedLink();
     $html.= "</div>";
 
 

@@ -39,13 +39,24 @@ class UserAccountForm extends ProfileForm
     // The user account being edited.
     $account = $this->entity;
 
+
     $element['delete']['#type'] = 'submit';
-    $element['delete']['#value'] = $this->t('Cancel account');
+    $element['delete']['#value'] = $this->t('Delete account');
     $element['delete']['#submit'] = ['::cancelAccountSubmit'];
     $element['delete']['#access'] = $account->id() > 1 && $account->access('delete');
     $element['delete']['#attributes'] = ['class' => ['buddy_link_button buddy_button']];
     $element['submit']['#attributes'] = ['class' => ['buddy_link_button buddy_button']];
     return $element;
+  }
+
+  public function form(array $form, FormStateInterface $form_state) {
+    $form = parent::form($form,$form_state);
+
+    unset($form['account']['mail']['#description']);
+    unset($form['account']['name']['#description']);
+    unset($form['account']['pass']['#description']);
+
+    return $form;
   }
 
   public function cancelAccountSubmit($form, FormStateInterface $form_state) {

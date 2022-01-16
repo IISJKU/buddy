@@ -91,7 +91,7 @@ buddy.user_account_form:
   path: '/user-account'
   defaults:
     _form: '\Drupal\buddy\Form\UserAccountForm'
-    _title: 'Change Settings'
+    _title: 'Account Information'
   requirements:
     _user_is_logged_in: 'TRUE'
   options:
