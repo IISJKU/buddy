@@ -100,7 +100,10 @@ class UserSearchForm extends FormBase
         foreach ($searchResults as $searchResult){
 
           $textForm = $this->renderATEntry($searchResult);
-          $form['search_results'][$searchResult] = $textForm;
+          if($textForm){
+
+            $form['search_results'][$searchResult] = $textForm;
+          }
         }
 
 
@@ -227,11 +230,17 @@ class UserSearchForm extends FormBase
     $atEntry = Node::load($atEntryID);
 
     $descriptions = Util::getDescriptionsOfATEntry($atEntryID);
+    if(count($descriptions) == 0){
+      return;
+    }
     $user = \Drupal::currentUser();
 
     $description = Util::getDescriptionForUser($descriptions,$user);
     $languages = Util::getLanguagesOfDescriptions($descriptions);
     $platforms = Util::getPlatformsOfATEntry($atEntry);
+    if(count($platforms) == 0){
+      return;
+    }
     $supportCategories = Util::getSupportCategoriesOfAtEntry(Node::load($atEntryID));
 
     $form = [];
