@@ -306,7 +306,7 @@ class UserSearchForm extends FormBase
 
       $form['install'] = [
         '#type' => 'markup',
-        '#markup' => $installHtml.'</div></div></div>',
+        '#markup' => $installHtml.'</div>',
         '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
       ];
 
