@@ -31,8 +31,9 @@ class UserSearchForm extends FormBase
 
     $form['search'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Search for assistive technology'),
-      '#required' => TRUE,
+      '#title' => $this->t('Search for tools'),
+      '#description' => $this->t("Leave empty to show all tools"),
+     /* '#required' => TRUE,*/
     ];
     $form['advanced'] = array(
       '#type' => 'details',
@@ -93,9 +94,9 @@ class UserSearchForm extends FormBase
         $form['search_results'] = [
           '#type' => 'markup',
           '#prefix' => "<hr><div class='at_search_results'>",
-          '#markup' => "<h1>".t('Search results')."</h1>",
-          '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr'],
-          '#suffix' => "</div>",
+          '#markup' => "<h1>".t('Search results')."</h1><ul>",
+          '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr','ul'],
+          '#suffix' => "</ul></div>",
         ];
         foreach ($searchResults as $searchResult){
 
@@ -250,7 +251,7 @@ class UserSearchForm extends FormBase
 
       $form['content'] = [
         '#type' => 'markup',
-        '#prefix' => "<div class='at_library_container'>",
+        '#prefix' => "<li><div class='at_library_container'>",
         '#suffix' => '<div class="col-12 col-lg-3 buddy_favourite_col buddy_recommendation_menu">',
         '#markup' => $content,
         '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
@@ -291,7 +292,7 @@ class UserSearchForm extends FormBase
 
       $form['install'] = [
         '#type' => 'markup',
-        '#markup' => $installHtml.'</div></div>',
+        '#markup' => $installHtml.'</div></div></li>',
         '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
       ];
 
@@ -300,7 +301,7 @@ class UserSearchForm extends FormBase
       $content = Util::renderDescriptionTiles2($description,$supportCategories,$platforms,$languages);
       $form['content'] = [
         '#type' => 'markup',
-        '#prefix' => "<div class='at_library_container'",
+        '#prefix' => "<li><div class='at_library_container'",
         '#markup' => $content,
         '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
       ];
@@ -318,7 +319,7 @@ class UserSearchForm extends FormBase
         '#type' => 'markup',
         '#markup' => $installHtml,
         '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
-        '#suffix' => '</div>'
+        '#suffix' => '</div></li>'
       ];
 
     }

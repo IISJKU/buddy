@@ -31,6 +31,8 @@ class UserATEntryInstallInstructionsForm extends FormBase
   public function buildForm(array $form, FormStateInterface $form_state, $description = null)
   {
 
+
+
     $return = \Drupal::request()->query->get('return');
     $form_state->set('return', $return);
 
@@ -130,7 +132,7 @@ class UserATEntryInstallInstructionsForm extends FormBase
     $form['actions']['no_submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Back'),
-      '#attributes' => ['class' => ['buddy_link_button buddy_button']],
+      '#attributes' => ['class' => ['buddy_menu_button']],
     ];
     $form['#attached']['library'][] = 'buddy/user_at_detail';
     return $form;
