@@ -269,6 +269,22 @@ class UserSearchForm extends FormBase
       if($this->isFavourite($atRecord)){
         $form['at_favourites']['#attributes']['icon'] = "fa-minus";
       }
+
+      $installLink = Link::createFromRoute($this->t('How to get this tool'),'buddy.user_at_install_form',['description' => $description->id(),"return"=>"search"],  ['attributes' => ['class' => 'buddy_menu_button']])->toString()->getGeneratedLink();
+      $installHtml = ' <div class="row">
+    <div class="col">
+    </div>
+    <div class="col buddy_recommendation_menu text-align-right">
+        '.$installLink.'
+    </div>
+    </div>';
+
+      $form['install'] = [
+        '#type' => 'markup',
+        '#markup' => $installHtml.'</div></div>',
+        '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
+      ];
+
     }else{
 
       $content = Util::renderDescriptionTiles2($description,$supportCategories,$platforms,$languages);
@@ -278,10 +294,9 @@ class UserSearchForm extends FormBase
         '#markup' => $content,
         '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
       ];
-    }
 
-    $installLink = Link::createFromRoute($this->t('How to get this tool'),'buddy.user_at_install_form',['description' => $description->id(),"return"=>"search"],  ['attributes' => ['class' => 'buddy_menu_button']])->toString()->getGeneratedLink();
-    $installHtml = ' <div class="row">
+      $installLink = Link::createFromRoute($this->t('How to get this tool'),'buddy.user_at_install_form',['description' => $description->id(),"return"=>"search"],  ['attributes' => ['class' => 'buddy_menu_button']])->toString()->getGeneratedLink();
+      $installHtml = ' <div class="row">
     <div class="col">
     </div>
     <div class="col buddy_recommendation_menu text-align-right">
@@ -289,11 +304,14 @@ class UserSearchForm extends FormBase
     </div>
     </div>';
 
-    $form['install'] = [
-      '#type' => 'markup',
-      '#markup' => $installHtml.'</div></div>',
-      '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
-    ];
+      $form['install'] = [
+        '#type' => 'markup',
+        '#markup' => $installHtml.'</div></div></div>',
+        '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
+      ];
+
+    }
+
 
 
 
