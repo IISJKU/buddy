@@ -138,7 +138,8 @@ class UserSearchForm extends FormBase
     $query->setFulltextFields(['title', 'name', 'field_at_description']);
 
     if($values['language'] == "own_language"){
-      $query->addCondition('field_at_description_language', "de","=");
+      $user_lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
+      $query->addCondition('field_at_description_language', $user_lang,"=");
     }
 
     $categoryFilter = false;
