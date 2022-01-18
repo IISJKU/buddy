@@ -1,0 +1,20 @@
+@media (min-width: 992px){
+  form{
+    width: 45%;
+  }
+
+  .form-control {
+    width: 100% !important;
+  }
+
+  .buddy_menu_button{
+    width: 100%;
+    display: block;
+  }
+
+
+}
+
+#edit-pass{
+  width: 100%;
+}

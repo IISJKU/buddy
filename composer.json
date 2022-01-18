@@ -35,7 +35,8 @@
         "drupal/search_api": "^1.21",
         "drupal/social_auth_facebook": "^3.0",
         "drupal/social_auth_google": "^3.0@RC",
-        "drupal/theme_switcher": "^1.2"
+        "drupal/theme_switcher": "^1.2",
+        "drupal/view_password": "5.1"
     },
     "conflict": {
         "drupal/drupal": "*"

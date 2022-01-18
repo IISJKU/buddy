@@ -41,3 +41,9 @@ main_page:
   css:
     theme:
       css/main-page.css: {}
+user_register_login:
+  version: 1.x
+  css:
+    theme:
+      css/user-register-login.css: {}
+

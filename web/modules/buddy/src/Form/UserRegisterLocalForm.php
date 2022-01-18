@@ -64,7 +64,7 @@ class UserRegisterLocalForm extends RegisterForm
     ];
 
 
-    $form['#attached']['library'][] = 'buddy/user_profile_forms';
+    $form['#attached']['library'][] = 'buddy/user_register_login';
 
     honeypot_add_form_protection($form,$form_state,['honeypot', 'time_restriction']);
     return $form;

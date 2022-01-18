@@ -52,7 +52,7 @@ class UserLoginLocalForm extends \Drupal\user\Form\UserLoginForm
 
 
 
-    $form['#attached']['library'][] = 'buddy/user_profile_forms';
+    $form['#attached']['library'][] = 'buddy/user_register_login';
 
     return $form;
   }
