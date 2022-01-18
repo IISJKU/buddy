@@ -325,9 +325,9 @@ class UserProfilePreferencesForm extends FormBase
 
 
     }else{
-      $form['actions']['prev'] = [
+      $form['actions']['back'] = [
         '#type' => 'submit',
-        '#value' => $this->t('Back'),
+        '#value' => $this->t('Back').' ',
         '#submit' => ['::backSubmit'],
         '#attributes' =>
           ['class' => ['buddy_menu_button','buddy-icon-button','buddy-icon-before'],
