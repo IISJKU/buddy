@@ -125,6 +125,8 @@ class Util
     ];
     if ($useLanguage) {
       $url_options['language'] = \Drupal::languageManager()->getCurrentLanguage();
+    } else {
+      $url_options['language'] = \Drupal::languageManager()->getDefaultLanguage();
     }
     return Url::fromRoute('<front>', [], $url_options)->toString();
 
