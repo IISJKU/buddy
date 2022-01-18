@@ -1,5 +1,16 @@
+@media (min-width: 992px) {
+
+  main{
+    margin-top:40px !important;
+  }
+
+}
+
 legend{
   margin: 10px 0 !important;
+}
+.fieldset-legend{
+  font-weight: initial !important;
 }
 #profile-progress-bar{
   height: 36px;
