@@ -30,7 +30,7 @@ class UserFrontPageController extends ControllerBase
       $createUserLink = Link::createFromRoute($this->t('Create account'),'buddy.user_register',[],['attributes' => ['class' => 'buddy_menu_button buddy_menu_button_large']])->toString()->getGeneratedLink();
       $loginLink = Link::createFromRoute($this->t('Log in'),'buddy.user_login',[],['attributes' => ['class' => 'buddy_menu_button buddy_menu_button_large']])->toString()->getGeneratedLink();
 
-      $leftColumnHTML = '<p class="mobile_intro_text">'.$this->t('<span class="buddy_main_page_intro_line">The assistive technology platform </span><span class="buddy_main_page_intro_line">that finds tools</span><span class="buddy_main_page_intro_line"> that work for you.</span>').'</p>
+      $leftColumnHTML = '<p class="mobile_intro_text"><span class="buddy_main_page_intro_line">'.$this->t('The assistive technology platform that finds tools that work for you.').'</span></p>
                <p class="desktop_intro_text">'.$this->t('<span class="buddy_main_page_intro_line">The assistive technology platform </span><span class="buddy_main_page_intro_line">that finds tools that work for you.</span>').'</p>
                <ul class="buddy_login_menu">
 	                  <li>'.$createUserLink.'</li>

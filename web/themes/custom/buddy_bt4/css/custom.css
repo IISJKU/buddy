@@ -81,7 +81,7 @@
   text-decoration: none;
   text-align: center;
   padding: 10px;
-  margin: 20px 0;
+  margin: 10px 0;
   font-weight: 700;
   background: #080866;
   color: white;
@@ -96,14 +96,26 @@
     width: 100%;
 
   }
+
+  .buddy_menu_button{
+    margin: 10px 0;
+  }
 }
 
-.buddy_menu_button:focus, .buddy_menu_button:hover{
+.buddy_menu_button:focus{
   background: white;
   color: #080866;
   border: 3px solid #080866;
   text-decoration: none;
 }
+
+.buddy_menu_button:hover{
+  color: white;
+  background-color:  #A20784;
+  border: 3px solid #A20784;
+  text-decoration: none;
+}
+
 
 .buddy_invert_button{
   background: white;
@@ -273,22 +285,28 @@ header {
 /* NAV */
 
 .navbar-brand img {
-  height: 74px;
+  height: 57px;
 }
 @media (max-width: 576px) {
   .navbar-brand img {
-    height: 60px;
+    height: 45px;
+  }
+
+  .navbar-brand{
+    margin-left: 20px;
   }
 
   .navbar-toggler-icon{
     width: 35px !important;
     height: 35px !important;
   }
+
+
 }
 
 @media (max-width: 380px) {
   .navbar-brand img {
-    height: 50px;
+    height: 45px;
   }
 
   .navbar-toggler-icon{
@@ -308,12 +326,6 @@ header {
   }
 }
 
-@media (min-width: 992px) {
-
-  .navbar-brand img {
-    height: 65px;
-  }
-}
 .navbar {
   background-color: #332865;
   color: white;
@@ -378,7 +390,7 @@ header .nav-item a:hover,header .nav-item a:focus{
     flex-direction: column;
   }
   h1{
-    font-size: 2.5rem !important;
+    font-size: 3.0rem !important;
     word-wrap: break-word;
   }
 }
@@ -388,7 +400,7 @@ header .nav-item a:hover,header .nav-item a:focus{
 .navbar-expand-lg {
   flex-flow: column;
   justify-content: flex-start;
-  padding: 15px 0;
+  padding: 10px 0;
 
 }
 /*
@@ -538,8 +550,9 @@ main>.container{
   background: url(../assets/svg/buddy_bg.svg) no-repeat;
 }
 */
-h1{
+h1,h2{
   font-weight: 700 !important;
+  color: #231854;
 
 }
 
@@ -635,7 +648,7 @@ Main page
 
 .buddy_main_page_intro_line{
   display: block;
-  line-height: 1.8;
+  font-size: 1.6rem;
 }
 .mobile_intro_text{
   display: none;
@@ -750,7 +763,7 @@ AT INSTall
 
 .at_library_container {
   display: block;
-  float: left;
+ /* float: left; */
   width: 100%;
 }
 
@@ -802,6 +815,7 @@ footer.mt-auto{
 
   background-color: #332865;
   color: white;
+  margin-top:20px;
 
 }
 
@@ -813,6 +827,8 @@ footer.mt-auto{
   font-size: 1.29rem;
 
 }
+
+
 .buddy_footer_menu a{
   color: white;
 }
@@ -821,10 +837,16 @@ footer.mt-auto{
   display: inline;
   padding-right: 50px;
 }
-@media (max-width: 575px) {
+
+@media (max-width: 767px) {
+  .buddy_footer_menu{
+    padding-left: 0;
+  }
   .buddy_footer_menu>li{
     display: block;
-
+    text-align: left;
+    font-size: 1.0rem;
+    margin-bottom: 15px;
   }
 }
 
