@@ -39,8 +39,9 @@ class UserATLibraryController extends ControllerBase
       ];
     }
 
-    $html = '<p>'.$this->t("This is the list of tools you saved to your favourites.").'</p>';
-    $html.= '<p>'.$this->t("Rating your favourite tools helps Buddy to improve its recommendations").'</p>';
+
+    $html = '<div class="buddy_rec_info"> <p class="">'.$this->t("This is the list of tools you saved to your favourites.").'</p>';
+    $html.= '<p>'.$this->t("Rating your favourite tools helps Buddy to improve its recommendations").'</p></div>';
 
     $atRecords = \Drupal::entityTypeManager()->getStorage('node')
       ->loadMultiple($atRecordsIDs);

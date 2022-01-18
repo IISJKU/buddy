@@ -20,6 +20,7 @@
   float: left;
   font-size: 2em;
   color: #036;
+  margin-left: 3px;
   cursor: pointer;
   /* Transparent border-bottom avoids jumping
      when a colored border is applied
@@ -54,7 +55,8 @@
   border-bottom-color: #036;
 }
 .star_rating input:focus + label {
-  border-bottom-style: dotted;
+  outline:solid black;
+  outline-offset:3px;
 }
 .star_rating:hover input + label {
   color: #036;
