@@ -87,7 +87,7 @@ class ATRecommendationForm extends FormBase
       if (!empty($recommendations)) {
         $form['recommendations'] = [
           '#type' => 'markup',
-          '#markup' => '<div><p>'.$this->t("Based on your preferences, Buddy recommends the following tools for you:").'</p></div>',
+          '#markup' => '<div class="buddy_rec_info"><p>'.$this->t("Based on your preferences, Buddy recommends the following tools for you:").'</p></div>',
           '#allowed_tags' => ['div','h2'],
         ];
         $maxResults = min(count($recommendations), BuddyRecommender::$maxNumberOfATEntries);
@@ -115,8 +115,18 @@ class ATRecommendationForm extends FormBase
 
         $form['recommendations'] = [
           '#type' => 'markup',
-          '#markup' => '<div><p>'. t("There are no more tools to recommend at the moment!") .'</p></div>',
+          '#markup' => '<div class="buddy_rec_info"><p>'. t("There are no more tools to recommend at the moment!") .'</p></div>',
           '#allowed_tags' => ['div','h2'],
+        ];
+
+        $form['recommendations_more'] = [
+          '#type' => 'submit',
+          '#button_type' => 'primary',
+          '#prefix' => '<div class="row"><div class="col buddy_recommendation_menu">',
+          '#suffix' => '</div></div>',
+          '#value' => $this->t('Restart search'),
+          '#submit' => ['::restartRecommendations'],
+          '#attributes' => ['class' => ['buddy_menu_button']],
         ];
 
       }
@@ -153,7 +163,7 @@ class ATRecommendationForm extends FormBase
       if(count($results)){
         $form['recommendations'] = [
           '#type' => 'markup',
-          '#markup' => '<div>'.$this->t("All tools supporting your language:").'</div>',
+          '#markup' => '<div class="buddy_rec_info">'.$this->t("All tools supporting your language:").'</div>',
           '#allowed_tags' => ['div','h2'],
         ];
 
@@ -175,8 +185,18 @@ class ATRecommendationForm extends FormBase
 
         $form['recommendations'] = [
           '#type' => 'markup',
-          '#markup' => '<div><p>'. t("There are no more tools in the list at the moment!") .'</p></div>',
+          '#markup' => '<div class="buddy_rec_info"><p>'. t("There are no more tools in the list at the moment!") .'</p></div>',
           '#allowed_tags' => ['div','h2'],
+        ];
+
+        $form['recommendations_more'] = [
+          '#type' => 'submit',
+          '#button_type' => 'primary',
+          '#prefix' => '<div class="row"><div class="col buddy_recommendation_menu">',
+          '#suffix' => '</div></div>',
+          '#value' => $this->t('Restart search'),
+          '#submit' => ['::restartTools'],
+          '#attributes' => ['class' => ['buddy_menu_button']],
         ];
 
       }
@@ -355,6 +375,23 @@ class ATRecommendationForm extends FormBase
     */
     $form_state->setRebuild(true);
   }
+
+  public function restartRecommendations(array &$form, FormStateInterface $form_state)
+  {
+    $form_state->set('mode', 0);
+    $form_state->set('page_num', 0);
+    $form_state->set('recommendations',array());
+    $form_state->setRebuild();
+  }
+
+  public function restartTools(array &$form, FormStateInterface $form_state)
+  {
+    $form_state->set('mode', 1);
+    $form_state->set('page_num', 0);
+    $form_state->set('recommendations',array());
+    $form_state->setRebuild();
+  }
+
 
   public function tryoutATSubmitHandler(array &$form, FormStateInterface $form_state)
   {

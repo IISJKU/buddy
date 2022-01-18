@@ -604,7 +604,7 @@ class Util
   }
 
   public static function renderLanguages($languages){
-    $html = "<b>".t("Available for").": </b>";
+    $html = "<b>".t("Supported languages").": </b>";
     $firstCategory = true;
 
     foreach ($languages as $language){

@@ -190,6 +190,14 @@
   list-style: none;
   padding-left: 0;
 }
+.at_detail_list li {
+  margin-top: 10px;
+}
+
+.buddy_rec_info{
+  font-size: 1.3rem;
+  margin: 20px 0;
+}
 
 .li_header{
   display: block;
