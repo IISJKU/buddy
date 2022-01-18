@@ -138,11 +138,9 @@ class UserFrontPageController extends ControllerBase
 
     }
 
-
     global $base_url;
     $module_path = drupal_get_path('module', 'buddy');
-    $decorativeImageURL = Util::getBaseURL(false)."/modules/buddy/img/main.svg";
-
+    $decorativeImageURL = $base_url . '/' . $module_path . '/img/main.svg';
 
     $html = '<div class="row">
   <div class="col-12 col-lg-6">'.$leftColumnHTML.'</div>
