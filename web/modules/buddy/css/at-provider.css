@@ -13,6 +13,10 @@
   padding: 20px 10px;
 }
 
+.at_entry_header h2{
+  color: white !important;
+}
+
 .at_entry_header a{
   margin-right: 10px;
   color: white;

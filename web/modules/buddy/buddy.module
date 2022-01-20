@@ -102,6 +102,11 @@ function buddy_user_login($account) {
       $redirectResponse = new RedirectResponse(URL::fromRoute('buddy.at_moderator_at_entry_all')->toString());
       $middleware->setRedirectResponse($redirectResponse);
     }
+
+    if(in_array("at_provider",$account->getRoles())){
+      $redirectResponse = new RedirectResponse(URL::fromRoute('buddy.at_entry_overview')->toString());
+      $middleware->setRedirectResponse($redirectResponse);
+    }
     return;
   }
 
