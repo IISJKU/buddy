@@ -47,12 +47,13 @@ class UserProfileCreationSelectionForm extends FormBase {
 
     $form['steps'] = [
       '#type' => 'markup',
-      '#markup' => "<div class='profile_step_introduction'>".$this->t("By letting Buddy know about where you need support, it can recommend suitable tools for you.")."</div>
+      '#markup' => "<div class='row'>
+  <div class='col-12 col-lg-6'><div class='profile_step_introduction'>".$this->t("By letting Buddy know about where you need support, it can recommend suitable tools for you.")."</div>
         <p>".$this->t("You can set your preferences in two ways:")."</p>
-        <ol>
+        <ol class='preference_instructions'>
         <li>".$this->t("You can answer questions about what support you need.")."</li>
         <li>".$this->t("You can also play some games. Buddy will then user artificial intelligence to calculate what support you need.")."</li>
-</ol>",
+</ol></div></div>",
       '#allowed_tags' => ['div','p','li','ol'],
 
     ];

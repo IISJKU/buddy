@@ -17,6 +17,10 @@
   .buddy_login_menu>li,.buddy_user_main_menu>li{
     margin-right: 40px;
   }
+
+  .instruction_heading{
+    margin-top: -110px;
+  }
 }
 
 /*.buddy-icon-button*/
@@ -111,7 +115,7 @@
 }
 */
 
-.buddy_menu_button:hover,.buddy_menu_button:focus{
+.buddy_menu_button:hover,.buddy_menu_button:focus,.buddy_invert_button:hover,.buddy_invert_button:focus{
   color: white;
   background-color:  #A20784;
   border: 3px solid #A20784;
@@ -124,11 +128,14 @@
   color: #080866;
   border: 3px solid #080866;
 }
+/*
+Old
 .buddy_invert_button:hover,.buddy_invert_button:focus{
   background: #080866;
   color: white;
   border: 3px solid #080866;
 }
+*/
 
 @media (max-width: 675px) {
   .buddy_mobile_100 {
@@ -141,6 +148,7 @@
   color: #fff !important;
   background-color: #A20784 !important;
   border-color: #A20784 !important;
+  opacity: initial !important;
 }
 @media (min-width: 676px){
   .buddy_favourite_col{
@@ -265,13 +273,17 @@ body {
 }
 
 #main-bg-img{
-  margin-top: -130px;
+  margin-top: -190px;
   max-height: 230px;
   margin-bottom: 20px;
 }
 @media (max-width: 991px) {
   #main-bg-img{
     display: none;
+  }
+
+  .col-12:not(:first-child) {
+    margin-top: 30px;
   }
 }
 /* Header */
@@ -526,7 +538,7 @@ main{
   background-size:100%;
   background-position: center bottom;
   width:100%;
-  margin:0 auto;
+  margin: 30px auto 50px auto;
   min-height: 75vh;
 
 
@@ -560,7 +572,7 @@ main>.container{
   background: url(../assets/svg/buddy_bg.svg) no-repeat;
 }
 */
-h1,h2{
+h1,h2,h3{
   font-weight: 700 !important;
   color: #231854;
 
@@ -659,6 +671,15 @@ Main page
 .buddy_main_page_intro_line{
   display: block;
   font-size: 1.6rem;
+}
+
+.profile_step_introduction{
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+}
+
+.preference_instructions li{
+  margin-top: 20px;
 }
 .mobile_intro_text{
   display: none;

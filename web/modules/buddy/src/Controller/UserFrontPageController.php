@@ -21,6 +21,7 @@ class UserFrontPageController extends ControllerBase
     $user = \Drupal::currentUser();
     $logged_in = \Drupal::currentUser()->isAuthenticated();
 
+    $decorativeImageHTML = "";
     $leftColumnHTML="";
     $rightColumnHTML = "";
     $title = $this->t("Welcome to Buddy!");
@@ -43,6 +44,12 @@ class UserFrontPageController extends ControllerBase
       $rightColumnHTML.="<p>".$this->t("In the Buddy platform you can find assistive technology")."</p>";
       $rightColumnHTML.="<p>".$this->t("You can find a tool on your own, or let Buddy suggest one for you.")."</p>";
       $rightColumnHTML.="<p>".$this->t("If you want reading support on this platform you can use Easy Reading, located in the top right corner.")."</p>";
+
+
+      global $base_url;
+      $module_path = drupal_get_path('module', 'buddy');
+      $decorativeImageURL = $base_url . '/' . $module_path . '/img/main.svg';
+      $decorativeImageHTML = '<div><img src="'.$decorativeImageURL.'" alt="" id="main-bg-img"></div>';
 
     }else{
 
@@ -99,7 +106,7 @@ class UserFrontPageController extends ControllerBase
 
 
 
-        $rightColumnHTML = '<h2>'.$this->t("How to use Buddy").'</h2>';
+        $rightColumnHTML = '<h2 class="instruction_heading">'.$this->t("How to use Buddy").'</h2>';
         $rightColumnHTML.='<ol>';
         $rightColumnHTML.="<li><span class='li_header'>".$this->t("Find a tool")." </span>".$this->t("After setting your preferences, you can ask Buddy to recommend you suitable tools.")."</li>";
         $rightColumnHTML.="<li><span class='li_header'>".$this->t("Create a list of your favourite tools") ." </span>".$this->t("When you find a tool you like, you can save it in your favourites.")."</li>";
@@ -126,7 +133,7 @@ class UserFrontPageController extends ControllerBase
 
 
 
-        $rightColumnHTML = '<h2>'.$this->t("How to use Buddy").'</h2>';
+        $rightColumnHTML = '<h2 class="instruction_heading">'.$this->t("How to use Buddy").'</h2>';
         $rightColumnHTML.='<ol>';
         $rightColumnHTML.="<li><span class='li_header'>".$this->t("Set your needs and preferences")." </span>".$this->t("A good place to start is to tell Buddy what support you need. You can do it by answering some questions or play some games.")."</li>";
         $rightColumnHTML.="<li><span class='li_header'>".$this->t("Find a tool")." </span>".$this->t("After setting your preferences, you can ask Buddy to recommend you suitable tools.")."</li>";
@@ -138,13 +145,11 @@ class UserFrontPageController extends ControllerBase
 
     }
 
-    global $base_url;
-    $module_path = drupal_get_path('module', 'buddy');
-    $decorativeImageURL = $base_url . '/' . $module_path . '/img/main.svg';
+
 
     $html = '<div class="row">
   <div class="col-12 col-lg-6">'.$leftColumnHTML.'</div>
-  <div class="col-12 col-lg-6"><div><img src="'.$decorativeImageURL.'" alt="" id="main-bg-img"></div>'.$rightColumnHTML.'</div>
+  <div class="col-12 col-lg-6">'.$decorativeImageHTML.$rightColumnHTML.'</div>
 </div>';
 
     $build = array(
