@@ -7,6 +7,7 @@ namespace Drupal\buddy\Form;
 use Drupal\buddy\Util\Util;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\user\AccountForm;
 use Drupal\user\RegisterForm;
 use Drupal\Component\Datetime\TimeInterface;
@@ -61,6 +62,18 @@ class UserRegisterLocalForm extends RegisterForm
       '#submit' => ['::userCreateAccountCancelSubmit'],
       '#limit_validation_errors' => [],
       '#attributes' => ['class' => ['buddy_menu_button','buddy_invert_button','buddy_mobile_100']]
+    ];
+
+    $markup = "<div class='login_info_registration'>".$this->t("Already have an account?");
+    $markup.= " ".Link::createFromRoute($this->t('Log in'),'buddy.user_login')->toString()->getGeneratedLink();
+    $markup.= "</div>";
+
+    $form['create_account'] = [
+      '#type' => 'markup',
+      '#markup' => $markup,
+      '#weight' => 666,
+      '#allowed_tags' => ['button', 'a', 'div','img','h2','h1','p','b','b','strong','hr'],
+
     ];
 
 
