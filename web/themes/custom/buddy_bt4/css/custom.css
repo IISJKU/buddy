@@ -102,14 +102,16 @@
   }
 }
 
+/*
 .buddy_menu_button:focus{
   background: white;
   color: #080866;
   border: 3px solid #080866;
   text-decoration: none;
 }
+*/
 
-.buddy_menu_button:hover{
+.buddy_menu_button:hover,.buddy_menu_button:focus{
   color: white;
   background-color:  #A20784;
   border: 3px solid #A20784;
