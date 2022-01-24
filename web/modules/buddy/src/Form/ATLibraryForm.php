@@ -88,7 +88,7 @@ class ATLibraryForm  extends FormBase
         '#type' => 'markup',
         '#prefix' => "<div class='at_library_container'",
         '#markup' => $content,
-        '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
+        '#allowed_tags' => ['button', 'a', 'div', 'img','h6','h5','h4','h3','h2', 'h1', 'p', 'b', 'strong', 'hr', 'ol','ul', 'li','dl','ol', 'span'],
       ];
 
       $form['description_actions_'.$key] = array(
