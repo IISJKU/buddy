@@ -547,7 +547,7 @@ class Util
         $html.=", ";
       }
 
-      $html.=$supportCategory->getTitle();
+      $html.=t($supportCategory->getTitle());
       $firstCategory = false;
     }
 
