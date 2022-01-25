@@ -303,7 +303,7 @@ class UserSearchForm extends FormBase
         '#type' => 'markup',
         '#prefix' => "<li><div class='at_library_container'",
         '#markup' => $content,
-        '#allowed_tags' => ['button', 'a', 'div', 'img','h3','h2', 'h1', 'p', 'b', 'b', 'strong', 'hr', 'ul', 'li', 'span'],
+        '#allowed_tags' => ['button', 'a', 'div', 'img','h6','h5','h4','h3','h2', 'h1', 'p', 'b', 'strong', 'hr', 'ol','ul', 'li','dl','ol', 'span'],
       ];
 
       $installLink = Link::createFromRoute($this->t('How to get this tool'),'buddy.user_at_install_form',['description' => $description->id(),"return"=>"search"],  ['attributes' => ['class' => 'buddy_menu_button']])->toString()->getGeneratedLink();
