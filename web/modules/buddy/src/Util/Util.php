@@ -629,7 +629,7 @@ class Util
 
       if($firstLicense){
 
-        $license = $platform->field_type_license->getValue()[0]['value'];
+        $license = t($platform->field_type_license->getValue()[0]['value']);
         $firstLicense = false;
       }else{
 
